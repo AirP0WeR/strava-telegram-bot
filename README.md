@@ -1,5 +1,3 @@
-Personal Strava bot using Telegram
-
 Have _config.json_ with the below parameters:
 
 ```

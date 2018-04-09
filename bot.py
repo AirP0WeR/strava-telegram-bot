@@ -32,7 +32,24 @@ class StravaApi():
             return response.json()
 
 
-class FitWit(StravaApi):
+class FormatValue():
+    def meters_to_kilometers(self, distance):
+        return Decimal((Decimal(distance/1000.0)).quantize(Decimal('.1'), rounding=ROUND_DOWN))
+
+    def seconds_to_minutes(self, time):
+        return time/60
+
+    def remove_decimal_point(self, number):
+        return int(number)
+
+    def seconds_to_human_readable(self, time):
+        return datetime.timedelta(seconds=time)
+
+    def date_to_human_readable(self, date):
+        return time.strftime("%d/%m/%Y", time.strptime(date[:19], "%Y-%m-%dT%H:%M:%S"))
+
+
+class FitWit(StravaApi, FormatValue):
     def __init__(self, bot, update, athlete_token):
         self.bot = bot
         self.update = update
@@ -49,19 +66,19 @@ class FitWit(StravaApi):
         send_message(self.bot, self.update, message)
         latest_activity = self.get_athlete_activities("1", "1")[0]
         message = "%s, %s, %s, %s" % (self.get_activity_type(latest_activity['type']),
-                                      (Decimal((Decimal(latest_activity['distance'] / 1000.0)).quantize(Decimal('.1'), rounding=ROUND_DOWN))),
-                                      (latest_activity['moving_time']) / 60,
-                                      int(latest_activity['kilojoules']))
+                                      self.meters_to_kilometers(latest_activity['distance']),
+                                      self.seconds_to_minutes(latest_activity['moving_time']),
+                                      self.remove_decimal_point(latest_activity['kilojoules']))
 
         if latest_activity['has_heartrate']:
-            message += "\nHR, %s, %s" % (int(latest_activity['average_heartrate']), int(latest_activity['max_heartrate']))
+            message += "\nHR, %s, %s" % (self.remove_decimal_point(latest_activity['average_heartrate']), self.remove_decimal_point(latest_activity['max_heartrate']))
 
         message += "\n\nhttps://www.strava.com/activities/%s" % latest_activity['id']
 
         return message
 
 
-class AthleteStats(StravaApi):
+class AthleteStats(StravaApi, FormatValue):
     def __init__(self, bot, update, athlete_token, command):
         self.bot = bot
         self.update = update
@@ -100,9 +117,9 @@ class AthleteStats(StravaApi):
         athlete_stats = self.get_athlete_stats(athlete_info['id'])
 
         stats['rides'] = athlete_stats[period]['count']
-        stats['distance'] = Decimal((Decimal(athlete_stats[period]['distance'] / 1000.0)).quantize(Decimal('.1'), rounding=ROUND_DOWN))
-        stats['moving_time'] = datetime.timedelta(seconds=athlete_stats[period]['moving_time'])
-        stats['elevation_gain'] = Decimal((Decimal(athlete_stats[period]['elevation_gain'] / 1000.0)).quantize(Decimal('.1'), rounding=ROUND_DOWN))
+        stats['distance'] = self.meters_to_kilometers(athlete_stats[period]['distance'])
+        stats['moving_time'] = self.seconds_to_human_readable(athlete_stats[period]['moving_time'])
+        stats['elevation_gain'] = self.meters_to_kilometers(athlete_stats[period]['elevation_gain'])
 
         rides_count = athlete_stats[period]['count']
         if rides_count < 200:
@@ -135,12 +152,11 @@ class AthleteStats(StravaApi):
         send_message(self.bot, self.update, greeting)
         stats = self.get_stats(period)
         message += "_Rides_: %s\n_Distance_: %s kms\n_Moving Time_: %s hours\n_Elevation Gain_: %s kms\n_50's_: %s\n_100's_: %s (Includes %s _150's_ & %s _200's_)" % \
-                   (stats['rides'], stats['distance'], stats['moving_time'], stats['elevation_gain'], stats['fifties'],
-                    stats['hundreds'], stats['one_hundred_fifties'], stats['two_hundreds'])
+                   (stats['rides'], stats['distance'], stats['moving_time'], stats['elevation_gain'], stats['fifties'], stats['hundreds'], stats['one_hundred_fifties'], stats['two_hundreds'])
         return message
 
 
-class FunStats(StravaApi):
+class FunStats(StravaApi, FormatValue):
     def __init__(self, bot, update, athlete_token):
         self.bot = bot
         self.update = update
@@ -151,9 +167,9 @@ class FunStats(StravaApi):
         try:
             for bike in athlete_info['bikes']:
                 if message == "":
-                    message += "%s (%s kms)" % (bike['name'], Decimal((Decimal(bike['distance'] / 1000.0)).quantize(Decimal('.1'), rounding=ROUND_DOWN)))
+                    message += "%s (%s kms)" % (bike['name'], self.meters_to_kilometers(bike['distance']))
                 else:
-                    message += "\n\t\t\t\t\t\t\t\t\t %s (%s kms)" % (bike['name'], Decimal((Decimal(bike['distance'] / 1000.0)).quantize(Decimal('.1'), rounding=ROUND_DOWN)))
+                    message += "\n\t\t\t\t\t\t\t\t\t %s (%s kms)" % (bike['name'], self.meters_to_kilometers(bike['distance']))
         except Exception:
             pass
         return message
@@ -171,11 +187,11 @@ class FunStats(StravaApi):
         athlete_info = self.get_athlete_info()
         athlete_stats = self.get_athlete_stats(athlete_info['id'])
 
-        stats['biggest_ride'] = Decimal((Decimal(athlete_stats['biggest_ride_distance'] / 1000.0)).quantize(Decimal('.1'), rounding=ROUND_DOWN))
-        stats['biggest_climb'] = int(athlete_stats['biggest_climb_elevation_gain'])
+        stats['biggest_ride'] = self.meters_to_kilometers(athlete_stats['biggest_ride_distance'])
+        stats['biggest_climb'] = self.remove_decimal_point(athlete_stats['biggest_climb_elevation_gain'])
         stats['following'] = athlete_info['friend_count']
         stats['followers'] = athlete_info['follower_count']
-        stats['strava_created'] = time.strftime("%d/%m/%Y", time.strptime(athlete_info['created_at'][:19], "%Y-%m-%dT%H:%M:%S"))
+        stats['strava_created'] = self.date_to_human_readable(athlete_info['created_at'])
         stats['bikes'] = self.get_bikes_info(athlete_info)
 
         return stats
@@ -185,8 +201,7 @@ class FunStats(StravaApi):
         send_message(self.bot, self.update, greeting)
         stats = self.get_stats()
         message = "*Fun Stats:*\n\n_Biggest Ride_: %s kms\n_Biggest Climb_: %s meters\n_Following Count_: %s\n_Followers Count_: %s\n_Using Strava Since_: %s\n_Bikes_: %s" % \
-                  (stats['biggest_ride'], stats['biggest_climb'], stats['following'], stats['followers'],
-                   stats['strava_created'], stats['bikes'])
+                  (stats['biggest_ride'], stats['biggest_climb'], stats['following'], stats['followers'], stats['strava_created'], stats['bikes'])
         return message
 
 
