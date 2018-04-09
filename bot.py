@@ -99,6 +99,12 @@ class AthleteStats(StravaApi, FormatValue):
                 elif distance > 200000.0:
                     stats['two_hundreds'] += 1
                     stats['hundreds'] += 1
+
+                if activity['trainer']:
+                    stats['indoor_distance'] += self.meters_to_kilometers(activity['distance'])
+                    stats['indoor_time'] += activity['moving_time']
+                    stats['indoor_rides'] += 1
+
         return stats
 
     def get_stats(self, period):
@@ -110,7 +116,10 @@ class AthleteStats(StravaApi, FormatValue):
             'rides': 0,
             'distance': 0,
             'moving_time': 0,
-            'elevation_gain': 0
+            'elevation_gain': 0,
+            'indoor_distance': 0,
+            'indoor_time': 0,
+            'indoor_rides': 0
         }
 
         athlete_info = self.get_athlete_info()
@@ -151,8 +160,8 @@ class AthleteStats(StravaApi, FormatValue):
         greeting = "Hey %s! Give me a %s or two while I give your %s." % (self.update.message.from_user.first_name, time_adjective, header_adjective)
         send_message(self.bot, self.update, greeting)
         stats = self.get_stats(period)
-        message += "_Rides_: %s\n_Distance_: %s kms\n_Moving Time_: %s hours\n_Elevation Gain_: %s kms\n_50's_: %s\n_100's_: %s (Includes %s _150's_ & %s _200's_)" % \
-                   (stats['rides'], stats['distance'], stats['moving_time'], stats['elevation_gain'], stats['fifties'], stats['hundreds'], stats['one_hundred_fifties'], stats['two_hundreds'])
+        message += "- _Rides_: %s (Includes %s Indoors)\n- _Distance_: %s kms (Includes %s kms of Indoors)\n- _Moving Time_: %s hours (Includes %s hours of Indoors)\n- _Elevation Gain_: %s kms\n- _50's_: %s\n- _100's_: %s (Includes %s _150's_ & %s _200's_)" % \
+                   (stats['rides'], stats['indoor_rides'], stats['distance'], stats['indoor_distance'], stats['moving_time'], self.seconds_to_human_readable(stats['indoor_time']), stats['elevation_gain'], stats['fifties'], stats['hundreds'], stats['one_hundred_fifties'], stats['two_hundreds'])
         return message
 
 
@@ -169,7 +178,7 @@ class FunStats(StravaApi, FormatValue):
                 if message == "":
                     message += "%s (%s kms)" % (bike['name'], self.meters_to_kilometers(bike['distance']))
                 else:
-                    message += "\n\t\t\t\t\t\t\t\t\t %s (%s kms)" % (bike['name'], self.meters_to_kilometers(bike['distance']))
+                    message += "\n\t\t\t\t\t\t\t\t\t\t\t\t\t %s (%s kms)" % (bike['name'], self.meters_to_kilometers(bike['distance']))
         except Exception:
             pass
         return message
@@ -200,7 +209,7 @@ class FunStats(StravaApi, FormatValue):
         greeting = "Hey %s! Give me a minute or two while I give some of your fun stats." % self.update.message.from_user.first_name
         send_message(self.bot, self.update, greeting)
         stats = self.get_stats()
-        message = "*Fun Stats:*\n\n_Biggest Ride_: %s kms\n_Biggest Climb_: %s meters\n_Following Count_: %s\n_Followers Count_: %s\n_Using Strava Since_: %s\n_Bikes_: %s" % \
+        message = "*Fun Stats:*\n\n- _Biggest Ride_: %s kms\n- _Biggest Climb_: %s meters\n- _Following Count_: %s\n- _Followers Count_: %s\n- _Using Strava Since_: %s\n-  _Bikes_: %s" % \
                   (stats['biggest_ride'], stats['biggest_climb'], stats['following'], stats['followers'], stats['strava_created'], stats['bikes'])
         return message
 
