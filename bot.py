@@ -1,26 +1,42 @@
 #!/usr/bin/env python
-from telegram.ext import Updater, CommandHandler, Filters
-from decimal import Decimal, ROUND_DOWN
-from threading import Thread
+import requests
+import telegram
+import datetime
 import json
 import logging
 import os
 import sys
-import requests
-import telegram
-import datetime
 import time
+from decimal import Decimal, ROUND_DOWN
+from threading import Thread
+from telegram.ext import Updater, CommandHandler, Filters
 
 
-class FitWit():
+class StravaApi():
+    def __init__(self, athlete_token):
+        self.athlete_token = athlete_token
+
+    def get_athlete_info(self):
+        response = requests.get("https://www.strava.com/api/v3/athlete", headers=self.athlete_token)
+        if response.status_code == 200:
+            return response.json()
+
+    def get_athlete_stats(self, athlete_id):
+        response = requests.get("https://www.strava.com/api/v3/athletes/%s/stats" % athlete_id, headers=self.athlete_token)
+        if response.status_code == 200:
+            return response.json()
+
+    def get_athlete_activities(self, total_activities, page):
+        response = requests.get("https://www.strava.com/api/v3/athlete/activities?per_page=%s&page=%s" % (total_activities, page), headers=self.athlete_token)
+        if response.status_code == 200:
+            return response.json()
+
+
+class FitWit(StravaApi):
     def __init__(self, bot, update, athlete_token):
         self.bot = bot
         self.update = update
-        self.athlete_token = athlete_token
-
-    def get_lastest_activity(self):
-        response = requests.get("https://www.strava.com/api/v3/athlete/activities?per_page=1", headers=self.athlete_token)
-        return response.json()[0]
+        StravaApi.__init__(self, athlete_token)
 
     def get_activity_type(self, type):
         if type == "Ride":
@@ -31,7 +47,7 @@ class FitWit():
     def main(self):
         message = "Hey %s! Give me a moment or two while I give your latest Strava activity in FitWit postable format." % self.update.message.from_user.first_name
         send_message(self.bot, self.update, message)
-        latest_activity = self.get_lastest_activity()
+        latest_activity = self.get_athlete_activities("1", "1")[0]
         message = "%s, %s, %s, %s" % (self.get_activity_type(latest_activity['type']),
                                       (Decimal((Decimal(latest_activity['distance'] / 1000.0)).quantize(Decimal('.1'), rounding=ROUND_DOWN))),
                                       (latest_activity['moving_time']) / 60,
@@ -45,27 +61,12 @@ class FitWit():
         return message
 
 
-class AthleteStats():
+class AthleteStats(StravaApi):
     def __init__(self, bot, update, athlete_token, command):
         self.bot = bot
         self.update = update
-        self.athlete_token = athlete_token
         self.command = command
-
-    def get_athlete_activities(self, total_activities, page):
-        response = requests.get("https://www.strava.com/api/v3/athlete/activities?per_page=%s&page=%s" % (total_activities, page), headers=self.athlete_token)
-        if response.status_code == 200:
-            return response.json()
-
-    def get_athlete_id(self):
-        response = requests.get("https://www.strava.com/api/v3/athlete", headers=self.athlete_token)
-        if response.status_code == 200:
-            return response.json()['id']
-
-    def get_athlete_stats(self, athlete_id):
-        response = requests.get("https://www.strava.com/api/v3/athletes/%s/stats" % athlete_id, headers=self.athlete_token)
-        if response.status_code == 200:
-            return response.json()
+        StravaApi.__init__(self, athlete_token)
 
     def calculate_stats(self, athlete_activities, stats):
         for activity in athlete_activities:
@@ -95,7 +96,8 @@ class AthleteStats():
             'elevation_gain': 0
         }
 
-        athlete_stats = self.get_athlete_stats(self.get_athlete_id())
+        athlete_info = self.get_athlete_info()
+        athlete_stats = self.get_athlete_stats(athlete_info['id'])
 
         stats['rides'] = athlete_stats[period]['count']
         stats['distance'] = Decimal((Decimal(athlete_stats[period]['distance'] / 1000.0)).quantize(Decimal('.1'), rounding=ROUND_DOWN))
@@ -133,24 +135,16 @@ class AthleteStats():
         send_message(self.bot, self.update, greeting)
         stats = self.get_stats(period)
         message += "_Rides_: %s\n_Distance_: %s kms\n_Moving Time_: %s hours\n_Elevation Gain_: %s kms\n_50's_: %s\n_100's_: %s (Includes %s _150's_ & %s _200's_)" % \
-                   (stats['rides'], stats['distance'], stats['moving_time'], stats['elevation_gain'],stats['fifties'], stats['hundreds'], stats['one_hundred_fifties'], stats['two_hundreds'])
+                   (stats['rides'], stats['distance'], stats['moving_time'], stats['elevation_gain'], stats['fifties'],
+                    stats['hundreds'], stats['one_hundred_fifties'], stats['two_hundreds'])
         return message
 
-class FunStats():
+
+class FunStats(StravaApi):
     def __init__(self, bot, update, athlete_token):
         self.bot = bot
         self.update = update
-        self.athlete_token = athlete_token
-
-    def get_athlete_info(self):
-        response = requests.get("https://www.strava.com/api/v3/athlete", headers=self.athlete_token)
-        if response.status_code == 200:
-            return response.json()
-
-    def get_athlete_stats(self, athlete_id):
-        response = requests.get("https://www.strava.com/api/v3/athletes/%s/stats" % athlete_id, headers=self.athlete_token)
-        if response.status_code == 200:
-            return response.json()
+        StravaApi.__init__(self, athlete_token)
 
     def get_bikes_info(self, athlete_info):
         message = ""
@@ -175,9 +169,7 @@ class FunStats():
         }
 
         athlete_info = self.get_athlete_info()
-        athlete_id = athlete_info['id']
-
-        athlete_stats = self.get_athlete_stats(athlete_id)
+        athlete_stats = self.get_athlete_stats(athlete_info['id'])
 
         stats['biggest_ride'] = Decimal((Decimal(athlete_stats['biggest_ride_distance'] / 1000.0)).quantize(Decimal('.1'), rounding=ROUND_DOWN))
         stats['biggest_climb'] = int(athlete_stats['biggest_climb_elevation_gain'])
@@ -193,8 +185,10 @@ class FunStats():
         send_message(self.bot, self.update, greeting)
         stats = self.get_stats()
         message = "*Fun Stats:*\n\n_Biggest Ride_: %s kms\n_Biggest Climb_: %s meters\n_Following Count_: %s\n_Followers Count_: %s\n_Using Strava Since_: %s\n_Bikes_: %s" % \
-                  (stats['biggest_ride'], stats['biggest_climb'], stats['following'], stats['followers'], stats['strava_created'], stats['bikes'])
+                  (stats['biggest_ride'], stats['biggest_climb'], stats['following'], stats['followers'],
+                   stats['strava_created'], stats['bikes'])
         return message
+
 
 def get_config():
     with open('config.json', 'r') as f:
@@ -263,6 +257,7 @@ def alltimestats(bot, update):
 
 def ytdstats(bot, update):
     handle_commands(bot, update, "ytdstats")
+
 
 def funstats(bot, update):
     handle_commands(bot, update, "funstats")
