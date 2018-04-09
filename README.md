@@ -1,7 +1,8 @@
 Personal Strava bot using Telegram
 
-Have config.json with the below parameters:
+_Have config.json with the below parameters:_
 
+```
 {
   "ENVIRONMENT": "DEV/PROD",
   "PROD_TELEGRAM_BOT_TOKEN": "",
@@ -13,3 +14,4 @@ Have config.json with the below parameters:
   "SHADOW_MODE": true/false,
   "SHADOW_MODE_CHAT_ID": "telegram_chat_id"
 }
+```
