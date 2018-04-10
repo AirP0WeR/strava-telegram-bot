@@ -353,7 +353,7 @@ def send_message(bot, update, message):
 def get_athlete_token(bot, update):
     bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     username = update.message.from_user.username
-    if athletes.has_key(username):
+    if username in athletes:
         return {"Authorization": "Bearer " + athletes[username]}
     else:
         return False
