@@ -228,6 +228,9 @@ class FunStats(StravaApi, FormatValue):
                 if activity['max_speed'] > stats['max_speed']:
                     stats['max_speed'] = activity['max_speed']
 
+                if activity['average_speed'] > stats['max_avg_speed']:
+                    stats['max_avg_speed'] = activity['average_speed']
+
                 if ('average_watts' in activity) and (activity['device_watts']):
                         if activity['average_watts'] > stats['average_watts']:
                             stats['average_watts'] = activity['average_watts']
@@ -247,6 +250,7 @@ class FunStats(StravaApi, FormatValue):
             'biggest_ride': 0,
             'biggest_climb': 0,
             'non_stop': 0,
+            'max_avg_speed': 0.0,
             'max_speed': 0.0,
             'average_watts': 0.0,
             'max_watts': 0,
@@ -291,6 +295,7 @@ class FunStats(StravaApi, FormatValue):
                   "- _Max Power_: %s watts\n" \
                   "- _Best Average Power_: %s watts\n" \
                   "- _Max Speed_: %s kmph\n" \
+                  "- _Best Average Speed_: %s kmph\n" \
                   "- _Best Avg Cadence_: %s\n" \
                   "- _Max Heartrate_: %s bpm\n" \
                   "- _Non-Stop Rides_: %s\n" \
@@ -308,6 +313,7 @@ class FunStats(StravaApi, FormatValue):
                   (stats['max_watts'],
                    stats['average_watts'],
                    self.meters_per_second_to_kilometers(stats['max_speed']),
+                   self.meters_per_second_to_kilometers(stats['max_avg_speed']),
                    self.remove_decimal_point(stats['average_cadence']),
                    self.remove_decimal_point(stats['max_heartrate']),
                    stats['non_stop'],
@@ -353,7 +359,7 @@ def send_message(bot, update, message):
 def get_athlete_token(bot, update):
     bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
     username = update.message.from_user.username
-    if username in athletes:
+    if username in athletes.viewkeys():
         return {"Authorization": "Bearer " + athletes[username]}
     else:
         return False
