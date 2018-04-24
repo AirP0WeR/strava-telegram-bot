@@ -13,52 +13,70 @@ import telegram
 from telegram.ext import Updater, CommandHandler, Filters
 
 
-class InitializeBot():
+class InitializeBot(object):
 
-    def get_config(self):
+    def __init__(self):
+        logging.info("Initializing %s" % self.__class__.__name__)
+
+    @staticmethod
+    def get_config():
+
+        get_telegram_token = None
+
         with open('config.json', 'r') as f:
             config = json.load(f)
 
         environment = config['ENVIRONMENT']
         if environment == "PROD":
-            telegram_token = config['PROD_TELEGRAM_BOT_TOKEN']
+            get_telegram_token = config['PROD_TELEGRAM_BOT_TOKEN']
         elif environment == "DEV":
-            telegram_token = config['DEV_TELEGRAM_BOT_TOKEN']
-        athletes = config['ATHLETES']
-        shadow_chat_id = int(config['SHADOW_MODE_CHAT_ID'])
-        admin_user_name = config['ADMIN_USER_NAME']
-        shadow_mode = config['SHADOW_MODE']
+            get_telegram_token = config['DEV_TELEGRAM_BOT_TOKEN']
+        get_athletes = config['ATHLETES']
+        get_shadow_chat_id = int(config['SHADOW_MODE_CHAT_ID'])
+        get_admin_user_name = config['ADMIN_USER_NAME']
+        get_shadow_mode = config['SHADOW_MODE']
 
-        return telegram_token, athletes, shadow_chat_id, admin_user_name, shadow_mode
+        return get_telegram_token, get_athletes, get_shadow_chat_id, get_admin_user_name, get_shadow_mode
 
-    def strava_activity_hyperlink(self):
+    @staticmethod
+    def strava_activity_hyperlink():
         return """[%s %s](https://www.strava.com/activities/%s)"""
 
 
-class FormatValue():
+class FormatValue(object):
 
-    def meters_to_kilometers(self, distance):
+    def __init__(self):
+        logging.info("Initializing %s" % self.__class__.__name__)
+
+    @staticmethod
+    def meters_to_kilometers(distance):
         return (Decimal(distance / 1000.0)).quantize(Decimal('.1'), rounding=ROUND_DOWN)
 
-    def seconds_to_minutes(self, time):
-        return time / 60
+    @staticmethod
+    def seconds_to_minutes(time_in_seconds):
+        return time_in_seconds / 60
 
-    def remove_decimal_point(self, number):
+    @staticmethod
+    def remove_decimal_point(number):
         return int(number)
 
-    def seconds_to_human_readable(self, time):
-        return datetime.timedelta(seconds=time)
+    @staticmethod
+    def seconds_to_human_readable(time_in_seconds):
+        return datetime.timedelta(seconds=time_in_seconds)
 
-    def date_to_human_readable(self, date):
+    @staticmethod
+    def date_to_human_readable(date):
         return time.strftime("%d/%m/%Y", time.strptime(date[:19], "%Y-%m-%dT%H:%M:%S"))
 
-    def meters_per_second_to_kilometers(self, speed):
+    @staticmethod
+    def meters_per_second_to_kilometers(speed):
         return (Decimal(speed * 3.6)).quantize(Decimal('.1'), rounding=ROUND_DOWN)
 
 
-class StravaApi():
+class StravaApi(object):
 
     def __init__(self, athlete_token):
+        logging.info("Initializing %s" % self.__class__.__name__)
         self.athlete_token = athlete_token
 
     def get_athlete_info(self):
@@ -83,12 +101,14 @@ class StravaApi():
 class FitWit(StravaApi, FormatValue):
 
     def __init__(self, bot, update, athlete_token):
+        logging.info("Initializing %s" % self.__class__.__name__)
         self.bot = bot
         self.update = update
         StravaApi.__init__(self, athlete_token)
 
-    def get_activity_type(self, type):
-        if type == "Ride":
+    @staticmethod
+    def get_activity_type(activity_type):
+        if activity_type == "Ride":
             return "C"
         else:
             return type
@@ -110,7 +130,9 @@ class FitWit(StravaApi, FormatValue):
 
 
 class AthleteStats(StravaApi, FormatValue):
+
     def __init__(self, bot, update, athlete_token, command):
+        logging.info("Initializing %s" % self.__class__.__name__)
         self.bot = bot
         self.update = update
         self.command = command
@@ -120,11 +142,11 @@ class AthleteStats(StravaApi, FormatValue):
         for activity in athlete_activities:
             if activity['type'] == 'Ride':
                 distance = float(activity['distance'])
-                if distance >= 50000.0 and distance < 100000.0:
+                if 50000.0 <= distance < 100000.0:
                     stats['fifties'] += 1
-                elif distance >= 100000.0 and distance < 150000.0:
+                elif 100000.0 <= distance < 150000.0:
                     stats['hundreds'] += 1
-                elif distance > 150000.0 and distance < 200000.0:
+                elif 150000.0 < distance < 200000.0:
                     stats['one_hundred_fifties'] += 1
                     stats['hundreds'] += 1
                 elif distance > 200000.0:
@@ -181,6 +203,7 @@ class AthleteStats(StravaApi, FormatValue):
         return stats
 
     def main(self):
+        period = message = None
         if self.command == "alltimestats":
             message = "*All Time Stats:*\n\n"
             period = "all_ride_totals"
@@ -215,6 +238,7 @@ class AthleteStats(StravaApi, FormatValue):
 class FunStats(StravaApi, FormatValue):
 
     def __init__(self, bot, update, athlete_token):
+        logging.info("Initializing %s" % self.__class__.__name__)
         self.bot = bot
         self.update = update
         StravaApi.__init__(self, athlete_token)
@@ -227,12 +251,13 @@ class FunStats(StravaApi, FormatValue):
                     message += "%s (%s kms)" % (bike['name'], self.meters_to_kilometers(bike['distance']))
                 else:
                     message += "\n\t\t\t\t\t\t\t\t\t\t\t\t %s (%s kms)" % (
-                    bike['name'], self.meters_to_kilometers(bike['distance']))
+                        bike['name'], self.meters_to_kilometers(bike['distance']))
         except Exception:
             pass
         return message
 
-    def calculate_stats(self, athlete_activities, stats):
+    @staticmethod
+    def calculate_stats(athlete_activities, stats):
         for activity in athlete_activities:
             if activity['type'] == 'Ride':
 
@@ -265,9 +290,9 @@ class FunStats(StravaApi, FormatValue):
                         stats['max_watts'] = activity['max_watts']
                         stats['max_watts_activity'] = activity['id']
 
-                if (activity['has_heartrate']) and (activity['max_heartrate'] > stats['max_heartrate']):
-                    stats['max_heartrate'] = activity['max_heartrate']
-                    stats['max_heartrate_activity'] = activity['id']
+                if (activity['has_heartrate']) and (activity['max_heartrate'] > stats['max_heart_rate']):
+                    stats['max_heart_rate'] = activity['max_heartrate']
+                    stats['max_heart_rate_activity'] = activity['id']
 
                 if ('average_cadence' in activity) and (activity['average_cadence'] > stats['average_cadence']):
                     stats['average_cadence'] = activity['average_cadence']
@@ -298,8 +323,8 @@ class FunStats(StravaApi, FormatValue):
             'average_watts_activity': '',
             'max_watts': 0,
             'max_watts_activity': '',
-            'max_heartrate': 0,
-            'max_heartrate_activity': '',
+            'max_heart_rate': 0,
+            'max_heart_rate_activity': '',
             'average_cadence': 0.0,
             'average_cadence_activity': '',
             'achievement_count': 0,
@@ -338,7 +363,7 @@ class FunStats(StravaApi, FormatValue):
                   "- _Max Speed_: %s\n" \
                   "- _Best Average Speed_: %s\n" \
                   "- _Best Avg Cadence_: %s\n" \
-                  "- _Max Heartrate_: %s\n" \
+                  "- _Max Heart Rate_: %s\n" \
                   "- _Biggest Ride_: %s\n" \
                   "- _Max Elevation Gain_: %s\n" \
                   "- _Non-Stop Rides_: %s\n" \
@@ -354,15 +379,15 @@ class FunStats(StravaApi, FormatValue):
                   (strava_activity_hyperlink % (stats['max_watts'], 'watts', stats['max_watts_activity']),
                    strava_activity_hyperlink % (stats['average_watts'], 'watts', stats['average_watts_activity']),
                    strava_activity_hyperlink % (
-                   self.meters_per_second_to_kilometers(stats['max_speed']), 'kmph', stats['max_speed_activity']),
-                   strava_activity_hyperlink % (self.meters_per_second_to_kilometers(stats['max_avg_speed']), 'kmph',
+                       self.meters_per_second_to_kilometers(stats['max_speed']), 'kph', stats['max_speed_activity']),
+                   strava_activity_hyperlink % (self.meters_per_second_to_kilometers(stats['max_avg_speed']), 'kph',
                                                 stats['max_avg_speed_activity']),
                    strava_activity_hyperlink % (
-                   self.remove_decimal_point(stats['average_cadence']), '', stats['average_cadence_activity']),
+                       self.remove_decimal_point(stats['average_cadence']), '', stats['average_cadence_activity']),
                    strava_activity_hyperlink % (
-                   self.remove_decimal_point(stats['max_heartrate']), 'bpm', stats['max_heartrate_activity']),
+                       self.remove_decimal_point(stats['max_heart_rate']), 'bpm', stats['max_heart_rate_activity']),
                    strava_activity_hyperlink % (
-                   self.meters_to_kilometers(stats['biggest_ride']), 'kms', stats['biggest_ride_activity']),
+                       self.meters_to_kilometers(stats['biggest_ride']), 'kms', stats['biggest_ride_activity']),
                    strava_activity_hyperlink % (self.remove_decimal_point(stats['max_elevation_gain']), 'meters',
                                                 stats['max_elevation_gain_activity']),
                    stats['non_stop'],
@@ -379,16 +404,21 @@ class FunStats(StravaApi, FormatValue):
         return message
 
 
-class StravaTelegramBot():
+class StravaTelegramBot(object):
 
-    def send_message(self, bot, update, message):
+    def __init__(self):
+        logging.info("Initializing %s" % self.__class__.__name__)
+
+    @staticmethod
+    def send_message(bot, update, message):
         bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
         if shadow_mode and (shadow_chat_id != update.message.chat_id):
             bot.send_message(chat_id=shadow_chat_id, text=message, parse_mode="Markdown", disable_notification=True,
                              disable_web_page_preview=True)
 
-    def get_athlete_token(self, bot, update):
+    @staticmethod
+    def get_athlete_token(bot, update):
         bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         username = update.message.from_user.username
         if username in athletes.viewkeys():
@@ -436,12 +466,13 @@ class StravaTelegramBot():
     def funstats(self, bot, update):
         self.handle_commands(bot, update, "funstats")
 
-    def error(bot, update, error):
+    @staticmethod
+    def error(update, error):
         logger.warning('Update "%s" caused error "%s"', update, error)
 
     def main(self):
         updater = Updater(telegram_token)
-        dispacther_handler = updater.dispatcher
+        dispatcher_handler = updater.dispatcher
 
         def stop_and_restart():
             updater.stop()
@@ -451,15 +482,15 @@ class StravaTelegramBot():
             self.send_message(bot, update, "Bot is restarting...")
             Thread(target=stop_and_restart).start()
 
-        dispacther_handler.add_handler(CommandHandler("start", self.start))
-        dispacther_handler.add_handler(CommandHandler("fw", self.fw))
-        dispacther_handler.add_handler(CommandHandler("alltimestats", self.alltimestats))
-        dispacther_handler.add_handler(CommandHandler("ytdstats", self.ytdstats))
-        dispacther_handler.add_handler(CommandHandler("funstats", self.funstats))
-        dispacther_handler.add_handler(
+        dispatcher_handler.add_handler(CommandHandler("start", self.start))
+        dispatcher_handler.add_handler(CommandHandler("fw", self.fw))
+        dispatcher_handler.add_handler(CommandHandler("alltimestats", self.alltimestats))
+        dispatcher_handler.add_handler(CommandHandler("ytdstats", self.ytdstats))
+        dispatcher_handler.add_handler(CommandHandler("funstats", self.funstats))
+        dispatcher_handler.add_handler(
             CommandHandler('restart', restart, filters=Filters.user(username=admin_user_name)))
 
-        dispacther_handler.add_error_handler(self.error)
+        dispatcher_handler.add_error_handler(self.error)
         updater.start_polling()
         updater.idle()
 
