@@ -23,7 +23,9 @@ class InitializeBot(object):
 
         get_telegram_token = None
 
-        with open('config.json', 'r') as f:
+        config_path = os.path.dirname(os.path.abspath(__file__))
+        config_file = os.path.join(config_path, 'config.json')
+        with open(config_file, 'r') as f:
             config = json.load(f)
 
         environment = config['ENVIRONMENT']
@@ -50,7 +52,7 @@ class FormatValue(object):
 
     @staticmethod
     def meters_to_kilometers(distance):
-        return (Decimal(distance / 1000.0)).quantize(Decimal('.1'), rounding=ROUND_DOWN)
+        return float((Decimal(distance / 1000.0)).quantize(Decimal('.1'), rounding=ROUND_DOWN))
 
     @staticmethod
     def seconds_to_minutes(time_in_seconds):
@@ -62,7 +64,7 @@ class FormatValue(object):
 
     @staticmethod
     def seconds_to_human_readable(time_in_seconds):
-        return datetime.timedelta(seconds=time_in_seconds)
+        return str(datetime.timedelta(seconds=time_in_seconds))
 
     @staticmethod
     def date_to_human_readable(date):
@@ -70,7 +72,7 @@ class FormatValue(object):
 
     @staticmethod
     def meters_per_second_to_kilometers(speed):
-        return (Decimal(speed * 3.6)).quantize(Decimal('.1'), rounding=ROUND_DOWN)
+        return float((Decimal(speed * 3.6)).quantize(Decimal('.1'), rounding=ROUND_DOWN))
 
 
 class StravaApi(object):
