@@ -1,4 +1,10 @@
-Have _config.json_ with the below parameters:
+# Strava Telegram Bot
+
+A simple Strava bot using Telegram for fetching and calculating statistics.
+
+## Getting Started
+
+Create _config.json_ inside _scripts/_ in the below format:
 
 ```
 {
@@ -13,3 +19,20 @@ Have _config.json_ with the below parameters:
   "SHADOW_MODE_CHAT_ID": "telegram_chat_id"
 }
 ```
+
+### Prerequisites
+
+Install or upgrade python-telegram-bot with:
+
+```
+$ pip install python-telegram-bot
+$ pip install python-telegram-bot --upgrade
+```
+
+## Contributing
+
+Please read [CONTRIBUTING.md](https://github.com/panchambharadwaj/strava-telegram-bot/blob/master/CODE_OF_CONDUCT.md) for details on our code of conduct, and the process for submitting pull requests to us.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/panchambharadwaj/strava-telegram-bot/blob/master/LICENSE) file for details
