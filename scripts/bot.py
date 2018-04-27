@@ -254,8 +254,8 @@ class FunStats(StravaApi, FormatValue):
                 else:
                     message += "\n\t\t\t\t\t\t\t\t\t\t\t\t %s (%s kms)" % (
                         bike['name'], self.meters_to_kilometers(bike['distance']))
-        except Exception:
-            pass
+        except KeyError, e:
+            logging.info("Key error: %s" % e)
         return message
 
     @staticmethod
@@ -429,25 +429,31 @@ class StravaTelegramBot(object):
             return False
 
     def handle_commands(self, bot, update, command):
-        message = "Hi %s! You are not a registered user yet. Contact @panchambharadwaj for more details." % update.message.from_user.first_name
+        message = "Hi %s! You are not a registered user yet. Contact @panchambharadwaj for more details." \
+                  % update.message.from_user.first_name
         athlete_token = self.get_athlete_token(bot, update)
         if athlete_token:
 
             if command == "start":
-                message = "Hey %s! I'm your Strava Bot. Type '/' (backslash) to get the list of commands that I understand." % update.message.from_user.first_name
+                message = "Hey %s! I'm your Strava Bot. " \
+                          "Type '/' (backslash) to get the list of commands that I understand." \
+                          % update.message.from_user.first_name
 
             elif command == "fw":
-                greeting = "Hey %s! Give me a moment or two while I give your latest Strava activity in FitWit postable format." % update.message.from_user.first_name
+                greeting = "Hey %s! Give me a moment or two while I give your latest Strava activity in " \
+                           "FitWit postable format." % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
                 message = FitWit(bot, update, athlete_token).main()
 
             elif command == "alltimestats" or command == "ytdstats":
-                greeting = "Hey %s! Give me a moment or two while I give your stats." % update.message.from_user.first_name
+                greeting = "Hey %s! Give me a moment or two while I give your stats." \
+                           % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
                 message = AthleteStats(bot, update, athlete_token, command).main()
 
             elif command == "funstats":
-                greeting = "Hey %s! Give me a minute or two while I give some of your fun stats." % update.message.from_user.first_name
+                greeting = "Hey %s! Give me a minute or two while I give some of your fun stats." \
+                           % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
                 message = FunStats(bot, update, athlete_token).main()
 

@@ -29,10 +29,6 @@ $ pip install python-telegram-bot
 $ pip install python-telegram-bot --upgrade
 ```
 
-## Contributing
-
-Please read [CONTRIBUTING.md](https://github.com/panchambharadwaj/strava-telegram-bot/blob/master/CODE_OF_CONDUCT.md) for details on our code of conduct, and the process for submitting pull requests to us.
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/panchambharadwaj/strava-telegram-bot/blob/master/LICENSE) file for details

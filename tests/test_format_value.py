@@ -3,7 +3,8 @@ from scripts.bot import FormatValue
 
 class FormatValueTests(unittest.TestCase):
 
-    format_value = FormatValue()
+    def setUp(self):
+        self.format_value = FormatValue()
 
     def test_meters_to_kilometers(self):
         meters_to_kilometers = self.format_value.meters_to_kilometers(757.5)

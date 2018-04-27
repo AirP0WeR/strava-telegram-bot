@@ -4,7 +4,8 @@ from scripts.bot import InitializeBot
 
 class InitializeBotTests(unittest.TestCase):
 
-    initialize_bot = InitializeBot()
+    def setUp(self):
+        self.initialize_bot = InitializeBot()
 
     def test_get_config(self):
 
