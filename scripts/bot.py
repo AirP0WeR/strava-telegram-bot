@@ -415,9 +415,11 @@ class StravaTelegramBot(object):
     def send_message(bot, update, message):
         bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-        if shadow_mode and (shadow_chat_id != update.message.chat_id):
+        if shadow_mode and (int(shadow_chat_id) != int(update.message.chat_id)):
             bot.send_message(chat_id=shadow_chat_id, text=message, parse_mode="Markdown", disable_notification=True,
                              disable_web_page_preview=True)
+        else:
+            logging.info("Chat ID & Shadow Chat ID are the same")
 
     @staticmethod
     def get_athlete_token(bot, update):

@@ -22,11 +22,14 @@ Create _config.json_ inside _scripts/_ in the below format:
 
 ### Prerequisites
 
-Install or upgrade python-telegram-bot with:
+1. pip
+2. requests
+3. python-telegram-bot
 
 ```
+$ apt-get install python-pip
+$ pip install requests
 $ pip install python-telegram-bot
-$ pip install python-telegram-bot --upgrade
 ```
 
 ## License
