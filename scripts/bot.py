@@ -142,7 +142,7 @@ class AthleteStats(StravaApi, FormatValue):
 
     def calculate_stats(self, athlete_activities, stats):
         for activity in athlete_activities:
-            if activity['type'] == 'Ride':
+            if (activity['type'] == 'Ride') and (activity['private'] != False) and (activity['flagged'] != False):
                 distance = float(activity['distance'])
                 if 50000.0 <= distance < 100000.0:
                     stats['fifties'] += 1
@@ -261,17 +261,11 @@ class FunStats(StravaApi, FormatValue):
     @staticmethod
     def calculate_stats(athlete_activities, stats):
         for activity in athlete_activities:
-            if activity['type'] == 'Ride':
+            if (activity['type'] == 'Ride') and (activity['private'] != False) and (activity['flagged'] != False):
 
                 stats['kudos'] += activity['kudos_count']
                 stats['achievement_count'] += activity['achievement_count']
                 stats['break_time'] += activity['elapsed_time'] - activity['moving_time']
-
-                if ('flagged' in activity) and (activity['flagged']):
-                    stats['flagged'] += 1
-
-                if ('private' in activity) and (activity['private']):
-                    stats['private'] += 1
 
                 if (activity['distance'] >= 70000.0) and ((activity['elapsed_time'] - activity['moving_time']) <= 900):
                     stats['non_stop'] += 1
@@ -307,6 +301,14 @@ class FunStats(StravaApi, FormatValue):
                 if activity['total_elevation_gain'] > stats['max_elevation_gain']:
                     stats['max_elevation_gain'] = activity['total_elevation_gain']
                     stats['max_elevation_gain_activity'] = activity['id']
+
+            elif activity['type'] == 'Ride':
+
+                if ('flagged' in activity) and (activity['flagged']):
+                    stats['flagged'] += 1
+
+                if ('private' in activity) and (activity['private']):
+                    stats['private'] += 1
 
         return stats
 
