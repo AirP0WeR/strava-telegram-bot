@@ -489,7 +489,7 @@ class StravaTelegramBot(object):
                 greeting = "Hey %s! Give me a moment while I update your latest activity to Walk." \
                            % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
-                message = UpdateActivity(bot, update, "Ride", athlete_token).main()
+                message = UpdateActivity(bot, update, "Walk", athlete_token).main()
 
         self.send_message(bot, update, message)
 
