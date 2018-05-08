@@ -99,6 +99,17 @@ class StravaApi(object):
         if response.status_code == 200:
             return response.json()
 
+    def get_lastest_activity(self):
+        response = requests.get("https://www.strava.com/api/v3/athlete/activities", data=[('per_page', '1')], headers=self.athlete_token)
+        if response.status_code == 200:
+            return response.json()[0]
+
+    def update_activity_type(self, activity_id, activity_type):
+        response = requests.put("https://www.strava.com/api/v3/activities/%s" % activity_id, data=[('type', activity_type)], headers=self.athlete_token)
+        if response.status_code == 200:
+            return True
+        else:
+            return False
 
 class FitWit(StravaApi, FormatValue):
 
@@ -405,6 +416,21 @@ class FunStats(StravaApi, FormatValue):
 
         return message
 
+class UpdateActivity(StravaApi):
+
+    def __init__(self, bot, update, activity_type, athlete_token):
+        logging.info("Initializing %s" % self.__class__.__name__)
+        self.bot = bot
+        self.update = update
+        self.activity_type = activity_type
+        StravaApi.__init__(self, athlete_token)
+
+    def main(self):
+        latest_activity = self.get_lastest_activity()
+        if self.update_activity_type(latest_activity['id'], self.activity_type):
+            return "Successfully updated your latest activity to Walk."
+        else:
+            return "Failed to update your latest activity to Walk."
 
 class StravaTelegramBot(object):
 
@@ -459,6 +485,12 @@ class StravaTelegramBot(object):
                 self.send_message(bot, update, greeting)
                 message = FunStats(bot, update, athlete_token).main()
 
+            elif command == "updatetowalk":
+                greeting = "Hey %s! Give me a moment while I update your latest activity to Walk." \
+                           % update.message.from_user.first_name
+                self.send_message(bot, update, greeting)
+                message = UpdateActivity(bot, update, "Ride", athlete_token).main()
+
         self.send_message(bot, update, message)
 
     def start(self, bot, update):
@@ -475,6 +507,9 @@ class StravaTelegramBot(object):
 
     def funstats(self, bot, update):
         self.handle_commands(bot, update, "funstats")
+
+    def updatetowalk(self, bot, update):
+        self.handle_commands(bot, update, "updatetowalk")
 
     @staticmethod
     def error(update, error):
@@ -497,6 +532,7 @@ class StravaTelegramBot(object):
         dispatcher_handler.add_handler(CommandHandler("alltimestats", self.alltimestats))
         dispatcher_handler.add_handler(CommandHandler("ytdstats", self.ytdstats))
         dispatcher_handler.add_handler(CommandHandler("funstats", self.funstats))
+        dispatcher_handler.add_handler(CommandHandler("updatetowalk", self.updatetowalk))
         dispatcher_handler.add_handler(
             CommandHandler('restart', restart, filters=Filters.user(username=admin_user_name)))
 
