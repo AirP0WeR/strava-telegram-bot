@@ -457,14 +457,14 @@ class StravaTelegramBot(object):
             return False
 
     def handle_commands(self, bot, update, command):
-        message = "Hi %s! You are not a registered user yet. Contact @panchambharadwaj for more details." \
-                  % update.message.from_user.first_name
+        message = "Hi %s! You are not a registered user yet. Contact %s for more details." \
+                  % (update.message.from_user.first_name, admin_user_name)
         athlete_token = self.get_athlete_token(bot, update)
         if athlete_token:
 
             if command == "start":
                 message = "Hey %s! I'm your Strava Bot. " \
-                          "Type '/' (backslash) to get the list of commands that I understand." \
+                          "Type '/' to get the list of commands that I understand." \
                           % update.message.from_user.first_name
 
             elif command == "fw":
