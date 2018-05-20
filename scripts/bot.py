@@ -267,7 +267,7 @@ class FunStats(StravaApi, FormatValue):
                 if message == "":
                     message += "%s (%s kms)" % (bike['name'], self.meters_to_kilometers(bike['distance']))
                 else:
-                    message += "\n\t\t\t\t\t\t\t\t\t\t\t\t %s (%s kms)" % (
+                    message += "\n\t\t\t\t\t\t\t\t\t\t\t\t\t %s (%s kms)" % (
                         bike['name'], self.meters_to_kilometers(bike['distance']))
         except KeyError, e:
             logging.info("Key error: %s" % e)
