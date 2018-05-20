@@ -157,7 +157,7 @@ class AthleteStats(StravaApi, FormatValue):
 
     def calculate_stats(self, athlete_activities, stats):
         for activity in athlete_activities:
-            if activity['type'] == 'Ride':
+            if activity['type'] == 'Ride' or activity['type'] == 'VirtualRide':
                 distance = float(activity['distance'])
                 if 50000.0 <= distance < 100000.0:
                     stats['fifties'] += 1
@@ -276,7 +276,7 @@ class FunStats(StravaApi, FormatValue):
     @staticmethod
     def calculate_stats(athlete_activities, stats):
         for activity in athlete_activities:
-            if activity['type'] == 'Ride':
+            if activity['type'] == 'Ride' or activity['type'] == 'VirtualRide':
 
                 stats['kudos'] += activity['kudos_count']
                 stats['achievement_count'] += activity['achievement_count']
