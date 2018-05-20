@@ -21,7 +21,7 @@ class InitializeBot(object):
     @staticmethod
     def get_config():
 
-        get_telegram_token = None
+        get_telegram_token = get_shadow_chat_id = None
 
         config_path = os.path.dirname(os.path.abspath(__file__))
         config_file = os.path.join(config_path, 'config.json')
@@ -34,9 +34,10 @@ class InitializeBot(object):
         elif environment == "DEV":
             get_telegram_token = config['DEV_TELEGRAM_BOT_TOKEN']
         get_athletes = config['ATHLETES']
-        get_shadow_chat_id = int(config['SHADOW_MODE_CHAT_ID'])
         get_admin_user_name = config['ADMIN_USER_NAME']
         get_shadow_mode = config['SHADOW_MODE']
+        if get_shadow_mode:
+            get_shadow_chat_id = int(config['SHADOW_MODE_CHAT_ID'])
 
         return get_telegram_token, get_athletes, get_shadow_chat_id, get_admin_user_name, get_shadow_mode
 
@@ -100,16 +101,19 @@ class StravaApi(object):
             return response.json()
 
     def get_lastest_activity(self):
-        response = requests.get("https://www.strava.com/api/v3/athlete/activities", data=[('per_page', '1')], headers=self.athlete_token)
+        response = requests.get("https://www.strava.com/api/v3/athlete/activities", data=[('per_page', '1')],
+                                headers=self.athlete_token)
         if response.status_code == 200:
             return response.json()[0]
 
     def update_activity_type(self, activity_id, activity_type):
-        response = requests.put("https://www.strava.com/api/v3/activities/%s" % activity_id, data=[('type', activity_type)], headers=self.athlete_token)
+        response = requests.put("https://www.strava.com/api/v3/activities/%s" % activity_id,
+                                data=[('type', activity_type)], headers=self.athlete_token)
         if response.status_code == 200:
             return True
         else:
             return False
+
 
 class FitWit(StravaApi, FormatValue):
 
@@ -416,6 +420,7 @@ class FunStats(StravaApi, FormatValue):
 
         return message
 
+
 class UpdateActivity(StravaApi):
 
     def __init__(self, bot, update, activity_type, athlete_token):
@@ -431,6 +436,7 @@ class UpdateActivity(StravaApi):
             return "Successfully updated your latest activity to Walk."
         else:
             return "Failed to update your latest activity to Walk."
+
 
 class StravaTelegramBot(object):
 
