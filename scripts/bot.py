@@ -76,6 +76,21 @@ class FormatValue(object):
         return float((Decimal(speed * 3.6)).quantize(Decimal('.1'), rounding=ROUND_DOWN))
 
 
+class Common(object):
+    def __init__(self):
+        logging.info("Initializing %s" % self.__class__.__name__)
+
+    @staticmethod
+    def is_flagged_or_private(activity):
+        if ('flagged' in activity) and (activity['flagged']):
+            return True
+
+        if ('private' in activity) and (activity['private']):
+            return True
+
+        return False
+
+
 class StravaApi(object):
 
     def __init__(self, athlete_token):
@@ -146,7 +161,7 @@ class FitWit(StravaApi, FormatValue):
         return message
 
 
-class AthleteStats(StravaApi, FormatValue):
+class AthleteStats(StravaApi, FormatValue, Common):
 
     def __init__(self, bot, update, athlete_token, command):
         logging.info("Initializing %s" % self.__class__.__name__)
@@ -157,26 +172,28 @@ class AthleteStats(StravaApi, FormatValue):
 
     def calculate_stats(self, athlete_activities, stats):
         for activity in athlete_activities:
-            if activity['type'] == 'Ride' or activity['type'] == 'VirtualRide':
-                distance = float(activity['distance'])
-                if 50000.0 <= distance < 100000.0:
-                    stats['fifties'] += 1
-                elif 100000.0 <= distance < 150000.0:
-                    stats['hundreds'] += 1
-                elif 150000.0 < distance < 200000.0:
-                    stats['one_hundred_fifties'] += 1
-                    stats['hundreds'] += 1
-                elif distance > 200000.0:
-                    stats['two_hundreds'] += 1
-                    stats['hundreds'] += 1
+            if not self.is_flagged_or_private(activity):
+                if activity['type'] == 'Ride' or activity['type'] == 'VirtualRide':
 
-                if activity['trainer']:
-                    stats['indoor_distance'] += self.meters_to_kilometers(activity['distance'])
-                    stats['indoor_time'] += activity['moving_time']
-                    stats['indoor_rides'] += 1
+                    distance = float(activity['distance'])
+                    if 50000.0 <= distance < 100000.0:
+                        stats['fifties'] += 1
+                    elif 100000.0 <= distance < 150000.0:
+                        stats['hundreds'] += 1
+                    elif 150000.0 < distance < 200000.0:
+                        stats['one_hundred_fifties'] += 1
+                        stats['hundreds'] += 1
+                    elif distance > 200000.0:
+                        stats['two_hundreds'] += 1
+                        stats['hundreds'] += 1
 
-                if 'kilojoules' in activity:
-                    stats['kilojoules'] += activity['kilojoules']
+                    if activity['trainer']:
+                        stats['indoor_distance'] += self.meters_to_kilometers(activity['distance'])
+                        stats['indoor_time'] += activity['moving_time']
+                        stats['indoor_rides'] += 1
+
+                    if 'kilojoules' in activity:
+                        stats['kilojoules'] += activity['kilojoules']
 
         return stats
 
@@ -252,7 +269,7 @@ class AthleteStats(StravaApi, FormatValue):
         return message
 
 
-class FunStats(StravaApi, FormatValue):
+class FunStats(StravaApi, FormatValue, Common):
 
     def __init__(self, bot, update, athlete_token):
         logging.info("Initializing %s" % self.__class__.__name__)
@@ -273,55 +290,58 @@ class FunStats(StravaApi, FormatValue):
             logging.info("Key error: %s" % e)
         return message
 
-    @staticmethod
-    def calculate_stats(athlete_activities, stats):
+    def calculate_stats(self, athlete_activities, stats):
         for activity in athlete_activities:
-            if activity['type'] == 'Ride' or activity['type'] == 'VirtualRide':
+            if not self.is_flagged_or_private(activity):
+                if activity['type'] == 'Ride' or activity['type'] == 'VirtualRide':
 
-                stats['kudos'] += activity['kudos_count']
-                stats['achievement_count'] += activity['achievement_count']
-                stats['break_time'] += activity['elapsed_time'] - activity['moving_time']
+                    stats['kudos'] += activity['kudos_count']
+                    stats['achievement_count'] += activity['achievement_count']
+                    stats['break_time'] += activity['elapsed_time'] - activity['moving_time']
+
+                    if (activity['distance'] >= 70000.0) and (
+                            (activity['elapsed_time'] - activity['moving_time']) <= 900):
+                        stats['non_stop'] += 1
+
+                    if activity['max_speed'] > stats['max_speed']:
+                        stats['max_speed'] = activity['max_speed']
+                        stats['max_speed_activity'] = activity['id']
+
+                    if activity['average_speed'] > stats['max_avg_speed']:
+                        stats['max_avg_speed'] = activity['average_speed']
+                        stats['max_avg_speed_activity'] = activity['id']
+
+                    if ('average_watts' in activity) and (activity['device_watts']):
+                        if activity['average_watts'] > stats['average_watts']:
+                            stats['average_watts'] = activity['average_watts']
+                            stats['average_watts_activity'] = activity['id']
+                        if activity['max_watts'] > stats['max_watts']:
+                            stats['max_watts'] = activity['max_watts']
+                            stats['max_watts_activity'] = activity['id']
+
+                    if (activity['has_heartrate']) and (activity['max_heartrate'] > stats['max_heart_rate']):
+                        stats['max_heart_rate'] = activity['max_heartrate']
+                        stats['max_heart_rate_activity'] = activity['id']
+
+                    if ('average_cadence' in activity) and (activity['average_cadence'] > stats['average_cadence']):
+                        stats['average_cadence'] = activity['average_cadence']
+                        stats['average_cadence_activity'] = activity['id']
+
+                    if activity['distance'] > stats['biggest_ride']:
+                        stats['biggest_ride'] = activity['distance']
+                        stats['biggest_ride_activity'] = activity['id']
+
+                    if activity['total_elevation_gain'] > stats['max_elevation_gain']:
+                        stats['max_elevation_gain'] = activity['total_elevation_gain']
+                        stats['max_elevation_gain_activity'] = activity['id']
+
+            elif activity['type'] == 'Ride' or activity['type'] == 'VirtualRide':
 
                 if ('flagged' in activity) and (activity['flagged']):
                     stats['flagged'] += 1
 
                 if ('private' in activity) and (activity['private']):
                     stats['private'] += 1
-
-                if (activity['distance'] >= 70000.0) and ((activity['elapsed_time'] - activity['moving_time']) <= 900):
-                    stats['non_stop'] += 1
-
-                if activity['max_speed'] > stats['max_speed']:
-                    stats['max_speed'] = activity['max_speed']
-                    stats['max_speed_activity'] = activity['id']
-
-                if activity['average_speed'] > stats['max_avg_speed']:
-                    stats['max_avg_speed'] = activity['average_speed']
-                    stats['max_avg_speed_activity'] = activity['id']
-
-                if ('average_watts' in activity) and (activity['device_watts']):
-                    if activity['average_watts'] > stats['average_watts']:
-                        stats['average_watts'] = activity['average_watts']
-                        stats['average_watts_activity'] = activity['id']
-                    if activity['max_watts'] > stats['max_watts']:
-                        stats['max_watts'] = activity['max_watts']
-                        stats['max_watts_activity'] = activity['id']
-
-                if (activity['has_heartrate']) and (activity['max_heartrate'] > stats['max_heart_rate']):
-                    stats['max_heart_rate'] = activity['max_heartrate']
-                    stats['max_heart_rate_activity'] = activity['id']
-
-                if ('average_cadence' in activity) and (activity['average_cadence'] > stats['average_cadence']):
-                    stats['average_cadence'] = activity['average_cadence']
-                    stats['average_cadence_activity'] = activity['id']
-
-                if activity['distance'] > stats['biggest_ride']:
-                    stats['biggest_ride'] = activity['distance']
-                    stats['biggest_ride_activity'] = activity['id']
-
-                if activity['total_elevation_gain'] > stats['max_elevation_gain']:
-                    stats['max_elevation_gain'] = activity['total_elevation_gain']
-                    stats['max_elevation_gain_activity'] = activity['id']
 
         return stats
 
