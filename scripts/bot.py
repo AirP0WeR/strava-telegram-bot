@@ -132,37 +132,6 @@ class StravaApi(object):
             return False
 
 
-class FitWit(StravaApi, FormatValue):
-
-    def __init__(self, bot, update, athlete_token):
-        logging.info("Initializing %s" % self.__class__.__name__)
-        self.bot = bot
-        self.update = update
-        StravaApi.__init__(self, athlete_token)
-
-    @staticmethod
-    def get_activity_type(activity_type):
-        if activity_type == "Ride":
-            return "C"
-        else:
-            return type
-
-    def main(self):
-        latest_activity = self.get_athlete_activities("1", "1")[0]
-        message = "%s, %s, %s, %s" % (self.get_activity_type(latest_activity['type']),
-                                      self.meters_to_kilometers(latest_activity['distance']),
-                                      self.seconds_to_minutes(latest_activity['moving_time']),
-                                      self.remove_decimal_point(latest_activity['kilojoules']))
-
-        if latest_activity['has_heartrate']:
-            message += "\nHR, %s, %s" % (self.remove_decimal_point(latest_activity['average_heartrate']),
-                                         self.remove_decimal_point(latest_activity['max_heartrate']))
-
-        message += "\n\nhttps://www.strava.com/activities/%s" % latest_activity['id']
-
-        return message
-
-
 class AthleteStats(StravaApi, FormatValue, Common):
 
     def __init__(self, bot, update, athlete_token, command):
@@ -548,12 +517,6 @@ class StravaTelegramBot(object):
                           "Type '/' to get the list of commands that I understand." \
                           % update.message.from_user.first_name
 
-            elif command == "fw":
-                greeting = "Hey %s! Give me a moment or two while I give your latest Strava activity in " \
-                           "FitWit postable format." % update.message.from_user.first_name
-                self.send_message(bot, update, greeting)
-                message = FitWit(bot, update, athlete_token).main()
-
             elif command == "stats":
                 greeting = "Hey %s! Give me a moment or two while I give your stats." \
                            % update.message.from_user.first_name
@@ -576,9 +539,6 @@ class StravaTelegramBot(object):
 
     def start(self, bot, update):
         self.handle_commands(bot, update, "start")
-
-    def fw(self, bot, update):
-        self.handle_commands(bot, update, "fw")
 
     def stats(self, bot, update):
         self.handle_commands(bot, update, "stats")
@@ -606,7 +566,6 @@ class StravaTelegramBot(object):
             Thread(target=stop_and_restart).start()
 
         dispatcher_handler.add_handler(CommandHandler("start", self.start))
-        dispatcher_handler.add_handler(CommandHandler("fw", self.fw))
         dispatcher_handler.add_handler(CommandHandler("stats", self.stats))
         dispatcher_handler.add_handler(CommandHandler("funstats", self.funstats))
         dispatcher_handler.add_handler(CommandHandler("updatetowalk", self.updatetowalk))
