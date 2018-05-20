@@ -5,9 +5,11 @@ import logging
 import os
 import sys
 import time
+from datetime import date
 from decimal import Decimal, ROUND_DOWN
 from threading import Thread
 
+import dateutil.parser
 import requests
 import telegram
 from telegram.ext import Updater, CommandHandler, Filters
@@ -68,8 +70,8 @@ class FormatValue(object):
         return str(datetime.timedelta(seconds=time_in_seconds))
 
     @staticmethod
-    def date_to_human_readable(date):
-        return time.strftime("%d/%m/%Y", time.strptime(date[:19], "%Y-%m-%dT%H:%M:%S"))
+    def date_to_human_readable(activity_date):
+        return time.strftime("%d/%m/%Y", time.strptime(activity_date[:19], "%Y-%m-%dT%H:%M:%S"))
 
     @staticmethod
     def meters_per_second_to_kilometers(speed):
@@ -170,35 +172,71 @@ class AthleteStats(StravaApi, FormatValue, Common):
         self.command = command
         StravaApi.__init__(self, athlete_token)
 
-    def calculate_stats(self, athlete_activities, stats):
+    def calculate_stats(self, current_year, athlete_activities, all_time_stats, ytd_stats):
         for activity in athlete_activities:
             if not self.is_flagged_or_private(activity):
                 if activity['type'] == 'Ride' or activity['type'] == 'VirtualRide':
 
+                    activity_year = int((dateutil.parser.parse(activity['start_date_local'])).strftime('%Y'))
+
+                    if activity_year == current_year:
+                        ytd_stats['rides'] += 1
+                    all_time_stats['rides'] += 1
+
+                    if activity_year == current_year:
+                        ytd_stats['moving_time'] += activity['moving_time']
+                    all_time_stats['moving_time'] += activity['moving_time']
+
+                    if activity_year == current_year:
+                        ytd_stats['elevation_gain'] += activity['total_elevation_gain']
+                    all_time_stats['elevation_gain'] += activity['total_elevation_gain']
+
                     distance = float(activity['distance'])
+
+                    if activity_year == current_year:
+                        ytd_stats['distance'] += distance
+                    all_time_stats['distance'] += distance
+
                     if 50000.0 <= distance < 100000.0:
-                        stats['fifties'] += 1
+                        if activity_year == current_year:
+                            ytd_stats['fifties'] += 1
+                        all_time_stats['fifties'] += 1
                     elif 100000.0 <= distance < 150000.0:
-                        stats['hundreds'] += 1
+                        if activity_year == current_year:
+                            ytd_stats['hundreds'] += 1
+                        all_time_stats['hundreds'] += 1
                     elif 150000.0 < distance < 200000.0:
-                        stats['one_hundred_fifties'] += 1
-                        stats['hundreds'] += 1
+                        if activity_year == current_year:
+                            ytd_stats['one_hundred_fifties'] += 1
+                            ytd_stats['hundreds'] += 1
+                        all_time_stats['one_hundred_fifties'] += 1
+                        all_time_stats['hundreds'] += 1
                     elif distance > 200000.0:
-                        stats['two_hundreds'] += 1
-                        stats['hundreds'] += 1
+                        if activity_year == current_year:
+                            ytd_stats['two_hundreds'] += 1
+                            ytd_stats['hundreds'] += 1
+                        all_time_stats['two_hundreds'] += 1
+                        all_time_stats['hundreds'] += 1
 
                     if activity['trainer']:
-                        stats['indoor_distance'] += self.meters_to_kilometers(activity['distance'])
-                        stats['indoor_time'] += activity['moving_time']
-                        stats['indoor_rides'] += 1
+                        if activity_year == current_year:
+                            ytd_stats['indoor_distance'] += self.meters_to_kilometers(activity['distance'])
+                            ytd_stats['indoor_time'] += activity['moving_time']
+                            ytd_stats['indoor_rides'] += 1
+                        all_time_stats['indoor_distance'] += self.meters_to_kilometers(activity['distance'])
+                        all_time_stats['indoor_time'] += activity['moving_time']
+                        all_time_stats['indoor_rides'] += 1
 
                     if 'kilojoules' in activity:
-                        stats['kilojoules'] += activity['kilojoules']
+                        if activity_year == current_year:
+                            ytd_stats['kilojoules'] += activity['kilojoules']
+                        all_time_stats['kilojoules'] += activity['kilojoules']
 
-        return stats
+        return all_time_stats, ytd_stats
 
-    def get_stats(self, period):
-        stats = {
+    def get_stats(self, current_year):
+
+        all_time_stats = {
             'rides': 0,
             'indoor_rides': 0,
             'distance': 0,
@@ -213,58 +251,74 @@ class AthleteStats(StravaApi, FormatValue, Common):
             'two_hundreds': 0
         }
 
-        athlete_info = self.get_athlete_info()
-        athlete_stats = self.get_athlete_stats(athlete_info['id'])
+        ytd_stats = {
+            'rides': 0,
+            'indoor_rides': 0,
+            'distance': 0,
+            'indoor_distance': 0,
+            'moving_time': 0,
+            'indoor_time': 0,
+            'elevation_gain': 0,
+            'kilojoules': 0.0,
+            'fifties': 0,
+            'hundreds': 0,
+            'one_hundred_fifties': 0,
+            'two_hundreds': 0
+        }
 
-        stats['rides'] = athlete_stats[period]['count']
-        stats['distance'] = self.meters_to_kilometers(athlete_stats[period]['distance'])
-        stats['moving_time'] = self.seconds_to_human_readable(athlete_stats[period]['moving_time'])
-        stats['elevation_gain'] = self.meters_to_kilometers(athlete_stats[period]['elevation_gain'])
+        page = 1
+        while page:
+            athlete_activities = self.get_athlete_activities("200", page)
+            if len(athlete_activities) == 0:
+                break
+            all_time_stats, ytd_stats = self.calculate_stats(current_year, athlete_activities, all_time_stats, ytd_stats)
+            page += 1
 
-        rides_count = athlete_stats[period]['count']
-        if rides_count < 200:
-            athlete_activities = self.get_athlete_activities(rides_count, "1")
-            stats = self.calculate_stats(athlete_activities, stats)
-        else:
-            page = 1
-            while page:
-                athlete_activities = self.get_athlete_activities("200", page)
-                if len(athlete_activities) == 0:
-                    break
-                stats = self.calculate_stats(athlete_activities, stats)
-                page += 1
-
-        return stats
+        return all_time_stats, ytd_stats
 
     def main(self):
-        period = message = None
-        if self.command == "alltimestats":
-            message = "*All Time Stats:*\n\n"
-            period = "all_ride_totals"
-        elif self.command == "ytdstats":
-            message = "*Year to Date Stats:*\n\n"
-            period = "ytd_ride_totals"
 
-        stats = self.get_stats(period)
-        message += "- _Rides_: %s (Includes %s Indoors)\n" \
+        all_time_stats, ytd_stats = self.get_stats(date.today().year)
+        message = "*All Time Stats:*\n\n" \
+                   "- _Rides_: %s (Includes %s Indoors)\n" \
+                   "- _Distance_: %s kms (Includes %s kms of Indoors)\n" \
+                   "- _Moving Time_: %s hours (Includes %s hours of Indoors)\n" \
+                   "- _Elevation Gain_: %s kms\n" \
+                   "- _Calories_: %s\n" \
+                   "- _50's_: %s\n" \
+                   "- _100's_: %s (Includes %s _150's_ & %s _200's_)\n\n" \
+                   "*Year to Date Stats:*\n\n" \
+                   "- _Rides_: %s (Includes %s Indoors)\n" \
                    "- _Distance_: %s kms (Includes %s kms of Indoors)\n" \
                    "- _Moving Time_: %s hours (Includes %s hours of Indoors)\n" \
                    "- _Elevation Gain_: %s kms\n" \
                    "- _Calories_: %s\n" \
                    "- _50's_: %s\n" \
                    "- _100's_: %s (Includes %s _150's_ & %s _200's_)" % \
-                   (stats['rides'],
-                    stats['indoor_rides'],
-                    stats['distance'],
-                    stats['indoor_distance'],
-                    stats['moving_time'],
-                    self.seconds_to_human_readable(stats['indoor_time']),
-                    stats['elevation_gain'],
-                    stats['kilojoules'],
-                    stats['fifties'],
-                    stats['hundreds'],
-                    stats['one_hundred_fifties'],
-                    stats['two_hundreds'])
+                   (all_time_stats['rides'],
+                    all_time_stats['indoor_rides'],
+                    self.meters_to_kilometers(all_time_stats['distance']),
+                    all_time_stats['indoor_distance'],
+                    self.seconds_to_human_readable(all_time_stats['moving_time']),
+                    self.seconds_to_human_readable(all_time_stats['indoor_time']),
+                    self.meters_to_kilometers(all_time_stats['elevation_gain']),
+                    all_time_stats['kilojoules'],
+                    all_time_stats['fifties'],
+                    all_time_stats['hundreds'],
+                    all_time_stats['one_hundred_fifties'],
+                    all_time_stats['two_hundreds'],
+                    ytd_stats['rides'],
+                    ytd_stats['indoor_rides'],
+                    self.meters_to_kilometers(ytd_stats['distance']),
+                    ytd_stats['indoor_distance'],
+                    self.seconds_to_human_readable(ytd_stats['moving_time']),
+                    self.seconds_to_human_readable(ytd_stats['indoor_time']),
+                    self.meters_to_kilometers(ytd_stats['elevation_gain']),
+                    ytd_stats['kilojoules'],
+                    ytd_stats['fifties'],
+                    ytd_stats['hundreds'],
+                    ytd_stats['one_hundred_fifties'],
+                    ytd_stats['two_hundreds'])
 
         return message
 
@@ -500,14 +554,14 @@ class StravaTelegramBot(object):
                 self.send_message(bot, update, greeting)
                 message = FitWit(bot, update, athlete_token).main()
 
-            elif command == "alltimestats" or command == "ytdstats":
+            elif command == "stats":
                 greeting = "Hey %s! Give me a moment or two while I give your stats." \
                            % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
                 message = AthleteStats(bot, update, athlete_token, command).main()
 
             elif command == "funstats":
-                greeting = "Hey %s! Give me a minute or two while I give some of your fun stats." \
+                greeting = "Hey %s! Give me a moment or two while I give some of your fun stats." \
                            % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
                 message = FunStats(bot, update, athlete_token).main()
@@ -526,11 +580,8 @@ class StravaTelegramBot(object):
     def fw(self, bot, update):
         self.handle_commands(bot, update, "fw")
 
-    def alltimestats(self, bot, update):
-        self.handle_commands(bot, update, "alltimestats")
-
-    def ytdstats(self, bot, update):
-        self.handle_commands(bot, update, "ytdstats")
+    def stats(self, bot, update):
+        self.handle_commands(bot, update, "stats")
 
     def funstats(self, bot, update):
         self.handle_commands(bot, update, "funstats")
@@ -556,8 +607,7 @@ class StravaTelegramBot(object):
 
         dispatcher_handler.add_handler(CommandHandler("start", self.start))
         dispatcher_handler.add_handler(CommandHandler("fw", self.fw))
-        dispatcher_handler.add_handler(CommandHandler("alltimestats", self.alltimestats))
-        dispatcher_handler.add_handler(CommandHandler("ytdstats", self.ytdstats))
+        dispatcher_handler.add_handler(CommandHandler("stats", self.stats))
         dispatcher_handler.add_handler(CommandHandler("funstats", self.funstats))
         dispatcher_handler.add_handler(CommandHandler("updatetowalk", self.updatetowalk))
         dispatcher_handler.add_handler(
