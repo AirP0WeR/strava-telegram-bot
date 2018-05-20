@@ -391,8 +391,7 @@ class FunStats(StravaApi, FormatValue):
                   "- _Kudos Received_: %s\n" \
                   "- _Total Achievements_: %s\n" \
                   "- _Private Rides_: %s\n" \
-                  "- _Flagged Rides_: %s\n" \
-                  "- _Bikes_: %s" % \
+                  "- _Flagged Rides_: %s\n" % \
                   (strava_activity_hyperlink % (stats['max_watts'], 'watts', stats['max_watts_activity']),
                    strava_activity_hyperlink % (stats['average_watts'], 'watts', stats['average_watts_activity']),
                    strava_activity_hyperlink % (
@@ -415,8 +414,10 @@ class FunStats(StravaApi, FormatValue):
                    stats['kudos'],
                    stats['achievement_count'],
                    stats['private'],
-                   stats['flagged'],
-                   stats['bikes'])
+                   stats['flagged'])
+
+        if stats['bikes'] != "":
+            message += "- _Bikes_: %s" % stats['bikes']
 
         return message
 
