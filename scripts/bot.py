@@ -141,20 +141,7 @@ class AthleteStats(StravaApi, FormatValue, Common):
         self.command = command
         StravaApi.__init__(self, athlete_token)
 
-    def get_bikes_info(self, athlete_info):
-        message = ""
-        try:
-            for bike in athlete_info['bikes']:
-                if message == "":
-                    message += "%s (%s kms)" % (bike['name'], self.meters_to_kilometers(bike['distance']))
-                else:
-                    message += "\n\t\t\t\t\t\t\t\t\t\t\t\t\t %s (%s kms)" % (
-                        bike['name'], self.meters_to_kilometers(bike['distance']))
-        except KeyError, e:
-            logging.info("Key error: %s" % e)
-        return message
-
-    def calculate_stats(self, current_year, athlete_activities, all_time_stats, ytd_stats, fun_stats):
+    def calculate_stats(self, current_year, athlete_activities, all_time_stats, ytd_stats):
         for activity in athlete_activities:
             if not self.is_flagged_or_private(activity):
                 if activity['type'] == 'Ride' or activity['type'] == 'VirtualRide':
@@ -214,55 +201,7 @@ class AthleteStats(StravaApi, FormatValue, Common):
                             ytd_stats['kilojoules'] += activity['kilojoules']
                         all_time_stats['kilojoules'] += activity['kilojoules']
 
-                    fun_stats['kudos'] += activity['kudos_count']
-                    fun_stats['achievement_count'] += activity['achievement_count']
-                    fun_stats['break_time'] += activity['elapsed_time'] - activity['moving_time']
-
-                    if (activity['distance'] >= 70000.0) and (
-                            (activity['elapsed_time'] - activity['moving_time']) <= 900):
-                        fun_stats['non_stop'] += 1
-
-                    if activity['max_speed'] > fun_stats['max_speed']:
-                        fun_stats['max_speed'] = activity['max_speed']
-                        fun_stats['max_speed_activity'] = activity['id']
-
-                    if activity['average_speed'] > fun_stats['max_avg_speed']:
-                        fun_stats['max_avg_speed'] = activity['average_speed']
-                        fun_stats['max_avg_speed_activity'] = activity['id']
-
-                    if ('average_watts' in activity) and (activity['device_watts']):
-                        if activity['average_watts'] > fun_stats['average_watts']:
-                            fun_stats['average_watts'] = activity['average_watts']
-                            fun_stats['average_watts_activity'] = activity['id']
-                        if activity['max_watts'] > fun_stats['max_watts']:
-                            fun_stats['max_watts'] = activity['max_watts']
-                            fun_stats['max_watts_activity'] = activity['id']
-
-                    if (activity['has_heartrate']) and (activity['max_heartrate'] > fun_stats['max_heart_rate']):
-                        fun_stats['max_heart_rate'] = activity['max_heartrate']
-                        fun_stats['max_heart_rate_activity'] = activity['id']
-
-                    if ('average_cadence' in activity) and (activity['average_cadence'] > fun_stats['average_cadence']):
-                        fun_stats['average_cadence'] = activity['average_cadence']
-                        fun_stats['average_cadence_activity'] = activity['id']
-
-                    if activity['distance'] > fun_stats['biggest_ride']:
-                        fun_stats['biggest_ride'] = activity['distance']
-                        fun_stats['biggest_ride_activity'] = activity['id']
-
-                    if activity['total_elevation_gain'] > fun_stats['max_elevation_gain']:
-                        fun_stats['max_elevation_gain'] = activity['total_elevation_gain']
-                        fun_stats['max_elevation_gain_activity'] = activity['id']
-
-            elif activity['type'] == 'Ride' or activity['type'] == 'VirtualRide':
-
-                if ('flagged' in activity) and (activity['flagged']):
-                    fun_stats['flagged'] += 1
-
-                if ('private' in activity) and (activity['private']):
-                    fun_stats['private'] += 1
-
-        return all_time_stats, ytd_stats, fun_stats
+        return all_time_stats, ytd_stats
 
     def get_stats(self, current_year):
 
@@ -296,7 +235,141 @@ class AthleteStats(StravaApi, FormatValue, Common):
             'two_hundreds': 0
         }
 
-        fun_stats = {
+        page = 1
+        while page:
+            athlete_activities = self.get_athlete_activities("200", page)
+            if len(athlete_activities) == 0:
+                break
+            all_time_stats, ytd_stats = self.calculate_stats(current_year, athlete_activities, all_time_stats, ytd_stats)
+            page += 1
+
+        return all_time_stats, ytd_stats
+
+    def main(self):
+
+        all_time_stats, ytd_stats = self.get_stats(date.today().year)
+        message = "*All Time Stats:*\n\n" \
+                   "- _Rides_: %s (Includes %s Indoors)\n" \
+                   "- _Distance_: %s kms (Includes %s kms of Indoors)\n" \
+                   "- _Moving Time_: %s hours (Includes %s hours of Indoors)\n" \
+                   "- _Elevation Gain_: %s kms\n" \
+                   "- _Calories_: %s\n" \
+                   "- _50's_: %s\n" \
+                   "- _100's_: %s (Includes %s _150's_ & %s _200's_)\n\n" \
+                   "*Year to Date Stats:*\n\n" \
+                   "- _Rides_: %s (Includes %s Indoors)\n" \
+                   "- _Distance_: %s kms (Includes %s kms of Indoors)\n" \
+                   "- _Moving Time_: %s hours (Includes %s hours of Indoors)\n" \
+                   "- _Elevation Gain_: %s kms\n" \
+                   "- _Calories_: %s\n" \
+                   "- _50's_: %s\n" \
+                   "- _100's_: %s (Includes %s _150's_ & %s _200's_)" % \
+                   (all_time_stats['rides'],
+                    all_time_stats['indoor_rides'],
+                    self.meters_to_kilometers(all_time_stats['distance']),
+                    all_time_stats['indoor_distance'],
+                    self.seconds_to_human_readable(all_time_stats['moving_time']),
+                    self.seconds_to_human_readable(all_time_stats['indoor_time']),
+                    self.meters_to_kilometers(all_time_stats['elevation_gain']),
+                    all_time_stats['kilojoules'],
+                    all_time_stats['fifties'],
+                    all_time_stats['hundreds'],
+                    all_time_stats['one_hundred_fifties'],
+                    all_time_stats['two_hundreds'],
+                    ytd_stats['rides'],
+                    ytd_stats['indoor_rides'],
+                    self.meters_to_kilometers(ytd_stats['distance']),
+                    ytd_stats['indoor_distance'],
+                    self.seconds_to_human_readable(ytd_stats['moving_time']),
+                    self.seconds_to_human_readable(ytd_stats['indoor_time']),
+                    self.meters_to_kilometers(ytd_stats['elevation_gain']),
+                    ytd_stats['kilojoules'],
+                    ytd_stats['fifties'],
+                    ytd_stats['hundreds'],
+                    ytd_stats['one_hundred_fifties'],
+                    ytd_stats['two_hundreds'])
+
+        return message
+
+
+class FunStats(StravaApi, FormatValue, Common):
+
+    def __init__(self, bot, update, athlete_token):
+        logging.info("Initializing %s" % self.__class__.__name__)
+        self.bot = bot
+        self.update = update
+        StravaApi.__init__(self, athlete_token)
+
+    def get_bikes_info(self, athlete_info):
+        message = ""
+        try:
+            for bike in athlete_info['bikes']:
+                if message == "":
+                    message += "%s (%s kms)" % (bike['name'], self.meters_to_kilometers(bike['distance']))
+                else:
+                    message += "\n\t\t\t\t\t\t\t\t\t\t\t\t\t %s (%s kms)" % (
+                        bike['name'], self.meters_to_kilometers(bike['distance']))
+        except KeyError, e:
+            logging.info("Key error: %s" % e)
+        return message
+
+    def calculate_stats(self, athlete_activities, stats):
+        for activity in athlete_activities:
+            if not self.is_flagged_or_private(activity):
+                if activity['type'] == 'Ride' or activity['type'] == 'VirtualRide':
+
+                    stats['kudos'] += activity['kudos_count']
+                    stats['achievement_count'] += activity['achievement_count']
+                    stats['break_time'] += activity['elapsed_time'] - activity['moving_time']
+
+                    if (activity['distance'] >= 70000.0) and (
+                            (activity['elapsed_time'] - activity['moving_time']) <= 900):
+                        stats['non_stop'] += 1
+
+                    if activity['max_speed'] > stats['max_speed']:
+                        stats['max_speed'] = activity['max_speed']
+                        stats['max_speed_activity'] = activity['id']
+
+                    if activity['average_speed'] > stats['max_avg_speed']:
+                        stats['max_avg_speed'] = activity['average_speed']
+                        stats['max_avg_speed_activity'] = activity['id']
+
+                    if ('average_watts' in activity) and (activity['device_watts']):
+                        if activity['average_watts'] > stats['average_watts']:
+                            stats['average_watts'] = activity['average_watts']
+                            stats['average_watts_activity'] = activity['id']
+                        if activity['max_watts'] > stats['max_watts']:
+                            stats['max_watts'] = activity['max_watts']
+                            stats['max_watts_activity'] = activity['id']
+
+                    if (activity['has_heartrate']) and (activity['max_heartrate'] > stats['max_heart_rate']):
+                        stats['max_heart_rate'] = activity['max_heartrate']
+                        stats['max_heart_rate_activity'] = activity['id']
+
+                    if ('average_cadence' in activity) and (activity['average_cadence'] > stats['average_cadence']):
+                        stats['average_cadence'] = activity['average_cadence']
+                        stats['average_cadence_activity'] = activity['id']
+
+                    if activity['distance'] > stats['biggest_ride']:
+                        stats['biggest_ride'] = activity['distance']
+                        stats['biggest_ride_activity'] = activity['id']
+
+                    if activity['total_elevation_gain'] > stats['max_elevation_gain']:
+                        stats['max_elevation_gain'] = activity['total_elevation_gain']
+                        stats['max_elevation_gain_activity'] = activity['id']
+
+            elif activity['type'] == 'Ride' or activity['type'] == 'VirtualRide':
+
+                if ('flagged' in activity) and (activity['flagged']):
+                    stats['flagged'] += 1
+
+                if ('private' in activity) and (activity['private']):
+                    stats['private'] += 1
+
+        return stats
+
+    def get_stats(self):
+        stats = {
             'biggest_ride': 0,
             'biggest_ride_activity': '',
             'max_elevation_gain': 0,
@@ -327,42 +400,24 @@ class AthleteStats(StravaApi, FormatValue, Common):
 
         athlete_info = self.get_athlete_info()
 
-        fun_stats['following'] = athlete_info['friend_count']
-        fun_stats['followers'] = athlete_info['follower_count']
-        fun_stats['strava_created'] = self.date_to_human_readable(athlete_info['created_at'])
-        fun_stats['bikes'] = self.get_bikes_info(athlete_info)
+        stats['following'] = athlete_info['friend_count']
+        stats['followers'] = athlete_info['follower_count']
+        stats['strava_created'] = self.date_to_human_readable(athlete_info['created_at'])
+        stats['bikes'] = self.get_bikes_info(athlete_info)
 
         page = 1
         while page:
             athlete_activities = self.get_athlete_activities("200", page)
             if len(athlete_activities) == 0:
                 break
-            all_time_stats, ytd_stats, fun_stats = self.calculate_stats(current_year, athlete_activities,
-                                                                        all_time_stats, ytd_stats, fun_stats)
+            stats = self.calculate_stats(athlete_activities, stats)
             page += 1
 
-        return all_time_stats, ytd_stats, fun_stats
+        return stats
 
     def main(self):
-
-        all_time_stats, ytd_stats, fun_stats = self.get_stats(date.today().year)
-        message = "*All Time Stats:*\n\n" \
-                  "- _Rides_: %s (Includes %s Indoors)\n" \
-                  "- _Distance_: %s kms (Includes %s kms of Indoors)\n" \
-                  "- _Moving Time_: %s hours (Includes %s hours of Indoors)\n" \
-                  "- _Elevation Gain_: %s kms\n" \
-                  "- _Calories_: %s\n" \
-                  "- _50's_: %s\n" \
-                  "- _100's_: %s (Includes %s _150's_ & %s _200's_)\n\n" \
-                  "*Year to Date Stats:*\n\n" \
-                  "- _Rides_: %s (Includes %s Indoors)\n" \
-                  "- _Distance_: %s kms (Includes %s kms of Indoors)\n" \
-                  "- _Moving Time_: %s hours (Includes %s hours of Indoors)\n" \
-                  "- _Elevation Gain_: %s kms\n" \
-                  "- _Calories_: %s\n" \
-                  "- _50's_: %s\n" \
-                  "- _100's_: %s (Includes %s _150's_ & %s _200's_)\n\n" \
-                  "*Fun Stats:*\n\n" \
+        stats = self.get_stats()
+        message = "*Fun Stats:*\n\n" \
                   "- _Max Power_: %s\n" \
                   "- _Best Average Power_: %s\n" \
                   "- _Max Speed_: %s\n" \
@@ -380,60 +435,32 @@ class AthleteStats(StravaApi, FormatValue, Common):
                   "- _Total Achievements_: %s\n" \
                   "- _Private Rides_: %s\n" \
                   "- _Flagged Rides_: %s\n" % \
-                  (all_time_stats['rides'],
-                   all_time_stats['indoor_rides'],
-                   self.meters_to_kilometers(all_time_stats['distance']),
-                   all_time_stats['indoor_distance'],
-                   self.seconds_to_human_readable(all_time_stats['moving_time']),
-                   self.seconds_to_human_readable(all_time_stats['indoor_time']),
-                   self.meters_to_kilometers(all_time_stats['elevation_gain']),
-                   all_time_stats['kilojoules'],
-                   all_time_stats['fifties'],
-                   all_time_stats['hundreds'],
-                   all_time_stats['one_hundred_fifties'],
-                   all_time_stats['two_hundreds'],
-                   ytd_stats['rides'],
-                   ytd_stats['indoor_rides'],
-                   self.meters_to_kilometers(ytd_stats['distance']),
-                   ytd_stats['indoor_distance'],
-                   self.seconds_to_human_readable(ytd_stats['moving_time']),
-                   self.seconds_to_human_readable(ytd_stats['indoor_time']),
-                   self.meters_to_kilometers(ytd_stats['elevation_gain']),
-                   ytd_stats['kilojoules'],
-                   ytd_stats['fifties'],
-                   ytd_stats['hundreds'],
-                   ytd_stats['one_hundred_fifties'],
-                   ytd_stats['two_hundreds'],
-                   strava_activity_hyperlink % (fun_stats['max_watts'], 'watts', fun_stats['max_watts_activity']),
+                  (strava_activity_hyperlink % (stats['max_watts'], 'watts', stats['max_watts_activity']),
+                   strava_activity_hyperlink % (stats['average_watts'], 'watts', stats['average_watts_activity']),
                    strava_activity_hyperlink % (
-                   fun_stats['average_watts'], 'watts', fun_stats['average_watts_activity']),
+                       self.meters_per_second_to_kilometers(stats['max_speed']), 'kph', stats['max_speed_activity']),
+                   strava_activity_hyperlink % (self.meters_per_second_to_kilometers(stats['max_avg_speed']), 'kph',
+                                                stats['max_avg_speed_activity']),
                    strava_activity_hyperlink % (
-                       self.meters_per_second_to_kilometers(fun_stats['max_speed']), 'kph',
-                       fun_stats['max_speed_activity']),
-                   strava_activity_hyperlink % (self.meters_per_second_to_kilometers(fun_stats['max_avg_speed']), 'kph',
-                                                fun_stats['max_avg_speed_activity']),
+                       self.remove_decimal_point(stats['average_cadence']), '', stats['average_cadence_activity']),
                    strava_activity_hyperlink % (
-                       self.remove_decimal_point(fun_stats['average_cadence']), '',
-                       fun_stats['average_cadence_activity']),
+                       self.remove_decimal_point(stats['max_heart_rate']), 'bpm', stats['max_heart_rate_activity']),
                    strava_activity_hyperlink % (
-                       self.remove_decimal_point(fun_stats['max_heart_rate']), 'bpm',
-                       fun_stats['max_heart_rate_activity']),
-                   strava_activity_hyperlink % (
-                       self.meters_to_kilometers(fun_stats['biggest_ride']), 'kms', fun_stats['biggest_ride_activity']),
-                   strava_activity_hyperlink % (self.remove_decimal_point(fun_stats['max_elevation_gain']), 'meters',
-                                                fun_stats['max_elevation_gain_activity']),
-                   fun_stats['non_stop'],
-                   self.seconds_to_human_readable(fun_stats['break_time']),
-                   fun_stats['strava_created'],
-                   fun_stats['following'],
-                   fun_stats['followers'],
-                   fun_stats['kudos'],
-                   fun_stats['achievement_count'],
-                   fun_stats['private'],
-                   fun_stats['flagged'])
+                       self.meters_to_kilometers(stats['biggest_ride']), 'kms', stats['biggest_ride_activity']),
+                   strava_activity_hyperlink % (self.remove_decimal_point(stats['max_elevation_gain']), 'meters',
+                                                stats['max_elevation_gain_activity']),
+                   stats['non_stop'],
+                   self.seconds_to_human_readable(stats['break_time']),
+                   stats['strava_created'],
+                   stats['following'],
+                   stats['followers'],
+                   stats['kudos'],
+                   stats['achievement_count'],
+                   stats['private'],
+                   stats['flagged'])
 
-        if fun_stats['bikes'] != "":
-            message += "- _Bikes_: %s" % fun_stats['bikes']
+        if stats['bikes'] != "":
+            message += "- _Bikes_: %s" % stats['bikes']
 
         return message
 
@@ -496,6 +523,12 @@ class StravaTelegramBot(object):
                 self.send_message(bot, update, greeting)
                 message = AthleteStats(bot, update, athlete_token, command).main()
 
+            elif command == "funstats":
+                greeting = "Hey %s! Give me a moment or two while I give some of your fun stats." \
+                           % update.message.from_user.first_name
+                self.send_message(bot, update, greeting)
+                message = FunStats(bot, update, athlete_token).main()
+
             elif command == "updatetowalk":
                 greeting = "Hey %s! Give me a moment while I update your latest activity to Walk." \
                            % update.message.from_user.first_name
@@ -509,6 +542,9 @@ class StravaTelegramBot(object):
 
     def stats(self, bot, update):
         self.handle_commands(bot, update, "stats")
+
+    def funstats(self, bot, update):
+        self.handle_commands(bot, update, "funstats")
 
     def updatetowalk(self, bot, update):
         self.handle_commands(bot, update, "updatetowalk")
@@ -531,6 +567,7 @@ class StravaTelegramBot(object):
 
         dispatcher_handler.add_handler(CommandHandler("start", self.start))
         dispatcher_handler.add_handler(CommandHandler("stats", self.stats))
+        dispatcher_handler.add_handler(CommandHandler("funstats", self.funstats))
         dispatcher_handler.add_handler(CommandHandler("updatetowalk", self.updatetowalk))
         dispatcher_handler.add_handler(
             CommandHandler('restart', restart, filters=Filters.user(username=admin_user_name)))
