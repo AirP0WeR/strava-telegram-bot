@@ -1,4 +1,5 @@
 from client import StravaApi
+from resources import FunStats
 from .bot import Bot
 from .resources.fun_stats import FunStats
 from .resources.stats import Stats
