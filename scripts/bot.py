@@ -7,7 +7,8 @@ from threading import Thread
 import telegram
 from telegram.ext import Updater, CommandHandler, Filters
 
-from resources.fun_stats import FunStats
+# from resources.fun_stats import FunStats
+from resources import FunStats
 from resources.stats import Stats
 from resources.update_activity import UpdateActivity
 from scripts.utils import AESCipher
