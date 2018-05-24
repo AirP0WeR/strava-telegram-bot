@@ -1,6 +1,7 @@
 import logging
 
-from scripts.client.strava_api import StravaApi
+from scripts import StravaApi
+# from scripts.client.strava_api import StravaApi
 from scripts.utils import Common
 
 
