@@ -3,8 +3,8 @@ from datetime import date
 
 import dateutil.parser
 
-from scripts.client.strava_api import StravaApi
-from scripts.utils import Common
+from common import Common
+from strava_api import StravaApi
 
 
 class Stats(StravaApi, Common):

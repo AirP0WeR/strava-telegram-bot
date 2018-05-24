@@ -1,6 +1,6 @@
 import logging
 
-from scripts.client.strava_api import StravaApi
+from scripts.strava_api import StravaApi
 
 
 class UpdateActivity(StravaApi):

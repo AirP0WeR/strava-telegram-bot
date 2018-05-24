@@ -7,12 +7,11 @@ from threading import Thread
 import telegram
 from telegram.ext import Updater, CommandHandler, Filters
 
-# from resources.fun_stats import FunStats
-from resources import FunStats
-from resources.stats import Stats
-from resources.update_activity import UpdateActivity
-from scripts.utils import AESCipher
-from utils.config import Config
+from aes_cipher import AESCipher
+from config import Config
+from fun_stats import FunStats
+from stats import Stats
+from update_activity import UpdateActivity
 
 
 class Bot(object):

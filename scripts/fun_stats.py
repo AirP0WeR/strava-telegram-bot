@@ -1,8 +1,7 @@
 import logging
 
-from scripts import StravaApi
-# from scripts.client.strava_api import StravaApi
-from scripts.utils import Common
+from common import Common
+from strava_api import StravaApi
 
 
 class FunStats(StravaApi, Common):
