@@ -13,6 +13,7 @@ import dateutil.parser
 import requests
 import telegram
 from telegram.ext import Updater, CommandHandler, Filters
+from scripts.common.aes_cipher import AESCipher
 
 
 class InitializeBot(object):
@@ -30,6 +31,8 @@ class InitializeBot(object):
         with open(config_file, 'r') as f:
             config = json.load(f)
 
+        get_crypt_key_length = config['CRYPT_KEY_LENGTH']
+        get_crypt_key = config['CRYPT_KEY']
         environment = config['ENVIRONMENT']
         if environment == "PROD":
             get_telegram_token = config['PROD_TELEGRAM_BOT_TOKEN']
@@ -39,9 +42,9 @@ class InitializeBot(object):
         get_admin_user_name = config['ADMIN_USER_NAME']
         get_shadow_mode = config['SHADOW_MODE']
         if get_shadow_mode:
-            get_shadow_chat_id = int(config['SHADOW_MODE_CHAT_ID'])
+            get_shadow_chat_id = config['SHADOW_MODE_CHAT_ID']
 
-        return get_telegram_token, get_athletes, get_shadow_chat_id, get_admin_user_name, get_shadow_mode
+        return get_crypt_key_length, get_crypt_key, get_telegram_token, get_athletes, get_shadow_chat_id, get_admin_user_name, get_shadow_mode
 
     @staticmethod
     def strava_activity_hyperlink():
@@ -491,8 +494,8 @@ class StravaTelegramBot(object):
     def send_message(bot, update, message):
         bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-        if shadow_mode and (int(shadow_chat_id) != int(update.message.chat_id)):
-            bot.send_message(chat_id=shadow_chat_id, text=message, parse_mode="Markdown", disable_notification=True,
+        if shadow_mode and (int(aes_cipher.decrypt(shadow_chat_id)) != int(update.message.chat_id)):
+            bot.send_message(chat_id=aes_cipher.decrypt(shadow_chat_id), text=message, parse_mode="Markdown", disable_notification=True,
                              disable_web_page_preview=True)
         else:
             logging.info("Chat ID & Shadow Chat ID are the same")
@@ -502,13 +505,13 @@ class StravaTelegramBot(object):
         bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         username = update.message.from_user.username
         if username in athletes.viewkeys():
-            return {"Authorization": "Bearer " + athletes[username]}
+            return {"Authorization": "Bearer " + aes_cipher.decrypt(athletes[username])}
         else:
             return False
 
     def handle_commands(self, bot, update, command):
         message = "Hi %s! You are not a registered user yet. Contact %s for more details." \
-                  % (update.message.from_user.first_name, admin_user_name)
+                  % (update.message.from_user.first_name, aes_cipher.decrypt(admin_user_name))
         athlete_token = self.get_athlete_token(bot, update)
         if athlete_token:
 
@@ -554,7 +557,7 @@ class StravaTelegramBot(object):
         logger.warning('Update "%s" caused error "%s"', update, error)
 
     def main(self):
-        updater = Updater(telegram_token)
+        updater = Updater(aes_cipher.decrypt(telegram_token))
         dispatcher_handler = updater.dispatcher
 
         def stop_and_restart():
@@ -570,7 +573,7 @@ class StravaTelegramBot(object):
         dispatcher_handler.add_handler(CommandHandler("funstats", self.funstats))
         dispatcher_handler.add_handler(CommandHandler("updatetowalk", self.updatetowalk))
         dispatcher_handler.add_handler(
-            CommandHandler('restart', restart, filters=Filters.user(username=admin_user_name)))
+            CommandHandler('restart', restart, filters=Filters.user(username=aes_cipher.decrypt(admin_user_name))))
 
         dispatcher_handler.add_error_handler(self.error)
         updater.start_polling()
@@ -581,7 +584,8 @@ if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
     logger = logging.getLogger(__name__)
     initialize_bot = InitializeBot()
-    telegram_token, athletes, shadow_chat_id, admin_user_name, shadow_mode = initialize_bot.get_config()
+    crypt_key_length, crypt_key, telegram_token, athletes, shadow_chat_id, admin_user_name, shadow_mode = initialize_bot.get_config()
+    aes_cipher = AESCipher(crypt_key_length, crypt_key)
     strava_activity_hyperlink = initialize_bot.strava_activity_hyperlink()
     strava_telegram_bot = StravaTelegramBot()
     strava_telegram_bot.main()
