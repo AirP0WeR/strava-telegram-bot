@@ -4,7 +4,7 @@ A simple Strava bot using Telegram for fetching and calculating statistics.
 
 ## Getting Started
 
-Create _config.json_ inside _scripts/utils/_ in the below format:
+Create _config.json_ inside _scripts/_ in the below format:
 
 ```
 {
