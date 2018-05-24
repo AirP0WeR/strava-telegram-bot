@@ -9,14 +9,15 @@ Create _config.json_ inside _scripts/utils/_ in the below format:
 ```
 {
   "ENVIRONMENT": "DEV/PROD",
-  "PROD_TELEGRAM_BOT_TOKEN": "",
-  "DEV_TELEGRAM_BOT_TOKEN": "",
+  "PROD_TELEGRAM_BOT_TOKEN": "PROD_TELEGRAM_BOT_TOKEN",
+  "DEV_TELEGRAM_BOT_TOKEN": "DEV_TELEGRAM_BOT_TOKEN",
   "ATHLETES": {
-    "telegram_username": ""
+    "TELEGRAM_USERNAME_1": "ATHLETE'S_STRAVA_TOKEN",
+    "TELEGRAM_USERNAME_2": "ATHLETE'S_STRAVA_TOKEN"
   },
-  "ADMIN_USER_NAME": "@telegram_username",
+  "ADMIN_USER_NAME": "@TELEGRAM_USERNAME",
   "SHADOW_MODE": true/false,
-  "SHADOW_MODE_CHAT_ID": "telegram_chat_id"
+  "SHADOW_MODE_CHAT_ID": "TELEGRAM_CHAT_ID"
 }
 ```
 
@@ -24,11 +25,13 @@ Create _config.json_ inside _scripts/utils/_ in the below format:
 
 1. pip
 2. requests
-3. python-telegram-bot
+3. dateutil
+4. python-telegram-bot
 
 ```
 $ apt-get install python-pip
 $ pip install requests
+$ pip install python-dateutil
 $ pip install python-telegram-bot
 ```
 
