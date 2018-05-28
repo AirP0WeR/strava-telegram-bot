@@ -9,10 +9,8 @@ from strava_api import StravaApi
 
 class Stats(StravaApi, Common):
 
-    def __init__(self, bot, update, athlete_token, command):
+    def __init__(self, athlete_token, command):
         logging.info("Initializing %s" % self.__class__.__name__)
-        self.bot = bot
-        self.update = update
         self.command = command
         StravaApi.__init__(self, athlete_token)
 

@@ -6,10 +6,8 @@ from strava_api import StravaApi
 
 class MiscellaneousStats(StravaApi, Common):
 
-    def __init__(self, bot, update, athlete_token):
+    def __init__(self, athlete_token):
         logging.info("Initializing %s" % self.__class__.__name__)
-        self.bot = bot
-        self.update = update
         StravaApi.__init__(self, athlete_token)
 
     def get_bikes_info(self, athlete_info):

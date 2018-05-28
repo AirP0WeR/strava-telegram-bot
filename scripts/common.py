@@ -30,6 +30,10 @@ class Common(object):
         return time.strftime("%d/%m/%Y", time.strptime(activity_date[:19], "%Y-%m-%dT%H:%M:%S"))
 
     @staticmethod
+    def date_to_human_readable_with_time(activity_date):
+        return time.strftime("%d/%m/%Y %H:%M:%S", time.strptime(activity_date[:19], "%Y-%m-%dT%H:%M:%S"))
+
+    @staticmethod
     def meters_per_second_to_kilometers(speed):
         return float((Decimal(speed * 3.6)).quantize(Decimal('.1'), rounding=ROUND_DOWN))
 

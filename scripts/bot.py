@@ -10,8 +10,8 @@ from telegram.ext import Updater, CommandHandler, Filters
 from aes_cipher import AESCipher
 from config import Config
 from miscellaneous_stats import MiscellaneousStats
+from segments import Segments
 from stats import Stats
-from update_activity import UpdateActivity
 
 
 class Bot(object):
@@ -52,22 +52,22 @@ class Bot(object):
                           % update.message.from_user.first_name
 
             elif command == "stats":
-                greeting = "Hey %s! Give me a moment or two while I give your stats." \
+                greeting = "Hey %s! Give me a few moments while I give your stats." \
                            % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
-                message = Stats(bot, update, athlete_token, command).main()
+                message = Stats(athlete_token, command).main()
 
             elif command == "miscstats":
-                greeting = "Hey %s! Give me a moment or two while I give some Miscellaneous Stats." \
+                greeting = "Hey %s! Give me a few moments while I give some Miscellaneous stats." \
                            % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
-                message = MiscellaneousStats(bot, update, athlete_token).main()
+                message = MiscellaneousStats(athlete_token).main()
 
-            elif command == "updatetowalk":
-                greeting = "Hey %s! Give me a moment while I update your latest activity to Walk." \
+            elif command == "segments":
+                greeting = "Hey %s! Give me a few moments while I give your Starred Segments' stats." \
                            % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
-                message = UpdateActivity(bot, update, "Walk", athlete_token).main()
+                message = Segments(athlete_token).main()
 
         self.send_message(bot, update, message)
 
@@ -80,8 +80,8 @@ class Bot(object):
     def miscstats(self, bot, update):
         self.handle_commands(bot, update, "miscstats")
 
-    def updatetowalk(self, bot, update):
-        self.handle_commands(bot, update, "updatetowalk")
+    def segments(self, bot, update):
+        self.handle_commands(bot, update, "segments")
 
     @staticmethod
     def error(update, error):
@@ -104,7 +104,7 @@ class Bot(object):
         dispatcher_handler.add_handler(CommandHandler("start", self.start))
         dispatcher_handler.add_handler(CommandHandler("stats", self.stats))
         dispatcher_handler.add_handler(CommandHandler("miscstats", self.miscstats))
-        dispatcher_handler.add_handler(CommandHandler("updatetowalk", self.updatetowalk))
+        dispatcher_handler.add_handler(CommandHandler("segments", self.segments))
         dispatcher_handler.add_handler(
             CommandHandler('restart', restart,
                            filters=Filters.user(username=aes_cipher.decrypt(config['ADMIN_USER_NAME']))))
