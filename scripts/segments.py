@@ -1,7 +1,7 @@
 import logging
 
-from scripts.common import Common
-from scripts.strava_api import StravaApi
+from common import Common
+from strava_api import StravaApi
 
 
 class Segments(StravaApi, Common):
