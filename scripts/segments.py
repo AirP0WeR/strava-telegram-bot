@@ -5,7 +5,7 @@ from strava_api import StravaApi
 
 
 class Segments(StravaApi, Common):
-    stats_format = "*%s. %s*\n\n*Personal Record:*\nTime: %s\nDate: %s\nTotal Attempts: %s\n\n*Segment Details:*\nDistance: %s kms\nCreated: %s\nAvg Gradient: %s percent\nMax Gradient: %s percent\nHighest Elevation: %s meters\nLowest Elevation: %s meters\nTotal Elevation Gain: %s meters\nTotal Athletes Attempted: %s\nTotal Attempts: %s\n\n*Leaderboard*:\n%s" + "\n\n"
+    stats_format = "*%s. %s*\n\n*Personal Record:*\n- _Time_: %s\n- _Date_: %s\n- _Total Attempts_: %s\n\n*Segment Details:*\n- _Distance_: %s kms\n- _Created_: %s\n- _Avg Gradient_: %s percent\n- _Max Gradient_: %s percent\n- _Highest Elevation_: %s meters\n- _Lowest Elevation_: %s meters\n- _Total Elevation Gain_: %s meters\n- _Total Athletes Attempted_: %s\n- _Total Attempts_: %s\n\n*Leaderboard*:\n%s" + "\n\n"
 
     leaderboard_format = "%s. %s | %s | %s\n"
 
@@ -19,7 +19,7 @@ class Segments(StravaApi, Common):
             message += (self.leaderboard_format
                         % (leader['rank'],
                            self.seconds_to_human_readable(leader['elapsed_time']),
-                           self.date_to_human_readable_with_time(leader['start_date_local']),
+                           self.date_to_human_readable(leader['start_date_local']),
                            leader['athlete_name']))
         return message
 
