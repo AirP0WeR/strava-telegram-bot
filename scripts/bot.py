@@ -9,7 +9,7 @@ from telegram.ext import Updater, CommandHandler, Filters
 
 from aes_cipher import AESCipher
 from config import Config
-from fun_stats import FunStats
+from miscellaneous_stats import MiscellaneousStats
 from stats import Stats
 from update_activity import UpdateActivity
 
@@ -57,11 +57,11 @@ class Bot(object):
                 self.send_message(bot, update, greeting)
                 message = Stats(bot, update, athlete_token, command).main()
 
-            elif command == "funstats":
-                greeting = "Hey %s! Give me a moment or two while I give some of your fun stats." \
+            elif command == "miscstats":
+                greeting = "Hey %s! Give me a moment or two while I give some miscellaneous stats." \
                            % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
-                message = FunStats(bot, update, athlete_token).main()
+                message = MiscellaneousStats(bot, update, athlete_token).main()
 
             elif command == "updatetowalk":
                 greeting = "Hey %s! Give me a moment while I update your latest activity to Walk." \
@@ -77,8 +77,8 @@ class Bot(object):
     def stats(self, bot, update):
         self.handle_commands(bot, update, "stats")
 
-    def funstats(self, bot, update):
-        self.handle_commands(bot, update, "funstats")
+    def miscstats(self, bot, update):
+        self.handle_commands(bot, update, "miscstats")
 
     def updatetowalk(self, bot, update):
         self.handle_commands(bot, update, "updatetowalk")
@@ -103,7 +103,7 @@ class Bot(object):
 
         dispatcher_handler.add_handler(CommandHandler("start", self.start))
         dispatcher_handler.add_handler(CommandHandler("stats", self.stats))
-        dispatcher_handler.add_handler(CommandHandler("funstats", self.funstats))
+        dispatcher_handler.add_handler(CommandHandler("miscstats", self.miscstats))
         dispatcher_handler.add_handler(CommandHandler("updatetowalk", self.updatetowalk))
         dispatcher_handler.add_handler(
             CommandHandler('restart', restart,

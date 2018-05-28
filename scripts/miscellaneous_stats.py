@@ -4,7 +4,7 @@ from common import Common
 from strava_api import StravaApi
 
 
-class FunStats(StravaApi, Common):
+class MiscellaneousStats(StravaApi, Common):
 
     def __init__(self, bot, update, athlete_token):
         logging.info("Initializing %s" % self.__class__.__name__)
@@ -133,7 +133,7 @@ class FunStats(StravaApi, Common):
 
     def main(self):
         stats = self.get_stats()
-        message = "*Fun Stats:*\n\n" \
+        message = "*Miscellaneous Stats:*\n\n" \
                   "- _Max Power_: %s\n" \
                   "- _Best Average Power_: %s\n" \
                   "- _Max Speed_: %s\n" \
