@@ -58,7 +58,7 @@ class Bot(object):
                 message = Stats(bot, update, athlete_token, command).main()
 
             elif command == "miscstats":
-                greeting = "Hey %s! Give me a moment or two while I give some miscellaneous stats." \
+                greeting = "Hey %s! Give me a moment or two while I give some Miscellaneous Stats." \
                            % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
                 message = MiscellaneousStats(bot, update, athlete_token).main()
