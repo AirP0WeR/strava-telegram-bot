@@ -34,7 +34,7 @@ class FunStats(StravaApi, Common):
                     stats['achievement_count'] += activity['achievement_count']
                     stats['break_time'] += activity['elapsed_time'] - activity['moving_time']
 
-                    if (activity['distance'] >= 70000.0) and (
+                    if (activity['distance'] >= 50000.0) and (
                             (activity['elapsed_time'] - activity['moving_time']) <= 900):
                         stats['non_stop'] += 1
 
@@ -69,6 +69,9 @@ class FunStats(StravaApi, Common):
                     if activity['total_elevation_gain'] > stats['max_elevation_gain']:
                         stats['max_elevation_gain'] = activity['total_elevation_gain']
                         stats['max_elevation_gain_activity'] = activity['id']
+
+                    if 'kilojoules' in activity:
+                        stats['kilojoules'] += activity['kilojoules']
 
             elif activity['type'] == 'Ride' or activity['type'] == 'VirtualRide':
 
@@ -107,7 +110,8 @@ class FunStats(StravaApi, Common):
             'flagged': 0,
             'break_time': 0,
             'kudos': 0,
-            'bikes': ''
+            'bikes': '',
+            'kilojoules': 0.0
         }
 
         athlete_info = self.get_athlete_info()
@@ -140,6 +144,7 @@ class FunStats(StravaApi, Common):
                   "- _Max Elevation Gain_: %s\n" \
                   "- _Non-Stop Rides_: %s\n" \
                   "- _Total Break Time During Rides_: %s\n" \
+                  "- _Total Calories Burnt_: %s\n" \
                   "- _Using Strava Since_: %s\n" \
                   "- _Following Count_: %s\n" \
                   "- _Followers Count_: %s\n" \
@@ -165,6 +170,7 @@ class FunStats(StravaApi, Common):
                                                        stats['max_elevation_gain_activity']),
                    stats['non_stop'],
                    self.seconds_to_human_readable(stats['break_time']),
+                   stats['kilojoules'],
                    stats['strava_created'],
                    stats['following'],
                    stats['followers'],

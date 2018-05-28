@@ -71,11 +71,6 @@ class Stats(StravaApi, Common):
                         all_time_stats['indoor_time'] += activity['moving_time']
                         all_time_stats['indoor_rides'] += 1
 
-                    if 'kilojoules' in activity:
-                        if activity_year == current_year:
-                            ytd_stats['kilojoules'] += activity['kilojoules']
-                        all_time_stats['kilojoules'] += activity['kilojoules']
-
         return all_time_stats, ytd_stats
 
     def get_stats(self, current_year):
@@ -88,7 +83,6 @@ class Stats(StravaApi, Common):
             'moving_time': 0,
             'indoor_time': 0,
             'elevation_gain': 0,
-            'kilojoules': 0.0,
             'fifties': 0,
             'hundreds': 0,
             'one_hundred_fifties': 0,
@@ -103,7 +97,6 @@ class Stats(StravaApi, Common):
             'moving_time': 0,
             'indoor_time': 0,
             'elevation_gain': 0,
-            'kilojoules': 0.0,
             'fifties': 0,
             'hundreds': 0,
             'one_hundred_fifties': 0,
@@ -129,7 +122,6 @@ class Stats(StravaApi, Common):
                   "- _Distance_: %s kms (Includes %s kms of Indoors)\n" \
                   "- _Moving Time_: %s hours (Includes %s hours of Indoors)\n" \
                   "- _Elevation Gain_: %s kms\n" \
-                  "- _Calories_: %s\n" \
                   "- _50's_: %s\n" \
                   "- _100's_: %s (Includes %s _150's_ & %s _200's_)\n\n" \
                   "*Year to Date Stats:*\n\n" \
@@ -137,7 +129,6 @@ class Stats(StravaApi, Common):
                   "- _Distance_: %s kms (Includes %s kms of Indoors)\n" \
                   "- _Moving Time_: %s hours (Includes %s hours of Indoors)\n" \
                   "- _Elevation Gain_: %s kms\n" \
-                  "- _Calories_: %s\n" \
                   "- _50's_: %s\n" \
                   "- _100's_: %s (Includes %s _150's_ & %s _200's_)" % \
                   (all_time_stats['rides'],
@@ -147,7 +138,6 @@ class Stats(StravaApi, Common):
                    self.seconds_to_human_readable(all_time_stats['moving_time']),
                    self.seconds_to_human_readable(all_time_stats['indoor_time']),
                    self.meters_to_kilometers(all_time_stats['elevation_gain']),
-                   all_time_stats['kilojoules'],
                    all_time_stats['fifties'],
                    all_time_stats['hundreds'],
                    all_time_stats['one_hundred_fifties'],
@@ -159,7 +149,6 @@ class Stats(StravaApi, Common):
                    self.seconds_to_human_readable(ytd_stats['moving_time']),
                    self.seconds_to_human_readable(ytd_stats['indoor_time']),
                    self.meters_to_kilometers(ytd_stats['elevation_gain']),
-                   ytd_stats['kilojoules'],
                    ytd_stats['fifties'],
                    ytd_stats['hundreds'],
                    ytd_stats['one_hundred_fifties'],
