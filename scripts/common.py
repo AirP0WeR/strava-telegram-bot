@@ -30,6 +30,10 @@ class Common(object):
         return time.strftime("%d/%m/%Y", time.strptime(activity_date[:19], "%Y-%m-%dT%H:%M:%S"))
 
     @staticmethod
+    def date_to_human_readable_with_short_year(activity_date):
+        return time.strftime("%d/%m/%y", time.strptime(activity_date[:19], "%Y-%m-%dT%H:%M:%S"))
+
+    @staticmethod
     def date_to_human_readable_with_time(activity_date):
         return time.strftime("%d/%m/%Y %H:%M:%S", time.strptime(activity_date[:19], "%Y-%m-%dT%H:%M:%S"))
 
