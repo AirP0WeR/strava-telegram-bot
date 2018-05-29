@@ -67,7 +67,8 @@ class Bot(object):
                 greeting = "Hey %s! Give me a few moments while I give your Starred Segments' stats." \
                            % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
-                message = Segments(athlete_token).main()
+                message = Segments(bot, update, athlete_token, config['SHADOW_MODE'],
+                                   aes_cipher.decrypt(config['SHADOW_MODE_CHAT_ID'])).main()
 
         self.send_message(bot, update, message)
 
