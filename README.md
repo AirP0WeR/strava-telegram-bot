@@ -27,12 +27,14 @@ Create _config.json_ inside _scripts/_ in the below format:
 2. requests
 3. dateutil
 4. python-telegram-bot
+5. pycrypto
 
 ```
 $ apt-get install python-pip
 $ pip install requests
 $ pip install python-dateutil
 $ pip install python-telegram-bot
+$ pip install pycrypto
 ```
 
 ## License
