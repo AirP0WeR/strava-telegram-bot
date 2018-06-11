@@ -89,10 +89,6 @@ class Bot(object):
         logger.warning('Update "%s" caused error "%s"', update, error)
 
     def main(self):
-        telegram_token = config['PROD_TELEGRAM_BOT_TOKEN'] if config['ENVIRONMENT'] == "PROD" else config[
-            'DEV_TELEGRAM_BOT_TOKEN']
-        updater = Updater(aes_cipher.decrypt(telegram_token))
-        dispatcher_handler = updater.dispatcher
 
         def stop_and_restart():
             updater.stop()
@@ -101,6 +97,9 @@ class Bot(object):
         def restart(bot, update):
             self.send_message(bot, update, "Bot is restarting...")
             Thread(target=stop_and_restart).start()
+
+        updater = Updater(aes_cipher.decrypt(os.environ['TELEGRAM_BOT_TOKEN']))
+        dispatcher_handler = updater.dispatcher
 
         dispatcher_handler.add_handler(CommandHandler("start", self.start))
         dispatcher_handler.add_handler(CommandHandler("stats", self.stats))
@@ -111,13 +110,19 @@ class Bot(object):
                            filters=Filters.user(username=aes_cipher.decrypt(config['ADMIN_USER_NAME']))))
 
         dispatcher_handler.add_error_handler(self.error)
-        updater.start_polling()
+
+        updater.start_webhook(listen="0.0.0.0",
+                              port=int(os.environ.get('PORT')),
+                              url_path=aes_cipher.decrypt(os.environ['TELEGRAM_BOT_TOKEN']))
+
+        updater.bot.setWebhook("{}/{}".format(os.environ.get('APP_NAME'), aes_cipher.decrypt(
+            os.environ['TELEGRAM_BOT_TOKEN'])))
         updater.idle()
 
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
     logger = logging.getLogger(__name__)
+    aes_cipher = AESCipher(os.environ['CRYPT_KEY_LENGTH'], os.environ['CRYPT_KEY'])
     config = Config().main()
-    aes_cipher = AESCipher(config['CRYPT_KEY_LENGTH'], config['CRYPT_KEY'])
     Bot().main()

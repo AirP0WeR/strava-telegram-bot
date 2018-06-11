@@ -1,0 +1,4 @@
+requests==2.18.4
+python-dateutil==1.5
+python-telegram-bot==10.0.2
+pycrypto==2.6.1
