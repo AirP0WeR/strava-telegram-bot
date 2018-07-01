@@ -60,7 +60,7 @@ class Stats(StravaApi, Common):
                         all_time_stats['two_hundreds'] += 1
                         all_time_stats['hundreds'] += 1
 
-                    if activity['trainer']:
+                    if activity['trainer'] or activity['type'] == 'VirtualRide':
                         if activity_year == current_year:
                             ytd_stats['indoor_distance'] += self.meters_to_kilometers(activity['distance'])
                             ytd_stats['indoor_time'] += activity['moving_time']

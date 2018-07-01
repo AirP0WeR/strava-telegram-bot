@@ -46,6 +46,10 @@ class Common(object):
         return """[%s %s](https://www.strava.com/activities/%s)"""
 
     @staticmethod
+    def strava_activity_link(activity_id):
+        return "https://www.strava.com/activities/%s" % activity_id
+
+    @staticmethod
     def is_flagged_or_private(activity):
         if ('flagged' in activity) and (activity['flagged']):
             return True
@@ -54,3 +58,10 @@ class Common(object):
             return True
 
         return False
+
+    @staticmethod
+    def is_activity_a_ride(activity):
+        is_activity_a_ride = False
+        if (activity['type'] == 'Ride') or (activity['type'] == 'VirtualRide'):
+            is_activity_a_ride = True
+        return is_activity_a_ride
