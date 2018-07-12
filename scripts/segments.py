@@ -44,7 +44,7 @@ class Segments(StravaLib, Common):
         segment_count = 1
         for segment in starred_segments:
             segment_details = self.get_segment_details(segment.id)
-            segment_leader_board = self.get_segment_leaderboard(segment.id)
+            segment_leader_board = self.get_segment_leader_board(segment.id)
             segment_stats = (self.stats_format %
                              (
                                  segment_count,
