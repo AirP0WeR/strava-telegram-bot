@@ -107,3 +107,4 @@ venv.bak/
 
 .idea/
 scripts/config.json
+scripts/local.py

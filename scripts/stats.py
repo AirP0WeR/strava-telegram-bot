@@ -1,72 +1,70 @@
 import logging
 from datetime import date
 
-import dateutil.parser
+from stravalib import unithelper
 
 from common import Common
-from strava_api import StravaApi
+from strava_lib import StravaLib
 
 
-class Stats(StravaApi, Common):
+class Stats(StravaLib, Common):
 
     def __init__(self, athlete_token, command):
         logging.info("Initializing %s" % self.__class__.__name__)
         self.command = command
-        StravaApi.__init__(self, athlete_token)
+        StravaLib.__init__(self, athlete_token)
 
-    def calculate_stats(self, current_year, athlete_activities, all_time_stats, ytd_stats):
-        for activity in athlete_activities:
+    def calculate_stats(self, current_year, activities, all_time_stats, ytd_stats):
+        for activity in activities:
             if not self.is_flagged_or_private(activity):
-                if activity['type'] == 'Ride' or activity['type'] == 'VirtualRide':
+                if activity.type == 'Ride' or activity.type == 'VirtualRide':
 
-                    activity_year = int((dateutil.parser.parse(activity['start_date_local'])).strftime('%Y'))
+                    activity_year = activity.start_date_local.year
 
                     if activity_year == current_year:
                         ytd_stats['rides'] += 1
                     all_time_stats['rides'] += 1
 
                     if activity_year == current_year:
-                        ytd_stats['moving_time'] += activity['moving_time']
-                    all_time_stats['moving_time'] += activity['moving_time']
+                        ytd_stats['moving_time'] += unithelper.timedelta_to_seconds(activity.moving_time)
+                    all_time_stats['moving_time'] += unithelper.timedelta_to_seconds(activity.moving_time)
 
                     if activity_year == current_year:
-                        ytd_stats['elevation_gain'] += activity['total_elevation_gain']
-                    all_time_stats['elevation_gain'] += activity['total_elevation_gain']
-
-                    distance = float(activity['distance'])
+                        ytd_stats['elevation_gain'] += int(activity.total_elevation_gain)
+                    all_time_stats['elevation_gain'] += int(activity.total_elevation_gain)
 
                     if activity_year == current_year:
-                        ytd_stats['distance'] += distance
-                    all_time_stats['distance'] += distance
+                        ytd_stats['distance'] += float(activity.distance)
+                    all_time_stats['distance'] += float(activity.distance)
 
-                    if 50000.0 <= distance < 100000.0:
+                    if 50000.0 <= float(activity.distance) < 100000.0:
                         if activity_year == current_year:
                             ytd_stats['fifties'] += 1
                         all_time_stats['fifties'] += 1
-                    elif 100000.0 <= distance < 150000.0:
+                    elif 100000.0 <= float(activity.distance) < 150000.0:
                         if activity_year == current_year:
                             ytd_stats['hundreds'] += 1
                         all_time_stats['hundreds'] += 1
-                    elif 150000.0 < distance < 200000.0:
+                    elif 150000.0 < float(activity.distance) < 200000.0:
                         if activity_year == current_year:
                             ytd_stats['one_hundred_fifties'] += 1
                             ytd_stats['hundreds'] += 1
                         all_time_stats['one_hundred_fifties'] += 1
                         all_time_stats['hundreds'] += 1
-                    elif distance > 200000.0:
+                    elif float(activity.distance) > 200000.0:
                         if activity_year == current_year:
                             ytd_stats['two_hundreds'] += 1
                             ytd_stats['hundreds'] += 1
                         all_time_stats['two_hundreds'] += 1
                         all_time_stats['hundreds'] += 1
 
-                    if activity['trainer'] or activity['type'] == 'VirtualRide':
+                    if activity.trainer or activity.type == 'VirtualRide':
                         if activity_year == current_year:
-                            ytd_stats['indoor_distance'] += self.meters_to_kilometers(activity['distance'])
-                            ytd_stats['indoor_time'] += activity['moving_time']
+                            ytd_stats['indoor_distance'] += float(activity.distance)
+                            ytd_stats['indoor_time'] += unithelper.timedelta_to_seconds(activity.moving_time)
                             ytd_stats['indoor_rides'] += 1
-                        all_time_stats['indoor_distance'] += self.meters_to_kilometers(activity['distance'])
-                        all_time_stats['indoor_time'] += activity['moving_time']
+                        all_time_stats['indoor_distance'] += float(activity.distance)
+                        all_time_stats['indoor_time'] += unithelper.timedelta_to_seconds(activity.moving_time)
                         all_time_stats['indoor_rides'] += 1
 
         return all_time_stats, ytd_stats
@@ -101,14 +99,9 @@ class Stats(StravaApi, Common):
             'two_hundreds': 0
         }
 
-        page = 1
-        while page:
-            athlete_activities = self.get_athlete_activities("200", page)
-            if len(athlete_activities) == 0:
-                break
-            all_time_stats, ytd_stats = self.calculate_stats(current_year, athlete_activities, all_time_stats,
-                                                             ytd_stats)
-            page += 1
+        activities = self.get_activities()
+
+        all_time_stats, ytd_stats = self.calculate_stats(current_year, activities, all_time_stats, ytd_stats)
 
         return all_time_stats, ytd_stats
 
@@ -132,7 +125,7 @@ class Stats(StravaApi, Common):
                   (all_time_stats['rides'],
                    all_time_stats['indoor_rides'],
                    self.meters_to_kilometers(all_time_stats['distance']),
-                   all_time_stats['indoor_distance'],
+                   self.meters_to_kilometers(all_time_stats['indoor_distance']),
                    self.seconds_to_human_readable(all_time_stats['moving_time']),
                    self.seconds_to_human_readable(all_time_stats['indoor_time']),
                    self.meters_to_kilometers(all_time_stats['elevation_gain']),
@@ -143,7 +136,7 @@ class Stats(StravaApi, Common):
                    ytd_stats['rides'],
                    ytd_stats['indoor_rides'],
                    self.meters_to_kilometers(ytd_stats['distance']),
-                   ytd_stats['indoor_distance'],
+                   self.meters_to_kilometers(ytd_stats['indoor_distance']),
                    self.seconds_to_human_readable(ytd_stats['moving_time']),
                    self.seconds_to_human_readable(ytd_stats['indoor_time']),
                    self.meters_to_kilometers(ytd_stats['elevation_gain']),
