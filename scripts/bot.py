@@ -36,7 +36,7 @@ class Bot(object):
         bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         username = update.message.from_user.username
         if username in config['ATHLETES'].viewkeys():
-            return {"Authorization": "Bearer " + aes_cipher.decrypt(config['ATHLETES'][username])}
+            return aes_cipher.decrypt(config['ATHLETES'][username])
         else:
             return False
 
