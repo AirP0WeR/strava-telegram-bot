@@ -1,6 +1,6 @@
 # Strava Telegram Bot
 
-A simple Strava bot using Telegram for fetching and calculating statistics.
+A simple Strava bot using Stravlib & Telegram for fetching and calculating statistics.
 
 ## Getting Started
 
@@ -21,15 +21,13 @@ Create _config.json_ inside _scripts/_ in the below format:
 ### Prerequisites
 
 1. pip
-2. requests
-3. dateutil
-4. python-telegram-bot
-5. pycrypto
+2. stravalib
+3. python-telegram-bot
+4. pycrypto
 
 ```
 $ apt-get install python-pip
-$ pip install requests
-$ pip install python-dateutil
+$ pip install stravalib
 $ pip install python-telegram-bot
 $ pip install pycrypto
 ```
