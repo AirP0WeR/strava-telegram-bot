@@ -1,6 +1,6 @@
 # Strava Telegram Bot
 
-A simple Strava bot using Stravlib & Telegram for fetching and calculating statistics.
+A simple Strava bot using Stravlib & Telegram for fetching and calculating statistics. It's ready to be deployed on Heroku as well.
 
 ## Getting Started
 
