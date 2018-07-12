@@ -117,14 +117,14 @@ class MiscellaneousStats(StravaLib, Common):
             'kilojoules': 0.0
         }
 
-        athlete_info = self.get_athlete()
+        athlete_info = self.fetch_athlete()
 
         stats['following'] = athlete_info.friend_count
         stats['followers'] = athlete_info.follower_count
         stats['strava_created'] = athlete_info.created_at.date()
         stats['bikes'] = self.get_bikes_info(athlete_info)
 
-        activities = self.get_activities()
+        activities = self.fetch_activities()
 
         stats = self.calculate_stats(activities, stats)
 

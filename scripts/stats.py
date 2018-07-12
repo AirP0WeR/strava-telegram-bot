@@ -99,7 +99,7 @@ class Stats(StravaLib, Common):
             'two_hundreds': 0
         }
 
-        activities = self.get_activities()
+        activities = self.fetch_activities()
 
         all_time_stats, ytd_stats = self.calculate_stats(current_year, activities, all_time_stats, ytd_stats)
 

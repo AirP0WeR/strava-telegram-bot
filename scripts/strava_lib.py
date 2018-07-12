@@ -11,17 +11,17 @@ class StravaLib(object):
         self.client = Client()
         self.client.access_token = self.athlete_token
 
-    def get_athlete(self):
+    def fetch_athlete(self):
         return self.client.get_athlete()
 
-    def get_activities(self):
+    def fetch_activities(self):
         return self.client.get_activities()
 
-    def get_starred_segments(self):
+    def fetch_starred_segments(self):
         return self.client.get_starred_segment()
 
-    def get_segment_details(self, segment_id):
+    def fetch_segment_details(self, segment_id):
         return self.client.get_segment(segment_id)
 
-    def get_segment_leader_board(self, segment_id):
+    def fetch_segment_leader_board(self, segment_id):
         return self.client.get_segment_leaderboard(segment_id)

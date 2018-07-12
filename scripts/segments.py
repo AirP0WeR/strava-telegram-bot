@@ -43,8 +43,8 @@ class Segments(StravaLib, Common):
     def collect_stats(self, starred_segments):
         segment_count = 1
         for segment in starred_segments:
-            segment_details = self.get_segment_details(segment.id)
-            segment_leader_board = self.get_segment_leader_board(segment.id)
+            segment_details = self.fetch_segment_details(segment.id)
+            segment_leader_board = self.fetch_segment_leader_board(segment.id)
             segment_stats = (self.stats_format %
                              (
                                  segment_count,
@@ -67,6 +67,6 @@ class Segments(StravaLib, Common):
             self.send_message(self.bot, self.update, segment_stats)
 
     def main(self):
-        starred_segments = self.get_starred_segments()
+        starred_segments = self.fetch_starred_segments()
         self.collect_stats(starred_segments)
         return "Finished fetching stats for your starred segment(s)."
