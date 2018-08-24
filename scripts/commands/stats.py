@@ -112,16 +112,16 @@ class Stats(StravaLib, Common):
         all_time_stats, ytd_stats = self.get_stats(date.today().year)
         message = "*All Time Stats:*\n\n" \
                   "- _Rides_: %s (Includes %s Indoors)\n" \
-                  "- _Distance_: %s kms (Includes %s kms of Indoors)\n" \
+                  "- _Distance_: %s km (Includes %s km of Indoors)\n" \
                   "- _Moving Time_: %s hours (Includes %s hours of Indoors)\n" \
-                  "- _Elevation Gain_: %s kms\n" \
+                  "- _Elevation Gain_: %s km\n" \
                   "- _50's_: %s\n" \
                   "- _100's_: %s (Includes %s _150's_ & %s _200's_)\n\n" \
                   "*Year to Date Stats:*\n\n" \
                   "- _Rides_: %s (Includes %s Indoors)\n" \
-                  "- _Distance_: %s kms (Includes %s kms of Indoors)\n" \
+                  "- _Distance_: %s km (Includes %s km of Indoors)\n" \
                   "- _Moving Time_: %s hours (Includes %s hours of Indoors)\n" \
-                  "- _Elevation Gain_: %s kms\n" \
+                  "- _Elevation Gain_: %s km\n" \
                   "- _50's_: %s\n" \
                   "- _100's_: %s (Includes %s _150's_ & %s _200's_)" % \
                   (all_time_stats['rides'],

@@ -53,19 +53,19 @@ class Bot(object):
                           % update.message.from_user.first_name
 
             elif command == "stats":
-                greeting = "Hey %s! Give me a few moments while I give your stats." \
+                greeting = "Hey %s! Give me a minute or two while I give your stats." \
                            % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
                 message = Stats(athlete_token, command).main()
 
             elif command == "miscstats":
-                greeting = "Hey %s! Give me a few moments while I give some Miscellaneous stats." \
+                greeting = "Hey %s! Give me a minute or two while I give some Miscellaneous stats." \
                            % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
                 message = MiscellaneousStats(athlete_token).main()
 
             elif command == "segments":
-                greeting = "Hey %s! Give me a few moments while I give your Starred Segments' stats." \
+                greeting = "Hey %s! Give me a minute or two while I give your Starred Segments' stats." \
                            % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
                 message = Segments(bot, update, athlete_token, config['SHADOW_MODE'],
