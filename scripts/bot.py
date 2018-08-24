@@ -122,7 +122,7 @@ class Bot(object):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     logger = logging.getLogger(__name__)
     aes_cipher = AESCipher(os.environ['CRYPT_KEY_LENGTH'], os.environ['CRYPT_KEY'])
     config = Config().main()
