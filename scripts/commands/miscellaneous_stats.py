@@ -1,9 +1,11 @@
 import logging
+from os import sys, path
 
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from stravalib import unithelper
 
-from common import Common
-from strava_lib import StravaLib
+from scripts.common.common import Common
+from scripts.clients.strava_lib import StravaLib
 
 
 class MiscellaneousStats(StravaLib, Common):
@@ -33,8 +35,6 @@ class MiscellaneousStats(StravaLib, Common):
 
                     stats['kudos'] += activity.kudos_count
                     stats['achievement_count'] += activity.achievement_count
-                    stats['break_time'] += unithelper.timedelta_to_seconds(
-                        activity.elapsed_time) - unithelper.timedelta_to_seconds(activity.moving_time)
 
                     if (int(activity.distance) >= 50000.0) and (
                             (unithelper.timedelta_to_seconds(activity.elapsed_time) - unithelper.timedelta_to_seconds(
@@ -111,7 +111,6 @@ class MiscellaneousStats(StravaLib, Common):
             'strava_created': '',
             'private': 0,
             'flagged': 0,
-            'break_time': 0,
             'kudos': 0,
             'bikes': '',
             'kilojoules': 0.0
@@ -144,7 +143,6 @@ class MiscellaneousStats(StravaLib, Common):
                   "- _Biggest Ride_: %s\n" \
                   "- _Max Elevation Gain_: %s\n" \
                   "- _Non-Stop Rides_: %s\n" \
-                  "- _Break Time During Rides_: %s\n" \
                   "- _Calories Burnt_: %s\n" \
                   "\n*Speed:*\n\n" \
                   "- _Max Speed_: %s\n" \
@@ -157,14 +155,13 @@ class MiscellaneousStats(StravaLib, Common):
                    stats['private'],
                    stats['flagged'],
                    self.strava_activity_hyperlink() % (
-                       self.meters_to_kilometers(stats['biggest_ride']), 'kms', stats['biggest_ride_activity']),
+                       self.meters_to_kilometers(stats['biggest_ride']), 'km', stats['biggest_ride_activity']),
                    self.strava_activity_hyperlink() % (self.remove_decimal_point(stats['max_elevation_gain']), 'meters',
                                                        stats['max_elevation_gain_activity']),
                    stats['non_stop'],
-                   self.seconds_to_human_readable(stats['break_time']),
                    stats['kilojoules'],
-                   self.strava_activity_hyperlink() % (stats['max_speed'], 'kph', stats['max_speed_activity']),
-                   self.strava_activity_hyperlink() % (stats['max_avg_speed'], 'kph',
+                   self.strava_activity_hyperlink() % (stats['max_speed'], 'km/h', stats['max_speed_activity']),
+                   self.strava_activity_hyperlink() % (stats['max_avg_speed'], 'km/h',
                                                        stats['max_avg_speed_activity']))
 
         if stats['max_watts'] != 0:

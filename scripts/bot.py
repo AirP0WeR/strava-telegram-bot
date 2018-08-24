@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 import logging
 import os
-import sys
+from os import sys, path
+
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from threading import Thread
 
 import telegram
 from telegram.ext import Updater, CommandHandler, Filters
 
-from aes_cipher import AESCipher
-from config import Config
-from miscellaneous_stats import MiscellaneousStats
-from segments import Segments
-from stats import Stats
-
+from scripts.common.aes_cipher import AESCipher
+from scripts.config import Config
+from scripts.commands.miscellaneous_stats import MiscellaneousStats
+from scripts.commands.segments import Segments
+from scripts.commands.stats import Stats
 
 class Bot(object):
 
@@ -52,19 +53,19 @@ class Bot(object):
                           % update.message.from_user.first_name
 
             elif command == "stats":
-                greeting = "Hey %s! Give me a few moments while I give your stats." \
+                greeting = "Hey %s! Give me a minute or two while I fetch your stats." \
                            % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
                 message = Stats(athlete_token, command).main()
 
             elif command == "miscstats":
-                greeting = "Hey %s! Give me a few moments while I give some Miscellaneous stats." \
+                greeting = "Hey %s! Give me a minute or two while I fetch your miscellaneous stats." \
                            % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
                 message = MiscellaneousStats(athlete_token).main()
 
             elif command == "segments":
-                greeting = "Hey %s! Give me a few moments while I give your Starred Segments' stats." \
+                greeting = "Hey %s! Give me a minute or two while I fetch your starred segments' stats." \
                            % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
                 message = Segments(bot, update, athlete_token, config['SHADOW_MODE'],
@@ -121,7 +122,7 @@ class Bot(object):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.DEBUG)
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     logger = logging.getLogger(__name__)
     aes_cipher = AESCipher(os.environ['CRYPT_KEY_LENGTH'], os.environ['CRYPT_KEY'])
     config = Config().main()
