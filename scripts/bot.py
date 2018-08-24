@@ -1,18 +1,19 @@
 #!/usr/bin/env python
 import logging
 import os
-import sys
+from os import sys, path
+
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from threading import Thread
 
 import telegram
 from telegram.ext import Updater, CommandHandler, Filters
 
-from aes_cipher import AESCipher
-from config import Config
-from miscellaneous_stats import MiscellaneousStats
-from segments import Segments
-from stats import Stats
-
+from scripts.common.aes_cipher import AESCipher
+from scripts.config import Config
+from scripts.commands.miscellaneous_stats import MiscellaneousStats
+from scripts.commands.segments import Segments
+from scripts.commands.stats import Stats
 
 class Bot(object):
 

@@ -1,10 +1,12 @@
 import logging
 from datetime import date
+from os import sys, path
 
+sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from stravalib import unithelper
 
-from common import Common
-from strava_lib import StravaLib
+from scripts.common.common import Common
+from scripts.clients.strava_lib import StravaLib
 
 
 class Stats(StravaLib, Common):
