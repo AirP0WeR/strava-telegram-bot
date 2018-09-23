@@ -118,6 +118,7 @@ class Bot(object):
         dispatcher_handler = updater.dispatcher
 
         dispatcher_handler.add_handler(CommandHandler("start", self.start))
+        dispatcher_handler.add_handler(CommandHandler("register", self.register))
         dispatcher_handler.add_handler(CommandHandler("stats", self.stats))
         dispatcher_handler.add_handler(CommandHandler("miscstats", self.miscstats))
         dispatcher_handler.add_handler(CommandHandler("segments", self.segments))
