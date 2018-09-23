@@ -88,6 +88,9 @@ class Bot(object):
     def start(self, bot, update):
         self.handle_commands(bot, update, "start")
 
+    def register(self, bot, update):
+        self.handle_commands(bot, update, "register")
+
     def stats(self, bot, update):
         self.handle_commands(bot, update, "stats")
 
