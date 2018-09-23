@@ -106,5 +106,4 @@ venv.bak/
 .mypy_cache/
 
 .idea/
-scripts/config.json
 scripts/local.py
