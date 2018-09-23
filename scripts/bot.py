@@ -49,7 +49,7 @@ class Bot(object):
             return False
 
     def handle_commands(self, bot, update, command):
-        message = "Hi {}! You are not a registered user yet. Visit {} to register. Ping {} in case you face any issue.".format(
+        message = "Hi {}! You are not a registered user yet.\n\nVisit {} to register.\n\nPing {} in case you face any issue.".format(
             update.message.from_user.first_name, os.environ['REGISTRATION_URL'],
             aes_cipher.decrypt(os.environ['ADMIN_USER_NAME']))
         athlete_token = self.get_athlete_token(bot, update)
