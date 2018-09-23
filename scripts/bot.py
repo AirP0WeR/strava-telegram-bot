@@ -49,7 +49,8 @@ class Bot(object):
             return False
 
     def handle_commands(self, bot, update, command):
-        message = "Hi %s! You are not a registered user yet. Contact %s for more details." \
+        message = "Hi %s! You are not a registered user yet. Hit /register to register. " \
+                  "Ping %s in case you face any issue." \
                   % (update.message.from_user.first_name, aes_cipher.decrypt(os.environ['ADMIN_USER_NAME']))
         athlete_token = self.get_athlete_token(bot, update)
         if athlete_token:
@@ -58,6 +59,10 @@ class Bot(object):
                 message = "Hey %s! I'm your Strava Bot. " \
                           "Type '/' to get the list of commands that I understand." \
                           % update.message.from_user.first_name
+
+            elif command == "register":
+                message = "Hi {}! Click the following link to register: {}.".format(update.message.from_user.first_name,
+                                                                                    os.environ['REGISTRATION_URL'])
 
             elif command == "stats":
                 greeting = "Hey %s! Give me a minute or two while I fetch your stats." \
