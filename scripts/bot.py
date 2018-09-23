@@ -43,7 +43,7 @@ class Bot(object):
         cursor.execute(self.QUERY_FETCH_TOKEN.format(username))
         result = cursor.fetchone()
         database_connection.close()
-        if len(result) > 0:
+        if result:
             return aes_cipher.decrypt(result[0])
         else:
             return False
