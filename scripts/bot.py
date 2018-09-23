@@ -49,9 +49,9 @@ class Bot(object):
             return False
 
     def handle_commands(self, bot, update, command):
-        message = "Hi %s! You are not a registered user yet. Hit /register to register. " \
-                  "Ping %s in case you face any issue." \
-                  % (update.message.from_user.first_name, aes_cipher.decrypt(os.environ['ADMIN_USER_NAME']))
+        message = "Hi {}! You are not a registered user yet. Visit {} to register. Ping {} in case you face any issue.".format(
+            update.message.from_user.first_name, os.environ['REGISTRATION_URL'],
+            aes_cipher.decrypt(os.environ['ADMIN_USER_NAME']))
         athlete_token = self.get_athlete_token(bot, update)
         if athlete_token:
 
@@ -59,10 +59,6 @@ class Bot(object):
                 message = "Hey %s! I'm your Strava Bot. " \
                           "Type '/' to get the list of commands that I understand." \
                           % update.message.from_user.first_name
-
-            elif command == "register":
-                message = "Hi {}! Click the following link to register: {}.".format(update.message.from_user.first_name,
-                                                                                    os.environ['REGISTRATION_URL'])
 
             elif command == "stats":
                 greeting = "Hey %s! Give me a minute or two while I fetch your stats." \
@@ -87,9 +83,6 @@ class Bot(object):
 
     def start(self, bot, update):
         self.handle_commands(bot, update, "start")
-
-    def register(self, bot, update):
-        self.handle_commands(bot, update, "register")
 
     def stats(self, bot, update):
         self.handle_commands(bot, update, "stats")
@@ -118,7 +111,6 @@ class Bot(object):
         dispatcher_handler = updater.dispatcher
 
         dispatcher_handler.add_handler(CommandHandler("start", self.start))
-        dispatcher_handler.add_handler(CommandHandler("register", self.register))
         dispatcher_handler.add_handler(CommandHandler("stats", self.stats))
         dispatcher_handler.add_handler(CommandHandler("miscstats", self.miscstats))
         dispatcher_handler.add_handler(CommandHandler("segments", self.segments))
