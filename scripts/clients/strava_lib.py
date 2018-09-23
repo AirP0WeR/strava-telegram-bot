@@ -18,7 +18,7 @@ class StravaLib(object):
         return self.strava_client.get_activities()
 
     def fetch_starred_segments(self):
-        return self.strava_client.get_starred_segment()
+        return self.strava_client.get_starred_segments()
 
     def fetch_segment_details(self, segment_id):
         return self.strava_client.get_segment(segment_id)

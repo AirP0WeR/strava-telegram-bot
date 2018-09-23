@@ -1,4 +1,5 @@
-#!/usr/bin/env python
+#  -*- encoding: utf-8 -*-
+
 import logging
 import os
 from os import sys, path
@@ -7,15 +8,17 @@ sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from threading import Thread
 
 import telegram
+import psycopg2
 from telegram.ext import Updater, CommandHandler, Filters
 
 from scripts.common.aes_cipher import AESCipher
-from scripts.config import Config
 from scripts.commands.miscellaneous_stats import MiscellaneousStats
 from scripts.commands.segments import Segments
 from scripts.commands.stats import Stats
 
 class Bot(object):
+    DATABASE_URL = os.environ['DATABASE_URL']
+    QUERY_FETCH_TOKEN = "select access_token from athletes where telegram_username='{}'"
 
     def __init__(self):
         logging.info("Initializing %s" % self.__class__.__name__)
@@ -24,26 +27,31 @@ class Bot(object):
     def send_message(bot, update, message):
         bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-        if config['SHADOW_MODE'] and (
-                int(aes_cipher.decrypt(config['SHADOW_MODE_CHAT_ID'])) != int(update.message.chat_id)):
-            bot.send_message(chat_id=aes_cipher.decrypt(config['SHADOW_MODE_CHAT_ID']), text=message,
+        if os.environ['SHADOW_MODE'] and (
+                int(aes_cipher.decrypt(os.environ['SHADOW_MODE_CHAT_ID'])) != int(update.message.chat_id)):
+            bot.send_message(chat_id=aes_cipher.decrypt(os.environ['SHADOW_MODE_CHAT_ID']), text=message,
                              parse_mode="Markdown", disable_notification=True,
                              disable_web_page_preview=True)
         else:
             logging.info("Chat ID & Shadow Chat ID are the same")
 
-    @staticmethod
-    def get_athlete_token(bot, update):
+    def get_athlete_token(self, bot, update):
         bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
         username = update.message.from_user.username
-        if username in config['ATHLETES'].viewkeys():
-            return aes_cipher.decrypt(config['ATHLETES'][username])
+        database_connection = psycopg2.connect(self.DATABASE_URL, sslmode='require')
+        cursor = database_connection.cursor()
+        cursor.execute(self.QUERY_FETCH_TOKEN.format(username))
+        result = cursor.fetchone()
+        database_connection.close()
+        if result:
+            return aes_cipher.decrypt(result[0])
         else:
             return False
 
     def handle_commands(self, bot, update, command):
-        message = "Hi %s! You are not a registered user yet. Contact %s for more details." \
-                  % (update.message.from_user.first_name, aes_cipher.decrypt(config['ADMIN_USER_NAME']))
+        message = "Hi {}! You are not a registered user yet.\n\nVisit the following link to register: {}\n\nPing {} in case you face any issue.".format(
+            update.message.from_user.first_name, os.environ['REGISTRATION_URL'],
+            aes_cipher.decrypt(os.environ['ADMIN_USER_NAME']))
         athlete_token = self.get_athlete_token(bot, update)
         if athlete_token:
 
@@ -68,8 +76,8 @@ class Bot(object):
                 greeting = "Hey %s! Give me a minute or two while I fetch your starred segments' stats." \
                            % update.message.from_user.first_name
                 self.send_message(bot, update, greeting)
-                message = Segments(bot, update, athlete_token, config['SHADOW_MODE'],
-                                   aes_cipher.decrypt(config['SHADOW_MODE_CHAT_ID'])).main()
+                message = Segments(bot, update, athlete_token, os.environ['SHADOW_MODE'],
+                                   aes_cipher.decrypt(os.environ['SHADOW_MODE_CHAT_ID'])).main()
 
         self.send_message(bot, update, message)
 
@@ -108,7 +116,7 @@ class Bot(object):
         dispatcher_handler.add_handler(CommandHandler("segments", self.segments))
         dispatcher_handler.add_handler(
             CommandHandler('restart', restart,
-                           filters=Filters.user(username=aes_cipher.decrypt(config['ADMIN_USER_NAME']))))
+                           filters=Filters.user(username=aes_cipher.decrypt(os.environ['ADMIN_USER_NAME']))))
 
         dispatcher_handler.add_error_handler(self.error)
 
@@ -125,5 +133,4 @@ if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     logger = logging.getLogger(__name__)
     aes_cipher = AESCipher(os.environ['CRYPT_KEY_LENGTH'], os.environ['CRYPT_KEY'])
-    config = Config().main()
     Bot().main()
