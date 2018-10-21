@@ -1,24 +1,25 @@
-import logging
 from datetime import date
 from os import sys, path
+
+from stravalib.client import Client
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from stravalib import unithelper
 
 from scripts.common.common import Common
-from scripts.clients.strava_lib import StravaLib
 
 
-class Stats(StravaLib, Common):
+class Stats():
 
     def __init__(self, athlete_token, command):
-        logging.info("Initializing %s" % self.__class__.__name__)
+        self.common = Common()
         self.command = command
-        StravaLib.__init__(self, athlete_token)
+        self.strava_client = Client()
+        self.strava_client.access_token = athlete_token
 
     def calculate_stats(self, current_year, activities, all_time_stats, ytd_stats):
         for activity in activities:
-            if not self.is_flagged_or_private(activity):
+            if not self.common.is_flagged_or_private(activity):
                 if activity.type == 'Ride' or activity.type == 'VirtualRide':
 
                     activity_year = activity.start_date_local.year
@@ -101,7 +102,7 @@ class Stats(StravaLib, Common):
             'two_hundreds': 0
         }
 
-        activities = self.fetch_activities()
+        activities = self.strava_client.get_activities()
 
         all_time_stats, ytd_stats = self.calculate_stats(current_year, activities, all_time_stats, ytd_stats)
 
@@ -126,22 +127,22 @@ class Stats(StravaLib, Common):
                   "- _100's_: %s (Includes %s _150's_ & %s _200's_)" % \
                   (all_time_stats['rides'],
                    all_time_stats['indoor_rides'],
-                   self.meters_to_kilometers(all_time_stats['distance']),
-                   self.meters_to_kilometers(all_time_stats['indoor_distance']),
-                   self.seconds_to_human_readable(all_time_stats['moving_time']),
-                   self.seconds_to_human_readable(all_time_stats['indoor_time']),
-                   self.meters_to_kilometers(all_time_stats['elevation_gain']),
+                   self.common.meters_to_kilometers(all_time_stats['distance']),
+                   self.common.meters_to_kilometers(all_time_stats['indoor_distance']),
+                   self.common.seconds_to_human_readable(all_time_stats['moving_time']),
+                   self.common.seconds_to_human_readable(all_time_stats['indoor_time']),
+                   self.common.meters_to_kilometers(all_time_stats['elevation_gain']),
                    all_time_stats['fifties'],
                    all_time_stats['hundreds'],
                    all_time_stats['one_hundred_fifties'],
                    all_time_stats['two_hundreds'],
                    ytd_stats['rides'],
                    ytd_stats['indoor_rides'],
-                   self.meters_to_kilometers(ytd_stats['distance']),
-                   self.meters_to_kilometers(ytd_stats['indoor_distance']),
-                   self.seconds_to_human_readable(ytd_stats['moving_time']),
-                   self.seconds_to_human_readable(ytd_stats['indoor_time']),
-                   self.meters_to_kilometers(ytd_stats['elevation_gain']),
+                   self.common.meters_to_kilometers(ytd_stats['distance']),
+                   self.common.meters_to_kilometers(ytd_stats['indoor_distance']),
+                   self.common.seconds_to_human_readable(ytd_stats['moving_time']),
+                   self.common.seconds_to_human_readable(ytd_stats['indoor_time']),
+                   self.common.meters_to_kilometers(ytd_stats['elevation_gain']),
                    ytd_stats['fifties'],
                    ytd_stats['hundreds'],
                    ytd_stats['one_hundred_fifties'],

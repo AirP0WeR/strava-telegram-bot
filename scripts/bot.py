@@ -15,6 +15,8 @@ from scripts.common.aes_cipher import AESCipher
 from scripts.commands.miscellaneous_stats import MiscellaneousStats
 from scripts.commands.segments import Segments
 from scripts.commands.stats import Stats
+from scripts.commands.hundreds import Hundreds
+from scripts.commands.fifties import Fifties
 
 class Bot(object):
     DATABASE_URL = os.environ['DATABASE_URL']
@@ -78,8 +80,19 @@ class Bot(object):
                 greeting = ["Hey %s! Give me a minute or two while I fetch your starred segments' stats." \
                             % update.message.from_user.first_name]
                 self.send_messages(bot, update, greeting)
-                message = Segments(bot, update, athlete_token, os.environ['SHADOW_MODE'],
-                                   aes_cipher.decrypt(os.environ['SHADOW_MODE_CHAT_ID'])).main()
+                message = Segments(athlete_token).main()
+
+            elif command == "hundreds":
+                greeting = ["Hey %s! Give me a minute or two while I fetch your 100 km rides." \
+                            % update.message.from_user.first_name]
+                self.send_messages(bot, update, greeting)
+                message = Hundreds(athlete_token).main()
+
+            elif command == "fifties":
+                greeting = ["Hey %s! Give me a minute or two while I fetch your 50 km rides." \
+                            % update.message.from_user.first_name]
+                self.send_messages(bot, update, greeting)
+                message = Fifties(athlete_token).main()
 
         self.send_messages(bot, update, message)
 
@@ -94,6 +107,12 @@ class Bot(object):
 
     def segments(self, bot, update):
         self.handle_commands(bot, update, "segments")
+
+    def hundreds(self, bot, update):
+        self.handle_commands(bot, update, "hundreds")
+
+    def fifties(self, bot, update):
+        self.handle_commands(bot, update, "fifties")
 
     @staticmethod
     def error(update, error):
@@ -116,6 +135,8 @@ class Bot(object):
         dispatcher_handler.add_handler(CommandHandler("stats", self.stats))
         dispatcher_handler.add_handler(CommandHandler("miscstats", self.miscstats))
         dispatcher_handler.add_handler(CommandHandler("segments", self.segments))
+        dispatcher_handler.add_handler(CommandHandler("100s", self.hundreds))
+        dispatcher_handler.add_handler(CommandHandler("50s", self.fifties))
         dispatcher_handler.add_handler(
             CommandHandler('restart', restart,
                            filters=Filters.user(username=aes_cipher.decrypt(os.environ['ADMIN_USER_NAME']))))

@@ -1,18 +1,20 @@
 import logging
 from os import sys, path
 
+from stravalib.client import Client
+
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from stravalib import unithelper
 
 from scripts.common.common import Common
-from scripts.clients.strava_lib import StravaLib
 
 
-class MiscellaneousStats(StravaLib, Common):
+class MiscellaneousStats():
 
     def __init__(self, athlete_token):
-        logging.info("Initializing %s" % self.__class__.__name__)
-        StravaLib.__init__(self, athlete_token)
+        self.common = Common()
+        self.strava_client = Client()
+        self.strava_client.access_token = athlete_token
 
     @staticmethod
     def get_bikes_info(athlete_info):
@@ -30,7 +32,7 @@ class MiscellaneousStats(StravaLib, Common):
 
     def calculate_stats(self, activities, stats):
         for activity in activities:
-            if not self.is_flagged_or_private(activity):
+            if not self.common.is_flagged_or_private(activity):
                 if activity.type == 'Ride' or activity.type == 'VirtualRide':
 
                     stats['kudos'] += activity.kudos_count
@@ -116,14 +118,14 @@ class MiscellaneousStats(StravaLib, Common):
             'kilojoules': 0.0
         }
 
-        athlete_info = self.fetch_athlete()
+        athlete_info = self.strava_client.get_athlete()
 
         stats['following'] = athlete_info.friend_count
         stats['followers'] = athlete_info.follower_count
         stats['strava_created'] = athlete_info.created_at.date()
         stats['bikes'] = self.get_bikes_info(athlete_info)
 
-        activities = self.fetch_activities()
+        activities = self.strava_client.get_activities()
 
         stats = self.calculate_stats(activities, stats)
 
@@ -154,32 +156,34 @@ class MiscellaneousStats(StravaLib, Common):
                    stats['achievement_count'],
                    stats['private'],
                    stats['flagged'],
-                   self.strava_activity_hyperlink() % (
-                       self.meters_to_kilometers(stats['biggest_ride']), 'km', stats['biggest_ride_activity']),
-                   self.strava_activity_hyperlink() % (self.remove_decimal_point(stats['max_elevation_gain']), 'meters',
+                   self.common.strava_activity_hyperlink() % (
+                       self.common.meters_to_kilometers(stats['biggest_ride']), 'km', stats['biggest_ride_activity']),
+                   self.common.strava_activity_hyperlink() % (
+                   self.common.remove_decimal_point(stats['max_elevation_gain']), 'meters',
                                                        stats['max_elevation_gain_activity']),
                    stats['non_stop'],
                    stats['kilojoules'],
-                   self.strava_activity_hyperlink() % (stats['max_speed'], 'km/h', stats['max_speed_activity']),
-                   self.strava_activity_hyperlink() % (stats['max_avg_speed'], 'km/h',
+                   self.common.strava_activity_hyperlink() % (stats['max_speed'], 'km/h', stats['max_speed_activity']),
+                   self.common.strava_activity_hyperlink() % (stats['max_avg_speed'], 'km/h',
                                                        stats['max_avg_speed_activity']))
 
         if stats['max_watts'] != 0:
             message += "*\nPower:*\n\n"
             message += "- _Max Power_: %s\n" % (
-                    self.strava_activity_hyperlink() % (stats['max_watts'], 'watts', stats['max_watts_activity']))
-            message += "- _Best Avg Power_: %s\n" % (self.strava_activity_hyperlink() % (
+                    self.common.strava_activity_hyperlink() % (
+            stats['max_watts'], 'watts', stats['max_watts_activity']))
+            message += "- _Best Avg Power_: %s\n" % (self.common.strava_activity_hyperlink() % (
                 stats['average_watts'], 'watts', stats['average_watts_activity']))
 
         if stats['max_heart_rate'] != 0:
             message += "*\nHeart Rate:*\n\n"
-            message += "- _Max Heart Rate_: %s\n" % (self.strava_activity_hyperlink() % (
-                self.remove_decimal_point(stats['max_heart_rate']), 'bpm', stats['max_heart_rate_activity']))
+            message += "- _Max Heart Rate_: %s\n" % (self.common.strava_activity_hyperlink() % (
+                self.common.remove_decimal_point(stats['max_heart_rate']), 'bpm', stats['max_heart_rate_activity']))
 
         if stats['average_cadence'] != 0.0:
             message += "*\nCadence:*\n\n"
-            message += "- _Best Avg Cadence_: %s" % (self.strava_activity_hyperlink() % (
-                self.remove_decimal_point(stats['average_cadence']), '', stats['average_cadence_activity']))
+            message += "- _Best Avg Cadence_: %s" % (self.common.strava_activity_hyperlink() % (
+                self.common.remove_decimal_point(stats['average_cadence']), '', stats['average_cadence_activity']))
 
         if stats['bikes'] != "":
             message += "*\n\nBike(s):*\n\n"
