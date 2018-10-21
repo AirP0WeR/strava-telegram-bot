@@ -24,16 +24,17 @@ class Bot(object):
         logging.info("Initializing %s" % self.__class__.__name__)
 
     @staticmethod
-    def send_message(bot, update, message):
-        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-        update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-        if os.environ['SHADOW_MODE'] and (
-                int(aes_cipher.decrypt(os.environ['SHADOW_MODE_CHAT_ID'])) != int(update.message.chat_id)):
-            bot.send_message(chat_id=aes_cipher.decrypt(os.environ['SHADOW_MODE_CHAT_ID']), text=message,
-                             parse_mode="Markdown", disable_notification=True,
-                             disable_web_page_preview=True)
-        else:
-            logging.info("Chat ID & Shadow Chat ID are the same")
+    def send_messages(bot, update, messages):
+        for message in messages:
+            bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
+            update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+            if os.environ['SHADOW_MODE'] and (
+                    int(aes_cipher.decrypt(os.environ['SHADOW_MODE_CHAT_ID'])) != int(update.message.chat_id)):
+                bot.send_message(chat_id=aes_cipher.decrypt(os.environ['SHADOW_MODE_CHAT_ID']), text=message,
+                                 parse_mode="Markdown", disable_notification=True,
+                                 disable_web_page_preview=True)
+            else:
+                logging.info("Chat ID & Shadow Chat ID are the same")
 
     def get_athlete_token(self, bot, update):
         bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
@@ -49,37 +50,38 @@ class Bot(object):
             return False
 
     def handle_commands(self, bot, update, command):
-        message = "Hi {}! You are not a registered user yet.\n\nVisit the following link to register: {}\n\nPing {} in case you face any issue.".format(
+        message = [
+            "Hi {}! You are not a registered user yet.\n\nVisit the following link to register: {}\n\nPing {} in case you face any issue.".format(
             update.message.from_user.first_name, os.environ['REGISTRATION_URL'],
-            aes_cipher.decrypt(os.environ['ADMIN_USER_NAME']))
+                aes_cipher.decrypt(os.environ['ADMIN_USER_NAME']))]
         athlete_token = self.get_athlete_token(bot, update)
         if athlete_token:
 
             if command == "start":
-                message = "Hey %s! I'm your Strava Bot. " \
-                          "Type '/' to get the list of commands that I understand." \
-                          % update.message.from_user.first_name
+                message = ["Hey %s! I'm your Strava Bot. " \
+                           "Type '/' to get the list of commands that I understand." \
+                           % update.message.from_user.first_name]
 
             elif command == "stats":
-                greeting = "Hey %s! Give me a minute or two while I fetch your stats." \
-                           % update.message.from_user.first_name
-                self.send_message(bot, update, greeting)
-                message = Stats(athlete_token, command).main()
+                greeting = ["Hey %s! Give me a minute or two while I fetch your stats." \
+                            % update.message.from_user.first_name]
+                self.send_messages(bot, update, greeting)
+                message = [Stats(athlete_token, command).main()]
 
             elif command == "miscstats":
-                greeting = "Hey %s! Give me a minute or two while I fetch your miscellaneous stats." \
-                           % update.message.from_user.first_name
-                self.send_message(bot, update, greeting)
-                message = MiscellaneousStats(athlete_token).main()
+                greeting = ["Hey %s! Give me a minute or two while I fetch your miscellaneous stats." \
+                            % update.message.from_user.first_name]
+                self.send_messages(bot, update, greeting)
+                message = [MiscellaneousStats(athlete_token).main()]
 
             elif command == "segments":
-                greeting = "Hey %s! Give me a minute or two while I fetch your starred segments' stats." \
-                           % update.message.from_user.first_name
-                self.send_message(bot, update, greeting)
+                greeting = ["Hey %s! Give me a minute or two while I fetch your starred segments' stats." \
+                            % update.message.from_user.first_name]
+                self.send_messages(bot, update, greeting)
                 message = Segments(bot, update, athlete_token, os.environ['SHADOW_MODE'],
                                    aes_cipher.decrypt(os.environ['SHADOW_MODE_CHAT_ID'])).main()
 
-        self.send_message(bot, update, message)
+        self.send_messages(bot, update, message)
 
     def start(self, bot, update):
         self.handle_commands(bot, update, "start")
@@ -104,7 +106,7 @@ class Bot(object):
             os.execl(sys.executable, sys.executable, *sys.argv)
 
         def restart(bot, update):
-            self.send_message(bot, update, "Bot is restarting...")
+            self.send_messages(bot, update, ["Bot is restarting..."])
             Thread(target=stop_and_restart).start()
 
         updater = Updater(aes_cipher.decrypt(os.environ['TELEGRAM_BOT_TOKEN']))
