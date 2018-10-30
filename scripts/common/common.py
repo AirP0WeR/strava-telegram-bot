@@ -26,16 +26,8 @@ class Common(object):
 
     @staticmethod
     def is_flagged_or_private(activity):
-        result = False
-        if activity.flagged:
-            result = True
-        if activity.private:
-            result = True
-        return result
+        return True if (activity.flagged or activity.private) else False
 
     @staticmethod
     def is_activity_a_ride(activity):
-        is_activity_a_ride = False
-        if (activity['type'] == 'Ride') or (activity['type'] == 'VirtualRide'):
-            is_activity_a_ride = True
-        return is_activity_a_ride
+        return True if (activity.type == 'Ride' or activity.type == 'VirtualRide') else False

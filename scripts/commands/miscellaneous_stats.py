@@ -23,11 +23,11 @@ class MiscellaneousStats():
         try:
             for bike in bikes:
                 if message == "":
-                    message += "- _%s_: %s" % (bike.name, unithelper.kilometers(bike.distance))
+                    message += "- _{}_: {}".format(bike.name, unithelper.kilometers(bike.distance))
                 else:
-                    message += "\n- _%s_: %s" % (bike.name, unithelper.kilometers(bike.distance))
-        except KeyError, e:
-            logging.info("Key error: %s" % e)
+                    message += "\n- _{}_: {}".format(bike.name, unithelper.kilometers(bike.distance))
+        except Exception:
+            logging.error("Exception!")
         return message
 
     def calculate_stats(self, activities, stats):

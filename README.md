@@ -7,14 +7,14 @@ A simple Strava bot using Stravlib & Telegram for fetching and calculating stati
 1. pip
 2. stravalib
 3. python-telegram-bot
-4. pycrypto
+4. pycryptodome
 5. psycopg2
 
 ```
 $ apt-get install python-pip
 $ pip install stravalib
 $ pip install python-telegram-bot
-$ pip install pycrypto
+$ pip install pycryptodome
 $ pip install psycopg2
 ```
 
