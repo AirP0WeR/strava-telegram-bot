@@ -1,3 +1,5 @@
+#  -*- encoding: utf-8 -*-
+
 from datetime import date
 from os import sys, path
 
@@ -102,50 +104,51 @@ class StatsFormat():
 
     def populate_ride_stats(self, all_time_ride_stats, ytd_ride_stats):
         return "*All Time Stats:*\n\n" \
-               "- _Rides_: {} (Includes {} Indoors)\n" \
-               "- _Distance_: {} km (Includes {} km of Indoors)\n" \
-               "- _Moving Time_: {} hours (Includes {} hours of Indoors)\n" \
-               "- _Elevation Gain_: {} km\n" \
-               "- _50's_: {}\n" \
-               "- _100's_: {} (Includes {} _150's_ & {} _200's_)\n\n" \
+               "- _Rides_: {rides} (Includes {indoor_rides} Indoors)\n" \
+               "- _Distance_: {distance} km (Includes {indoor_distance} km of Indoors)\n" \
+               "- _Moving Time_: {moving_time} hours (Includes {indoor_time} hours of Indoors)\n" \
+               "- _Elevation Gain_: {elevation_gain} km\n" \
+               "- _50's_: {fifties}\n" \
+               "- _100's_: {hundreds} (Includes {one_hundred_fifties} _150's_ & {two_hundreds} _200's_)\n\n" \
                "*Year to Date Stats:*\n\n" \
-               "- _Rides_: {} (Includes {} Indoors)\n" \
-               "- _Distance_: {} km (Includes {} km of Indoors)\n" \
-               "- _Moving Time_: {} hours (Includes {} hours of Indoors)\n" \
-               "- _Elevation Gain_: {} km\n" \
-               "- _50's_: {}\n" \
-               "- _100's_: {} (Includes {} _150's_ & {} _200's_)".format(all_time_ride_stats['rides'],
-                                                                         all_time_ride_stats['indoor_rides'],
-                                                                         self.common.meters_to_kilometers(
+               "- _Rides_: {ytd_rides} (Includes {ytd_indoor_rides} Indoors)\n" \
+               "- _Distance_: {ytd_distance} km (Includes {ytd_indoor_distance} km of Indoors)\n" \
+               "- _Moving Time_: {ytd_moving_time} hours (Includes {ytd_indoor_time} hours of Indoors)\n" \
+               "- _Elevation Gain_: {ytd_elevation_gain} km\n" \
+               "- _50's_: {ytd_fifties}\n" \
+               "- _100's_: {ytd_hundreds} (Includes {ytd_one_hundred_fifties} _150's_ & {ytd_two_hundreds} _200's_)".format(
+            rides=all_time_ride_stats['rides'],
+            indoor_rides=all_time_ride_stats['indoor_rides'],
+            distance=self.common.meters_to_kilometers(
                                                                              all_time_ride_stats['distance']),
-                                                                         self.common.meters_to_kilometers(
+            indoor_distance=self.common.meters_to_kilometers(
                                                                              all_time_ride_stats['indoor_distance']),
-                                                                         self.common.seconds_to_human_readable(
+            moving_time=self.common.seconds_to_human_readable(
                                                                              all_time_ride_stats['moving_time']),
-                                                                         self.common.seconds_to_human_readable(
+            indoor_time=self.common.seconds_to_human_readable(
                                                                              all_time_ride_stats['indoor_time']),
-                                                                         self.common.meters_to_kilometers(
+            elevation_gain=self.common.meters_to_kilometers(
                                                                              all_time_ride_stats['elevation_gain']),
-                                                                         all_time_ride_stats['fifties'],
-                                                                         all_time_ride_stats['hundreds'],
-                                                                         all_time_ride_stats['one_hundred_fifties'],
-                                                                         all_time_ride_stats['two_hundreds'],
-                                                                         ytd_ride_stats['rides'],
-                                                                         ytd_ride_stats['indoor_rides'],
-                                                                         self.common.meters_to_kilometers(
+            fifties=all_time_ride_stats['fifties'],
+            hundreds=all_time_ride_stats['hundreds'],
+            one_hundred_fifties=all_time_ride_stats['one_hundred_fifties'],
+            two_hundreds=all_time_ride_stats['two_hundreds'],
+            ytd_rides=ytd_ride_stats['rides'],
+            ytd_indoor_rides=ytd_ride_stats['indoor_rides'],
+            ytd_distance=self.common.meters_to_kilometers(
                                                                              ytd_ride_stats['distance']),
-                                                                         self.common.meters_to_kilometers(
+            ytd_indoor_distance=self.common.meters_to_kilometers(
                                                                              ytd_ride_stats['indoor_distance']),
-                                                                         self.common.seconds_to_human_readable(
+            ytd_moving_time=self.common.seconds_to_human_readable(
                                                                              ytd_ride_stats['moving_time']),
-                                                                         self.common.seconds_to_human_readable(
+            ytd_indoor_time=self.common.seconds_to_human_readable(
                                                                              ytd_ride_stats['indoor_time']),
-                                                                         self.common.meters_to_kilometers(
+            ytd_elevation_gain=self.common.meters_to_kilometers(
                                                                              ytd_ride_stats['elevation_gain']),
-                                                                         ytd_ride_stats['fifties'],
-                                                                         ytd_ride_stats['hundreds'],
-                                                                         ytd_ride_stats['one_hundred_fifties'],
-                                                                         ytd_ride_stats['two_hundreds'])
+            ytd_fifties=ytd_ride_stats['fifties'],
+            ytd_hundreds=ytd_ride_stats['hundreds'],
+            ytd_one_hundred_fifties=ytd_ride_stats['one_hundred_fifties'],
+            ytd_two_hundreds=ytd_ride_stats['two_hundreds'])
 
 
 class Stats():

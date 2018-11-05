@@ -1,3 +1,5 @@
+#  -*- encoding: utf-8 -*-
+
 from stravalib.client import Client
 
 
@@ -15,8 +17,10 @@ class Hundreds():
             if activity.type == "Ride" or activity.type == "VirtualRide":
                 if float(activity.distance) >= 100000:
                     count += 1
-                    no_of_hundreds += "{}. ".format(count) + "[{}](https://www.strava.com/activities/{})".format(
-                        activity.name, activity.id) + " ({})\n".format(activity.start_date_local.date())
+                    no_of_hundreds += "{count}. ".format(
+                        count=count) + "[{activity_name}](https://www.strava.com/activities/{activity_id})".format(
+                        activity_name=activity.name, activity_id=activity.id) + " ({activity_date})\n".format(
+                        activity_date=activity.start_date_local.date())
                     if count % 25 == 0:
                         messages.append(no_of_hundreds)
                         no_of_hundreds = ""

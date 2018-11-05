@@ -1,12 +1,10 @@
+#  -*- encoding: utf-8 -*-
+
 import datetime
-import logging
 from decimal import Decimal, ROUND_DOWN
 
 
 class Common(object):
-
-    def __init__(self):
-        logging.info("Initializing %s" % self.__class__.__name__)
 
     @staticmethod
     def meters_to_kilometers(distance):

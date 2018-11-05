@@ -1,3 +1,5 @@
+#  -*- encoding: utf-8 -*-
+
 import logging
 from os import sys, path
 
@@ -23,9 +25,13 @@ class MiscellaneousStats():
         try:
             for bike in bikes:
                 if message == "":
-                    message += "- _{}_: {}".format(bike.name, unithelper.kilometers(bike.distance))
+                    message += "- _{bike_name}_: {bike_distance}".format(bike_name=bike.name,
+                                                                         bike_distance=unithelper.kilometers(
+                                                                             bike.distance))
                 else:
-                    message += "\n- _{}_: {}".format(bike.name, unithelper.kilometers(bike.distance))
+                    message += "\n- _{bike_name}_: {bike_distance}".format(bike_name=bike.name,
+                                                                           bike_distance=unithelper.kilometers(
+                                                                               bike.distance))
         except Exception:
             logging.error("Exception!")
         return message
@@ -187,6 +193,6 @@ class MiscellaneousStats():
 
         if stats['bikes'] != "":
             message += "*\n\nBike(s):*\n\n"
-            message += "%s\n" % stats['bikes']
+            message += "{bikes}\n".format(bikes=stats['bikes'])
 
         return message

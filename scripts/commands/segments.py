@@ -1,3 +1,5 @@
+#  -*- encoding: utf-8 -*-
+
 from os import sys, path
 
 from stravalib.client import Client
@@ -10,7 +12,7 @@ from scripts.common.common import Common
 class Segments():
     stats_format = "*%s. %s*\n\n*Personal Record:*\n- _Time_: %s\n- _Date_: %s\n- _Total Attempts_: %s\n\n*Segment Details:*\n- _Distance_: %s\n- _Created_: %s\n- _Avg Gradient_: %s percent\n- _Max Gradient_: %s percent\n- _Highest Elevation_: %s\n- _Lowest Elevation_: %s\n- _Total Elevation Gain_: %s\n- _Total Athletes Attempted_: %s\n- _Total Attempts_: %s\n\n*Leader Board:*\n%s" + "\n\n"
 
-    leader_board_format = "%s. %s | %s | %s\n"
+    leader_board_format = "{rank}. {elapsed_time} | {start_date} | {athlete_name}\n"
 
     def __init__(self, athlete_token):
         self.common = Common()
@@ -20,11 +22,10 @@ class Segments():
     def prepare_leader_board(self, leader_board):
         message = ""
         for leader in leader_board.entries:
-            message += (self.leader_board_format
-                        % (leader.rank,
-                           leader.elapsed_time,
-                           leader.start_date_local.date(),
-                           leader.athlete_name))
+            message += (self.leader_board_format.format(rank=leader.rank,
+                                                        elapsed_time=leader.elapsed_time,
+                                                        start_date=leader.start_date_local.date(),
+                                                        athlete_name=leader.athlete_name))
         return message
 
     def collect_stats(self, starred_segments):
@@ -53,7 +54,8 @@ class Segments():
                                  self.prepare_leader_board(segment_leader_board)
                              ))
 
-        segment_stats.append("Finished fetching stats for your {} starred segment(s).".format(segment_count))
+        segment_stats.append(
+            "Finished fetching stats for your {segment_count} starred segment(s).".format(segment_count=segment_count))
         return segment_stats
 
     def main(self):

@@ -1,5 +1,5 @@
 psycopg2_binary==2.7.5
 python_telegram_bot==11.1.0
-stravalib==0.9.4
+stravalib==0.10.0
 pycryptodome==3.7.0
 psycopg2==2.7.5
