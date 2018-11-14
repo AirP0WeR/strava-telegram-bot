@@ -11,7 +11,7 @@ from stravalib import unithelper
 from scripts.common.common import Common
 
 
-class RideStats():
+class RideStats(object):
 
     @staticmethod
     def calculate_ride_stats(current_year, activity, all_time_ride_stats, ytd_ride_stats):
@@ -67,7 +67,7 @@ class RideStats():
         return all_time_ride_stats, ytd_ride_stats
 
 
-class StatsFormat():
+class StatsFormat(object):
 
     def __init__(self):
         self.common = Common()
@@ -151,7 +151,7 @@ class StatsFormat():
             ytd_two_hundreds=ytd_ride_stats['two_hundreds'])
 
 
-class Stats():
+class Stats(object):
 
     def __init__(self, athlete_token):
         self.common = Common()

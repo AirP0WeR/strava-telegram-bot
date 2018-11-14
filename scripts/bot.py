@@ -14,6 +14,7 @@ from scripts.common.aes_cipher import AESCipher
 from scripts.commands.miscellaneous_stats import MiscellaneousStats
 from scripts.commands.segments import Segments
 from scripts.commands.stats import Stats
+from scripts.commands.run_stats import RunStats
 from scripts.commands.hundreds import Hundreds
 from scripts.commands.fifties import Fifties
 
@@ -81,11 +82,17 @@ class Bot(EnvironmentalVariables):
                 self.send_messages(bot, update, greeting)
                 message = Stats(athlete_token).main()
 
+            elif command == "runstats":
+                greeting = [
+                    "Hey {first_name}! Give me a minute or two while I fetch your stats.".format(first_name=first_name)]
+                self.send_messages(bot, update, greeting)
+                message = RunStats(athlete_token).main()
+
             elif command == "miscstats":
                 greeting = ["Hey {first_name}! Give me a minute or two while I fetch your miscellaneous stats.".format(
                     first_name=first_name)]
                 self.send_messages(bot, update, greeting)
-                message = [MiscellaneousStats(athlete_token).main()]
+                message = MiscellaneousStats(athlete_token).main()
 
             elif command == "segments":
                 greeting = [
@@ -114,6 +121,9 @@ class Bot(EnvironmentalVariables):
     def stats(self, bot, update):
         self.handle_commands(bot, update, "stats")
 
+    def runstats(self, bot, update):
+        self.handle_commands(bot, update, "runstats")
+
     def miscstats(self, bot, update):
         self.handle_commands(bot, update, "miscstats")
 
@@ -137,6 +147,7 @@ class Bot(EnvironmentalVariables):
 
         dispatcher_handler.add_handler(CommandHandler("start", self.start))
         dispatcher_handler.add_handler(CommandHandler("stats", self.stats))
+        dispatcher_handler.add_handler(CommandHandler("runstats", self.runstats))
         dispatcher_handler.add_handler(CommandHandler("miscstats", self.miscstats))
         dispatcher_handler.add_handler(CommandHandler("segments", self.segments))
         dispatcher_handler.add_handler(CommandHandler("100s", self.hundreds))

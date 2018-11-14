@@ -29,3 +29,7 @@ class Common(object):
     @staticmethod
     def is_activity_a_ride(activity):
         return True if (activity.type == 'Ride' or activity.type == 'VirtualRide') else False
+
+    @staticmethod
+    def is_activity_a_run(activity):
+        return True if (activity.type == 'Run' or activity.type == 'VirtualRun') else False

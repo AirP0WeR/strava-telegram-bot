@@ -11,12 +11,10 @@ from stravalib import unithelper
 from scripts.common.common import Common
 
 
-class MiscellaneousStats():
+class CalculateMiscStats(object):
 
-    def __init__(self, athlete_token):
+    def __init__(self):
         self.common = Common()
-        self.strava_client = Client()
-        self.strava_client.access_token = athlete_token
 
     @staticmethod
     def get_bikes_info(athlete_info):
@@ -34,6 +32,7 @@ class MiscellaneousStats():
                                                                                bike.distance))
         except Exception:
             logging.error("Exception!")
+
         return message
 
     def calculate_stats(self, activities, stats):
@@ -94,8 +93,22 @@ class MiscellaneousStats():
 
         return stats
 
-    def get_stats(self):
-        stats = {
+    def get_athlete_info_stats(self, stats, athlete_info):
+        stats['following'] = athlete_info.friend_count
+        stats['followers'] = athlete_info.follower_count
+        stats['strava_created'] = athlete_info.created_at.date()
+        stats['bikes'] = self.get_bikes_info(athlete_info)
+
+        return stats
+
+
+class MiscStatsFormat(object):
+
+    def __init__(self):
+        self.common = Common()
+
+    def misc_ride_stats(self):
+        return {
             'biggest_ride': 0,
             'biggest_ride_activity': '',
             'max_elevation_gain': 0,
@@ -124,21 +137,7 @@ class MiscellaneousStats():
             'kilojoules': 0.0
         }
 
-        athlete_info = self.strava_client.get_athlete()
-
-        stats['following'] = athlete_info.friend_count
-        stats['followers'] = athlete_info.follower_count
-        stats['strava_created'] = athlete_info.created_at.date()
-        stats['bikes'] = self.get_bikes_info(athlete_info)
-
-        activities = self.strava_client.get_activities()
-
-        stats = self.calculate_stats(activities, stats)
-
-        return stats
-
-    def main(self):
-        stats = self.get_stats()
+    def populate_misc_ride_stats(self, stats):
         message = "*Strava:*\n\n" \
                   "- _Using Since_: %s\n" \
                   "- _Following Count_: %s\n" \
@@ -165,19 +164,19 @@ class MiscellaneousStats():
                    self.common.strava_activity_hyperlink() % (
                        self.common.meters_to_kilometers(stats['biggest_ride']), 'km', stats['biggest_ride_activity']),
                    self.common.strava_activity_hyperlink() % (
-                   self.common.remove_decimal_point(stats['max_elevation_gain']), 'meters',
-                                                       stats['max_elevation_gain_activity']),
+                       self.common.remove_decimal_point(stats['max_elevation_gain']), 'meters',
+                       stats['max_elevation_gain_activity']),
                    stats['non_stop'],
                    stats['kilojoules'],
                    self.common.strava_activity_hyperlink() % (stats['max_speed'], 'km/h', stats['max_speed_activity']),
                    self.common.strava_activity_hyperlink() % (stats['max_avg_speed'], 'km/h',
-                                                       stats['max_avg_speed_activity']))
+                                                              stats['max_avg_speed_activity']))
 
         if stats['max_watts'] != 0:
             message += "*\nPower:*\n\n"
             message += "- _Max Power_: %s\n" % (
                     self.common.strava_activity_hyperlink() % (
-            stats['max_watts'], 'watts', stats['max_watts_activity']))
+                stats['max_watts'], 'watts', stats['max_watts_activity']))
             message += "- _Best Avg Power_: %s\n" % (self.common.strava_activity_hyperlink() % (
                 stats['average_watts'], 'watts', stats['average_watts_activity']))
 
@@ -196,3 +195,29 @@ class MiscellaneousStats():
             message += "{bikes}\n".format(bikes=stats['bikes'])
 
         return message
+
+
+class MiscellaneousStats():
+
+    def __init__(self, athlete_token):
+        self.common = Common()
+        self.strava_client = Client()
+        self.strava_client.access_token = athlete_token
+
+    def main(self):
+        all_stats = []
+        calculate_misc_stats = CalculateMiscStats()
+        stats_format = MiscStatsFormat()
+        stats = stats_format.misc_ride_stats()
+
+        athlete_info = self.strava_client.get_athlete()
+
+        stats = calculate_misc_stats.get_athlete_info_stats(stats, athlete_info)
+
+        activities = self.strava_client.get_activities()
+
+        stats = calculate_misc_stats.calculate_stats(activities, stats)
+
+        all_stats.append(stats_format.populate_misc_ride_stats(stats))
+
+        return all_stats
