@@ -7,16 +7,14 @@ from os import sys, path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
 import telegram
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 import psycopg2
-from telegram.ext import Updater, CommandHandler
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 
 from scripts.common.aes_cipher import AESCipher
-from scripts.commands.miscellaneous_stats import MiscellaneousStats
-from scripts.commands.segments import Segments
-from scripts.commands.stats import Stats
-from scripts.commands.run_stats import RunStats
-from scripts.commands.hundreds import Hundreds
-from scripts.commands.fifties import Fifties
+from scripts.clients.strava import StravaClient
+from scripts.stats.calculate_stats import CalculateStats
+from scripts.stats.format_stats import FormatStats
 
 
 class EnvironmentalVariables(object):
@@ -27,27 +25,26 @@ class EnvironmentalVariables(object):
     app_name = os.environ.get('APP_NAME')
     port = os.environ.get('PORT')
     registration_url = os.environ['REGISTRATION_URL']
-    shadow_mode = os.environ['SHADOW_MODE']
     telegram_bot_token = os.environ['TELEGRAM_BOT_TOKEN']
 
 
 class Bot(EnvironmentalVariables):
     QUERY_FETCH_TOKEN = "select access_token from athletes where telegram_username='{telegram_username}'"
 
+    STATS_MAIN_KEYBOARD_MENU = [[InlineKeyboardButton("Ride", callback_data='stats_ride'),
+                                 InlineKeyboardButton("Run", callback_data='stats_run')],
+                                [InlineKeyboardButton("Exit", callback_data='exit')]]
+
+    STATS_RIDE_KEYBOARD_MENU = [[InlineKeyboardButton("All Time", callback_data='stats_ride_all_time'),
+                                 InlineKeyboardButton("Year to Date", callback_data='stats_ride_ytd')],
+                                [InlineKeyboardButton("Exit", callback_data='exit')]]
+
+    STATS_RUN_KEYBOARD_MENU = [[InlineKeyboardButton("All Time", callback_data='stats_run_all_time'),
+                                InlineKeyboardButton("Year to Date", callback_data='stats_run_ytd')],
+                               [InlineKeyboardButton("Exit", callback_data='exit')]]
+
     def __init__(self):
         self.aes_cipher = AESCipher(self.crypt_key_length, self.crypt_key)
-
-    def send_messages(self, bot, update, messages):
-        for message in messages:
-            bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-            update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-            if self.shadow_mode and (
-                    int(self.aes_cipher.decrypt(os.environ['SHADOW_MODE_CHAT_ID'])) != int(update.message.chat_id)):
-                bot.send_message(chat_id=self.aes_cipher.decrypt(os.environ['SHADOW_MODE_CHAT_ID']), text=message,
-                                 parse_mode="Markdown", disable_notification=True,
-                                 disable_web_page_preview=True)
-            else:
-                logging.info("Chat ID & Shadow Chat ID are the same")
 
     def get_athlete_token(self, bot, update):
         bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
@@ -63,82 +60,107 @@ class Bot(EnvironmentalVariables):
         else:
             return False
 
-    def handle_commands(self, bot, update, command):
-        message = [
-            "Hi {first_name}! You are not a registered user yet.\n\nVisit the following link to register: {registration_url}\n\nPing {admin_user_name} in case you face any issue.".format(
-                first_name=update.message.from_user.first_name, registration_url=self.registration_url,
-                admin_user_name=self.aes_cipher.decrypt(self.admin_user_name))]
-        first_name = update.message.from_user.first_name
+    @staticmethod
+    def start(bot, update):
+        message = "Hey {first_name}! I'm your Strava Bot. Type '/' to get the list of commands that I understand.".format(
+            first_name=update.message.from_user.first_name)
+        update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+
+    def stats(self, bot, update, user_data):
         athlete_token = self.get_athlete_token(bot, update)
         if athlete_token:
+            greeting = "Hey {first_name}! Give me a minute or two while I fetch your data.".format(
+                first_name=update.message.from_user.first_name)
+            update.message.reply_text(greeting, parse_mode="Markdown", disable_web_page_preview=True)
 
-            if command == "start":
-                message = ["Hey {first_name}! I'm your Strava Bot. " \
-                           "Type '/' to get the list of commands that I understand.".format(first_name=first_name)]
+            strava_client = StravaClient(athlete_token).get_strava_client()
+            activities = strava_client.get_activities()
 
-            elif command == "stats":
-                greeting = [
-                    "Hey {first_name}! Give me a minute or two while I fetch your stats.".format(first_name=first_name)]
-                self.send_messages(bot, update, greeting)
-                message = Stats(athlete_token).main()
+            calculated_stats = CalculateStats(activities).main()
+            formatted_stats = FormatStats(calculated_stats).main()
+            user_data['stats'] = formatted_stats
 
-            elif command == "runstats":
-                greeting = [
-                    "Hey {first_name}! Give me a minute or two while I fetch your stats.".format(first_name=first_name)]
-                self.send_messages(bot, update, greeting)
-                message = RunStats(athlete_token).main()
+            update.message.reply_text('Choose an Activity to view your stats:',
+                                      reply_markup=InlineKeyboardMarkup(self.STATS_MAIN_KEYBOARD_MENU))
+        else:
+            message = "Hi {first_name}! You are not a registered user yet.\n\nVisit the following link to register: {registration_url}\n\nPing {admin_user_name} in case you face any issue.".format(
+                first_name=update.message.from_user.first_name, registration_url=self.registration_url,
+                admin_user_name=self.aes_cipher.decrypt(self.admin_user_name))
+            update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
 
-            elif command == "miscstats":
-                greeting = ["Hey {first_name}! Give me a minute or two while I fetch your miscellaneous stats.".format(
-                    first_name=first_name)]
-                self.send_messages(bot, update, greeting)
-                message = MiscellaneousStats(athlete_token).main()
+    def button(self, bot, update, user_data):
+        query = update.callback_query
+        chosen_option = query.data
+        chat_id = query.message.chat_id
+        message_id = query.message.message_id
+        stats_ride_all_time = user_data['stats']['all_time_ride_stats']
+        stats_ride_ytd = user_data['stats']['ytd_ride_stats']
+        stats_run_all_time = user_data['stats']['all_time_run_stats']
+        stats_run_ytd = user_data['stats']['ytd_run_stats']
 
-            elif command == "segments":
-                greeting = [
-                    "Hey {first_name}! Give me a minute or two while I fetch your starred segments' stats.".format(
-                        first_name=first_name)]
-                self.send_messages(bot, update, greeting)
-                message = Segments(athlete_token).main()
+        if chosen_option == "stats_ride":
+            bot.edit_message_text(text="Choose the type of stat you want to see:",
+                                  chat_id=chat_id,
+                                  message_id=message_id,
+                                  reply_markup=InlineKeyboardMarkup(self.STATS_RIDE_KEYBOARD_MENU))
 
-            elif command == "hundreds":
-                greeting = ["Hey {first_name}! Give me a minute or two while I fetch your 100 km rides.".format(
-                    first_name=first_name)]
-                self.send_messages(bot, update, greeting)
-                message = Hundreds(athlete_token).main()
+        elif chosen_option == "stats_ride_all_time":
+            bot.edit_message_text(text=stats_ride_all_time,
+                                  chat_id=chat_id,
+                                  message_id=message_id,
+                                  parse_mode="Markdown",
+                                  disable_web_page_preview=True)
 
-            elif command == "fifties":
-                greeting = ["Hey {first_name}! Give me a minute or two while I fetch your 50 km rides.".format(
-                    first_name=first_name)]
-                self.send_messages(bot, update, greeting)
-                message = Fifties(athlete_token).main()
+            bot.send_message(text="Choose an Activity to view your stats:",
+                             chat_id=chat_id,
+                             reply_markup=InlineKeyboardMarkup(self.STATS_MAIN_KEYBOARD_MENU))
 
-        self.send_messages(bot, update, message)
+        elif chosen_option == "stats_ride_ytd":
+            bot.edit_message_text(text=stats_ride_ytd,
+                                  chat_id=chat_id,
+                                  message_id=message_id,
+                                  parse_mode="Markdown",
+                                  disable_web_page_preview=True)
 
-    def start(self, bot, update):
-        self.handle_commands(bot, update, "start")
+            bot.send_message(text="Choose an Activity to view your stats:",
+                             chat_id=chat_id,
+                             reply_markup=InlineKeyboardMarkup(self.STATS_MAIN_KEYBOARD_MENU))
 
-    def stats(self, bot, update):
-        self.handle_commands(bot, update, "stats")
+        elif chosen_option == "stats_run":
+            bot.edit_message_text(text="Choose the type of stat you want to see:",
+                                  chat_id=chat_id,
+                                  message_id=message_id,
+                                  reply_markup=InlineKeyboardMarkup(self.STATS_RUN_KEYBOARD_MENU))
 
-    def runstats(self, bot, update):
-        self.handle_commands(bot, update, "runstats")
+        elif chosen_option == "stats_run_all_time":
+            bot.edit_message_text(text=stats_run_all_time,
+                                  chat_id=chat_id,
+                                  message_id=message_id,
+                                  parse_mode="Markdown",
+                                  disable_web_page_preview=True)
 
-    def miscstats(self, bot, update):
-        self.handle_commands(bot, update, "miscstats")
+            bot.send_message(text="Choose an Activity to view your stats:",
+                             chat_id=chat_id,
+                             reply_markup=InlineKeyboardMarkup(self.STATS_MAIN_KEYBOARD_MENU))
 
-    def segments(self, bot, update):
-        self.handle_commands(bot, update, "segments")
+        elif chosen_option == "stats_run_ytd":
+            bot.edit_message_text(text=stats_run_ytd,
+                                  chat_id=chat_id,
+                                  message_id=message_id,
+                                  parse_mode="Markdown",
+                                  disable_web_page_preview=True)
 
-    def hundreds(self, bot, update):
-        self.handle_commands(bot, update, "hundreds")
+            bot.send_message(text="Choose an Activity to view your stats:",
+                             chat_id=chat_id,
+                             reply_markup=InlineKeyboardMarkup(self.STATS_MAIN_KEYBOARD_MENU))
 
-    def fifties(self, bot, update):
-        self.handle_commands(bot, update, "fifties")
+        elif chosen_option == "exit":
+            user_data.clear()
+            bot.edit_message_text(text="Thank you!", chat_id=chat_id, message_id=message_id)
 
     @staticmethod
     def error(update, error):
-        logging.error('Update "{update}" caused error "{error}"'.format(update=update, error=error))
+        logger.error('Update "{update}" caused error "{error}"'.format(update=update, error=error))
 
     def main(self):
 
@@ -146,17 +168,12 @@ class Bot(EnvironmentalVariables):
         dispatcher_handler = updater.dispatcher
 
         dispatcher_handler.add_handler(CommandHandler("start", self.start))
-        dispatcher_handler.add_handler(CommandHandler("stats", self.stats))
-        dispatcher_handler.add_handler(CommandHandler("runstats", self.runstats))
-        dispatcher_handler.add_handler(CommandHandler("miscstats", self.miscstats))
-        dispatcher_handler.add_handler(CommandHandler("segments", self.segments))
-        dispatcher_handler.add_handler(CommandHandler("100s", self.hundreds))
-        dispatcher_handler.add_handler(CommandHandler("50s", self.fifties))
+        dispatcher_handler.add_handler(CommandHandler("stats", self.stats, pass_user_data=True))
+        dispatcher_handler.add_handler((CallbackQueryHandler(self.button, pass_user_data=True)))
 
         dispatcher_handler.add_error_handler(self.error)
 
-        updater.start_webhook(listen="0.0.0.0",
-                              port=int(self.port),
+        updater.start_webhook(listen="0.0.0.0", port=int(self.port),
                               url_path=self.aes_cipher.decrypt(self.telegram_bot_token))
 
         updater.bot.setWebhook("{app_name}/{telegram_bot_token}".format(app_name=self.app_name,
@@ -167,5 +184,6 @@ class Bot(EnvironmentalVariables):
 
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
-    bot = Bot()
-    bot.main()
+    logger = logging.getLogger(__name__)
+    strava_bot = Bot()
+    strava_bot.main()
