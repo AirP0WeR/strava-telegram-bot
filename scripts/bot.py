@@ -38,11 +38,13 @@ class Bot(EnvironmentalVariables):
     STATS_RIDE_KEYBOARD_MENU = [[InlineKeyboardButton("All Time", callback_data='stats_ride_all_time'),
                                  InlineKeyboardButton("Year to Date", callback_data='stats_ride_ytd'),
                                  InlineKeyboardButton("Misc", callback_data='stats_ride_misc')],
-                                [InlineKeyboardButton("Exit", callback_data='exit')]]
+                                [InlineKeyboardButton("Back", callback_data='back'),
+                                 InlineKeyboardButton("Exit", callback_data='exit')]]
 
     STATS_RUN_KEYBOARD_MENU = [[InlineKeyboardButton("All Time", callback_data='stats_run_all_time'),
                                 InlineKeyboardButton("Year to Date", callback_data='stats_run_ytd')],
-                               [InlineKeyboardButton("Exit", callback_data='exit')]]
+                               [InlineKeyboardButton("Back", callback_data='back'),
+                                InlineKeyboardButton("Exit", callback_data='exit')]]
 
     def __init__(self):
         self.aes_cipher = AESCipher(self.crypt_key_length, self.crypt_key)
@@ -167,6 +169,12 @@ class Bot(EnvironmentalVariables):
             bot.send_message(text="Choose an activity type to view your stats:",
                              chat_id=chat_id,
                              reply_markup=InlineKeyboardMarkup(self.STATS_MAIN_KEYBOARD_MENU))
+
+        elif chosen_option == "back":
+            bot.edit_message_text(text="Choose an activity type to view your stats:",
+                                  chat_id=chat_id,
+                                  message_id=message_id,
+                                  reply_markup=InlineKeyboardMarkup(self.STATS_MAIN_KEYBOARD_MENU))
 
         elif chosen_option == "exit":
             user_data.clear()
