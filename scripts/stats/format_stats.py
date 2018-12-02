@@ -63,6 +63,44 @@ class FormatStats(object):
             ytd_one_hundred_fifties=stats['ytd_ride_stats']['one_hundred_fifties'],
             ytd_two_hundreds=stats['ytd_ride_stats']['two_hundreds'])
 
+        misc_ride_stats = "*Strava:*\n\n" \
+                          "- _Using Since_: %s\n" \
+                          "- _Following Count_: %s\n" \
+                          "- _Followers Count_: %s\n" \
+                          "- _Kudos Received_: %s\n" \
+                          "- _Total Achievements_: %s\n" \
+                          "- _Private Rides_: %s\n" \
+                          "- _Flagged Rides_: %s\n" \
+                          "\n*Rides:*\n\n" \
+                          "- _Biggest Ride_: %s\n" \
+                          "- _Max Elevation Gain_: %s\n" \
+                          "- _Non-Stop Rides_: %s\n" \
+                          "- _Calories Burnt_: %s\n" \
+                          "\n*Speed:*\n\n" \
+                          "- _Max Speed_: %s\n" \
+                          "- _Best Avg Speed_: %s\n" % \
+                          (stats['misc_ride_stats']['strava_created'],
+                           stats['misc_ride_stats']['following'],
+                           stats['misc_ride_stats']['followers'],
+                           stats['misc_ride_stats']['kudos'],
+                           stats['misc_ride_stats']['achievement_count'],
+                           stats['misc_ride_stats']['private'],
+                           stats['misc_ride_stats']['flagged'],
+                           self.common.strava_activity_hyperlink() % (
+                               self.common.meters_to_kilometers(stats['misc_ride_stats']['biggest_ride']), 'km',
+                               stats['misc_ride_stats']['biggest_ride_activity']),
+                           self.common.strava_activity_hyperlink() % (
+                               self.common.remove_decimal_point(stats['misc_ride_stats']['max_elevation_gain']),
+                               'meters',
+                               stats['misc_ride_stats']['max_elevation_gain_activity']),
+                           stats['misc_ride_stats']['non_stop'],
+                           stats['misc_ride_stats']['kilojoules'],
+                           self.common.strava_activity_hyperlink() % (stats['misc_ride_stats']['max_speed'], 'km/h',
+                                                                      stats['misc_ride_stats']['max_speed_activity']),
+                           self.common.strava_activity_hyperlink() % (stats['misc_ride_stats']['max_avg_speed'], 'km/h',
+                                                                      stats['misc_ride_stats'][
+                                                                          'max_avg_speed_activity']))
+
         all_time_run_stats = "*All Time Stats:*\n\n" \
                              "- _Runs_: {all_time_runs}\n" \
                              "- _Distance_: {all_time_distance} km\n" \
@@ -109,6 +147,7 @@ class FormatStats(object):
 
         stats['all_time_ride_stats'] = all_time_ride_stats
         stats['ytd_ride_stats'] = ytd_ride_stats
+        stats['misc_ride_stats'] = misc_ride_stats
         stats['all_time_run_stats'] = all_time_run_stats
         stats['ytd_run_stats'] = ytd_run_stats
 

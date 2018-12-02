@@ -36,7 +36,8 @@ class Bot(EnvironmentalVariables):
                                 [InlineKeyboardButton("Exit", callback_data='exit')]]
 
     STATS_RIDE_KEYBOARD_MENU = [[InlineKeyboardButton("All Time", callback_data='stats_ride_all_time'),
-                                 InlineKeyboardButton("Year to Date", callback_data='stats_ride_ytd')],
+                                 InlineKeyboardButton("Year to Date", callback_data='stats_ride_ytd'),
+                                 InlineKeyboardButton("Misc", callback_data='stats_ride_misc')],
                                 [InlineKeyboardButton("Exit", callback_data='exit')]]
 
     STATS_RUN_KEYBOARD_MENU = [[InlineKeyboardButton("All Time", callback_data='stats_run_all_time'),
@@ -75,8 +76,9 @@ class Bot(EnvironmentalVariables):
 
             strava_client = StravaClient(athlete_token).get_strava_client()
             activities = strava_client.get_activities()
+            athlete_info = strava_client.get_athlete()
 
-            calculated_stats = CalculateStats(activities).main()
+            calculated_stats = CalculateStats(activities, athlete_info).main()
             formatted_stats = FormatStats(calculated_stats).main()
             user_data['stats'] = formatted_stats
 
@@ -97,6 +99,7 @@ class Bot(EnvironmentalVariables):
         stats_ride_ytd = user_data['stats']['ytd_ride_stats']
         stats_run_all_time = user_data['stats']['all_time_run_stats']
         stats_run_ytd = user_data['stats']['ytd_run_stats']
+        stats_ride_misc = user_data['stats']['misc_ride_stats']
 
         if chosen_option == "stats_ride":
             bot.edit_message_text(text="Choose the type of stat you want to see:",
@@ -111,7 +114,7 @@ class Bot(EnvironmentalVariables):
                                   parse_mode="Markdown",
                                   disable_web_page_preview=True)
 
-            bot.send_message(text="Choose an Activity to view your stats:",
+            bot.send_message(text="Choose an activity type to view your stats:",
                              chat_id=chat_id,
                              reply_markup=InlineKeyboardMarkup(self.STATS_MAIN_KEYBOARD_MENU))
 
@@ -122,7 +125,18 @@ class Bot(EnvironmentalVariables):
                                   parse_mode="Markdown",
                                   disable_web_page_preview=True)
 
-            bot.send_message(text="Choose an Activity to view your stats:",
+            bot.send_message(text="Choose an activity type to view your stats:",
+                             chat_id=chat_id,
+                             reply_markup=InlineKeyboardMarkup(self.STATS_MAIN_KEYBOARD_MENU))
+
+        elif chosen_option == "stats_ride_misc":
+            bot.edit_message_text(text=stats_ride_misc,
+                                  chat_id=chat_id,
+                                  message_id=message_id,
+                                  parse_mode="Markdown",
+                                  disable_web_page_preview=True)
+
+            bot.send_message(text="Choose an activity type to view your stats:",
                              chat_id=chat_id,
                              reply_markup=InlineKeyboardMarkup(self.STATS_MAIN_KEYBOARD_MENU))
 
@@ -139,7 +153,7 @@ class Bot(EnvironmentalVariables):
                                   parse_mode="Markdown",
                                   disable_web_page_preview=True)
 
-            bot.send_message(text="Choose an Activity to view your stats:",
+            bot.send_message(text="Choose an activity type to view your stats:",
                              chat_id=chat_id,
                              reply_markup=InlineKeyboardMarkup(self.STATS_MAIN_KEYBOARD_MENU))
 
@@ -150,7 +164,7 @@ class Bot(EnvironmentalVariables):
                                   parse_mode="Markdown",
                                   disable_web_page_preview=True)
 
-            bot.send_message(text="Choose an Activity to view your stats:",
+            bot.send_message(text="Choose an activity type to view your stats:",
                              chat_id=chat_id,
                              reply_markup=InlineKeyboardMarkup(self.STATS_MAIN_KEYBOARD_MENU))
 
