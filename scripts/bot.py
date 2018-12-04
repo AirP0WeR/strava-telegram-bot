@@ -16,7 +16,6 @@ class Bot(object):
 
     def __init__(self):
         self.bot_variables = BotVariables()
-        self.button_handle = HandleButtons()
         self.aes_cipher = AESCipher(self.bot_variables.crypt_key_length, self.bot_variables.crypt_key)
 
     @staticmethod
@@ -24,17 +23,22 @@ class Bot(object):
         logger.error('Update "{update}" caused error "{error}"'.format(update=update, error=error))
 
     @staticmethod
-    def handle(bot, update, user_data):
-        handler = HandleCommands(bot, update, user_data)
-        handler.main()
+    def handle_commands(bot, update, user_data):
+        commands = HandleCommands(bot, update, user_data)
+        commands.process()
+
+    @staticmethod
+    def handle_buttons(bot, update, user_data):
+        buttons = HandleButtons(bot, update, user_data)
+        buttons.process()
 
     def main(self):
         updater = Updater(self.aes_cipher.decrypt(self.bot_variables.telegram_bot_token))
         dispatcher_handler = updater.dispatcher
 
-        dispatcher_handler.add_handler(CommandHandler("start", self.handle, pass_user_data=True))
-        dispatcher_handler.add_handler(CommandHandler("stats", self.handle, pass_user_data=True))
-        dispatcher_handler.add_handler(CallbackQueryHandler(self.button_handle.button, pass_user_data=True))
+        dispatcher_handler.add_handler(CommandHandler("start", self.handle_commands, pass_user_data=True))
+        dispatcher_handler.add_handler(CommandHandler("stats", self.handle_commands, pass_user_data=True))
+        dispatcher_handler.add_handler(CallbackQueryHandler(self.handle_buttons, pass_user_data=True))
 
         dispatcher_handler.add_error_handler(self.error)
 

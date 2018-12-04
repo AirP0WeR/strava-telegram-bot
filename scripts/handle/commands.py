@@ -21,12 +21,10 @@ class HandleCommands(object):
         self.bot_constants = BotConstants()
         self.aes_cipher = AESCipher(self.bot_variables.crypt_key_length, self.bot_variables.crypt_key)
 
-    def get_athlete_token(self, bot, update):
-        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.TYPING)
-        username = update.message.from_user.username
+    def get_athlete_token(self, telegram_username):
         database_connection = psycopg2.connect(self.bot_variables.database_url, sslmode='require')
         cursor = database_connection.cursor()
-        cursor.execute(self.bot_constants.QUERY_FETCH_TOKEN.format(telegram_username=username))
+        cursor.execute(self.bot_constants.QUERY_FETCH_TOKEN.format(telegram_username=telegram_username))
         result = cursor.fetchone()
         cursor.close()
         database_connection.close()
@@ -35,10 +33,13 @@ class HandleCommands(object):
         else:
             return False
 
-    def main(self):
-        athlete_token = self.get_athlete_token(self.bot, self.update)
+    def process(self):
+        self.bot.send_chat_action(chat_id=self.update.message.chat_id, action=telegram.ChatAction.TYPING)
+        telegram_username = self.update.message.from_user.username
+        athlete_token = self.get_athlete_token(telegram_username)
         if athlete_token:
             command = self.update.message.text
+            self.bot.send_chat_action(chat_id=self.update.message.chat_id, action=telegram.ChatAction.TYPING)
 
             if command == "/start":
                 message = self.bot_constants.MESSAGE_START_COMMAND.format(
