@@ -4,13 +4,13 @@ from os import sys, path
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
-from scripts.common.common import Common
+from scripts.common.operations import Operations
 
 
 class FormatStats(object):
 
     def __init__(self, stats):
-        self.common = Common()
+        self.common = Operations()
         self.stats = stats
 
     def format(self, stats):

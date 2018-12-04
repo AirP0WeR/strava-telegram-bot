@@ -6,7 +6,7 @@ from stravalib.client import Client
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 
-from scripts.common.common import Common
+from scripts.common.operations import Operations
 
 
 class Segments():
@@ -15,7 +15,7 @@ class Segments():
     leader_board_format = "{rank}. {elapsed_time} | {start_date} | {athlete_name}\n"
 
     def __init__(self, athlete_token):
-        self.common = Common()
+        self.common = Operations()
         self.strava_client = Client()
         self.strava_client.access_token = athlete_token
         

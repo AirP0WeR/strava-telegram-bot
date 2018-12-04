@@ -4,7 +4,7 @@ import datetime
 from decimal import Decimal, ROUND_DOWN
 
 
-class Common(object):
+class Operations(object):
 
     @staticmethod
     def meters_to_kilometers(distance):

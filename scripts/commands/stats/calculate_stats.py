@@ -6,13 +6,13 @@ from os import sys, path
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from stravalib import unithelper
 
-from scripts.common.common import Common
+from scripts.common.operations import Operations
 import logging
 
 class CalculateStats(object):
 
     def __init__(self, activities, athlete_info):
-        self.common = Common()
+        self.common = Operations()
         self.activities = activities
         self.athlete_info = athlete_info
 
