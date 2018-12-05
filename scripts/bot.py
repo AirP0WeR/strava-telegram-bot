@@ -12,7 +12,7 @@ from scripts.common.constants_and_variables import BotVariables
 from scripts.handle.commands import HandleCommands
 
 
-class Bot(object):
+class StravaTelegramBot(object):
 
     def __init__(self):
         self.bot_variables = BotVariables()
@@ -54,5 +54,5 @@ class Bot(object):
 if __name__ == '__main__':
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
     logger = logging.getLogger(__name__)
-    strava_bot = Bot()
-    strava_bot.main()
+    strava_telegram_bot = StravaTelegramBot()
+    strava_telegram_bot.main()
