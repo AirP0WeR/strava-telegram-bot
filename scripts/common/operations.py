@@ -33,3 +33,7 @@ class Operations(object):
     @staticmethod
     def is_activity_a_run(activity):
         return True if (activity.type == 'Run' or activity.type == 'VirtualRun') else False
+
+    @staticmethod
+    def is_indoor(activity):
+        return True if (activity.trainer or activity.type == 'VirtualRide') else False
