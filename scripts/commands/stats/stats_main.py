@@ -21,7 +21,7 @@ class StatsMain(object):
         self.bot_constants = BotConstants()
 
     def process(self):
-        strava_client = StravaClient(self.athlete_token).get_strava_client()
+        strava_client = StravaClient(self.athlete_token).get_client()
         activities = strava_client.get_activities()
         athlete_info = strava_client.get_athlete()
         calculated_stats = CalculateStats(activities, athlete_info).main()
