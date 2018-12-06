@@ -1,5 +1,6 @@
 #  -*- encoding: utf-8 -*-
 
+from collections import defaultdict
 from os import sys, path
 
 import psycopg2
@@ -20,6 +21,7 @@ class HandleCommands(object):
         self.bot_variables = BotVariables()
         self.bot_constants = BotConstants()
         self.aes_cipher = AESCipher(self.bot_variables.crypt_key_length, self.bot_variables.crypt_key)
+        self.athlete_token = None
 
     def get_athlete_token(self, telegram_username):
         database_connection = psycopg2.connect(self.bot_variables.database_url, sslmode='require')
@@ -31,27 +33,37 @@ class HandleCommands(object):
         if result:
             return self.aes_cipher.decrypt(result[0])
         else:
-            return False
+            return None
+
+    def start_command(self):
+        self.user_data.clear()
+        message = self.bot_constants.MESSAGE_START_COMMAND.format(
+            first_name=self.update.message.from_user.first_name)
+        self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+
+    def stats_command(self):
+        self.user_data.clear()
+        message = self.bot_constants.MESSAGE_STATS_COMMAND.format(
+            first_name=self.update.message.from_user.first_name)
+        self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+        stats = StatsMain(self.bot, self.update, self.user_data, self.athlete_token)
+        stats.process()
 
     def process(self):
         self.bot.send_chat_action(chat_id=self.update.message.chat_id, action=telegram.ChatAction.TYPING)
         telegram_username = self.update.message.from_user.username
         athlete_token = self.get_athlete_token(telegram_username)
         if athlete_token:
+
             command = self.update.message.text
             self.bot.send_chat_action(chat_id=self.update.message.chat_id, action=telegram.ChatAction.TYPING)
 
-            if command == "/start":
-                message = self.bot_constants.MESSAGE_START_COMMAND.format(
-                    first_name=self.update.message.from_user.first_name)
-                self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+            options = defaultdict(lambda: self.start_command, {
+                '/start': self.start_command,
+                '/stats': self.stats_command
+            })
 
-            elif command == "/stats":
-                message = self.bot_constants.MESSAGE_STATS_COMMAND.format(
-                    first_name=self.update.message.from_user.first_name)
-                self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-                stats = StatsMain(self.bot, self.update, self.user_data, athlete_token)
-                stats.process()
+            options[command]()
 
         else:
             message = self.bot_constants.MESSAGE_UNREGISTERED_ATHLETE.format(
