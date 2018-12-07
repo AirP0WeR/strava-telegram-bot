@@ -30,7 +30,7 @@ class CalculateStats(object):
     def process(self):
         strava_client = StravaClient(self.athlete_token).get_client()
         athlete_info = strava_client.get_athlete()
-        activities = strava_client.get_activities()
+        activities = strava_client.get_activities(after="1970-01-01T00:00:00Z")
         current_year = date.today().year
 
         ride_all_time_stats = RideAllTimeStats()
@@ -67,7 +67,8 @@ class CalculateStats(object):
         stats['ytd_run_stats'] = run_ytd_stats.format(input_run_ytd_stats)
         stats['misc_ride_stats'] = ride_misc_stats.format(input_ride_misc_stats)
 
-        print("100's: {}".format(input_list_ride_hundreds_stats))
+        for hundred in input_list_ride_hundreds_stats:
+            print(hundred)
 
         self.user_data['stats'] = stats
         self.update.message.reply_text(self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU,
