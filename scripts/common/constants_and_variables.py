@@ -17,6 +17,8 @@ class BotConstants(object):
     MESSAGE_STATS_RIDE_KEYBOARD_MENU = "Choose the type of stat you want to see:"
     MESSAGE_UNREGISTERED_ATHLETE = "Hi {first_name}! You are not a registered user yet.\n\nVisit the following link to register: {registration_url}\n\nPing {admin_user_name} in case you face any issue."
     MESSAGE_EXIT_BUTTON = "Thank you!"
+    MESSAGE_STATS_RIDE_ALL_TIME_FIFTIES = "*All Time 50 km Rides:*"
+    MESSAGE_STATS_RIDE_ALL_TIME_HUNDREDS = "*All Time 100 km Rides:*"
 
     STATS_MAIN_KEYBOARD_MENU = [[InlineKeyboardButton("Ride", callback_data='stats_ride'),
                                  InlineKeyboardButton("Run", callback_data='stats_run')],
@@ -25,6 +27,8 @@ class BotConstants(object):
     STATS_RIDE_KEYBOARD_MENU = [[InlineKeyboardButton("All Time", callback_data='stats_ride_all_time'),
                                  InlineKeyboardButton("Year to Date", callback_data='stats_ride_ytd'),
                                  InlineKeyboardButton("Misc", callback_data='stats_ride_misc')],
+                                [InlineKeyboardButton("50 km Rides", callback_data='stats_ride_all_time_fifties'),
+                                 InlineKeyboardButton("100 km Rides", callback_data='stats_ride_all_time_hundreds')],
                                 [InlineKeyboardButton("Back", callback_data='back'),
                                  InlineKeyboardButton("Exit", callback_data='exit')]]
 

@@ -31,7 +31,7 @@ class RideAllTimeStats(object):
 
     @staticmethod
     def output():
-        return "*All Time Stats:*\n\n" \
+        return "*Ride - All Time Stats:*\n\n" \
                "- _Rides_: {rides} (Includes {indoor_rides} Indoors)\n" \
                "- _Distance_: {distance} km (Includes {indoor_distance} km of Indoors)\n" \
                "- _Moving Time_: {moving_time} hours (Includes {indoor_moving_time} hours of Indoors)\n" \

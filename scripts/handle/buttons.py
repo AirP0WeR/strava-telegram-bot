@@ -23,6 +23,8 @@ class HandleButtons(object):
         self.all_time_ride_stats = self.user_data['stats']['all_time_ride_stats']
         self.ytd_ride_stats = self.user_data['stats']['ytd_ride_stats']
         self.misc_ride_stats = self.user_data['stats']['misc_ride_stats']
+        self.all_time_ride_fifties = self.user_data['stats']['ride_all_time_fifties']
+        self.all_time_ride_hundreds = self.user_data['stats']['ride_all_time_hundreds']
         self.all_time_run_stats = self.user_data['stats']['all_time_run_stats']
         self.ytd_run_stats = self.user_data['stats']['ytd_run_stats']
 
@@ -46,6 +48,28 @@ class HandleButtons(object):
     def stats_ride_misc_button(self):
         self.bot.edit_message_text(text=self.misc_ride_stats, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
+        self.bot.send_message(text=self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU, chat_id=self.chat_id,
+                              reply_markup=InlineKeyboardMarkup(self.bot_constants.STATS_MAIN_KEYBOARD_MENU))
+
+    def stats_ride_all_time_fifties(self):
+        self.bot.edit_message_text(text=self.bot_constants.MESSAGE_STATS_RIDE_ALL_TIME_FIFTIES, chat_id=self.chat_id,
+                                   message_id=self.message_id, parse_mode="Markdown", disable_web_page_preview=True)
+
+        for fifties in self.all_time_ride_fifties:
+            self.bot.send_message(text=fifties, chat_id=self.chat_id, parse_mode="Markdown",
+                                  disable_web_page_preview=True)
+
+        self.bot.send_message(text=self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU, chat_id=self.chat_id,
+                              reply_markup=InlineKeyboardMarkup(self.bot_constants.STATS_MAIN_KEYBOARD_MENU))
+
+    def stats_ride_all_time_hundreds(self):
+        self.bot.edit_message_text(text=self.bot_constants.MESSAGE_STATS_RIDE_ALL_TIME_HUNDREDS, chat_id=self.chat_id,
+                                   message_id=self.message_id, parse_mode="Markdown", disable_web_page_preview=True)
+
+        for hundreds in self.all_time_ride_hundreds:
+            self.bot.send_message(text=hundreds, chat_id=self.chat_id, parse_mode="Markdown",
+                                  disable_web_page_preview=True)
+
         self.bot.send_message(text=self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU, chat_id=self.chat_id,
                               reply_markup=InlineKeyboardMarkup(self.bot_constants.STATS_MAIN_KEYBOARD_MENU))
 
@@ -83,6 +107,8 @@ class HandleButtons(object):
             'stats_ride_all_time': self.stats_ride_all_time_button,
             'stats_ride_ytd': self.stats_ride_ytd_button,
             'stats_ride_misc': self.stats_ride_misc_button,
+            'stats_ride_all_time_fifties': self.stats_ride_all_time_fifties,
+            'stats_ride_all_time_hundreds': self.stats_ride_all_time_hundreds,
             'stats_run': self.stats_run_button,
             'stats_run_all_time': self.stats_run_all_time_button,
             'stats_run_ytd': self.stats_run_ytd_button,

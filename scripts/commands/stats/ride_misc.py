@@ -60,7 +60,12 @@ class RideMiscStats(object):
                "- _Calories Burnt_: {calories_burnt}\n" \
                "\n*Speed:*\n\n" \
                "- _Max Speed_: {max_speed}\n" \
-               "- _Best Avg Speed_: {best_avg_speed}\n"
+               "- _Best Avg Speed_: {best_avg_speed}"
+
+    @staticmethod
+    def output_bikes(output_ride_misc_stats, bikes):
+        output_ride_misc_stats += "*\n\nBike(s):*\n\n{bikes}\n".format(bikes=bikes)
+        return output_ride_misc_stats
 
     @staticmethod
     def get_bikes_info(athlete_info):
@@ -141,7 +146,7 @@ class RideMiscStats(object):
 
     def format(self, input_ride_misc_stats):
         output_ride_misc_stats = self.output()
-        return output_ride_misc_stats.format(
+        output_ride_misc_stats = output_ride_misc_stats.format(
             using_since=input_ride_misc_stats['strava_created'],
             following_count=input_ride_misc_stats['following'],
             followers_count=input_ride_misc_stats['followers'],
@@ -167,3 +172,8 @@ class RideMiscStats(object):
                 text="{value} km/h".format(
                     value=self.operations.round_off_two_decimal_places(input_ride_misc_stats['max_avg_speed'])),
                 activity_id=input_ride_misc_stats['max_avg_speed_activity']))
+
+        if input_ride_misc_stats['bikes'] != "":
+            output_ride_misc_stats = self.output_bikes(output_ride_misc_stats, input_ride_misc_stats['bikes'])
+
+        return output_ride_misc_stats
