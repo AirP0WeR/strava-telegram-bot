@@ -18,6 +18,10 @@ class RideHundredsStats(object):
         list_ride_hundreds_stats = list()
         return serial_no, list_ride_hundreds_stats
 
+    @staticmethod
+    def prepare_batches(batch_size, list_of_items):
+        return [list_of_items[i:i + batch_size] for i in range(0, len(list_of_items), batch_size)]
+
     def calculate(self, serial_no, input_list_ride_hundreds_stats, activity):
         if float(activity.distance) >= 100000:
             serial_no += 1
@@ -29,3 +33,6 @@ class RideHundredsStats(object):
             ))
 
         return serial_no, input_list_ride_hundreds_stats
+
+    def format(self, input_list_ride_hundreds_stats):
+        return self.prepare_batches(25, input_list_ride_hundreds_stats)

@@ -66,8 +66,10 @@ class CalculateStats(object):
         stats['all_time_run_stats'] = run_all_time_stats.format(input_run_all_time_stats)
         stats['ytd_run_stats'] = run_ytd_stats.format(input_run_ytd_stats)
         stats['misc_ride_stats'] = ride_misc_stats.format(input_ride_misc_stats)
+        stats['ride_hundreds'] = ride_hundreds_stats.format(input_list_ride_hundreds_stats)
 
-        print(input_list_ride_hundreds_stats)
+        for hundred in stats['ride_hundreds']:
+            self.update.message.reply_text(hundred, parse_mode="Markdown", disable_web_page_preview=True)
 
         self.user_data['stats'] = stats
         self.update.message.reply_text(self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU,
