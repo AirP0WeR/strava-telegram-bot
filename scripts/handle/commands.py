@@ -9,7 +9,7 @@ import telegram
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from scripts.common.aes_cipher import AESCipher
 from scripts.common.constants_and_variables import BotVariables, BotConstants
-from scripts.commands.stats.stats_main import StatsMain
+from scripts.commands.stats.calculate import CalculateStats
 
 
 class HandleCommands(object):
@@ -44,7 +44,7 @@ class HandleCommands(object):
         message = self.bot_constants.MESSAGE_STATS_COMMAND.format(
             first_name=self.update.message.from_user.first_name)
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-        stats = StatsMain(self.bot, self.update, self.user_data, self.athlete_token)
+        stats = CalculateStats(self.bot, self.update, self.user_data, self.athlete_token)
         stats.process()
 
     def process(self):
