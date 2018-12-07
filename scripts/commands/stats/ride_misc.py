@@ -60,7 +60,7 @@ class RideMiscStats(object):
                "- _Calories Burnt_: {calories_burnt}\n" \
                "\n*Speed:*\n\n" \
                "- _Max Speed_: {max_speed}\n" \
-               "- _Best Avg Speed_: {best_avg_speed}\n"
+               "- _Best Avg Speed_: {best_avg_speed}"
 
     @staticmethod
     def output_bikes(output_ride_misc_stats, bikes):
