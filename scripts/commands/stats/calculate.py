@@ -1,6 +1,5 @@
 #  -*- encoding: utf-8 -*-
 
-import logging
 from datetime import date
 from os import sys, path
 
@@ -32,16 +31,13 @@ class CalculateStats(object):
 
         ride_all_time_stats = RideAllTimeStats()
         input_ride_all_time_stats = ride_all_time_stats.input()
-        output_ride_all_time_stats = ride_all_time_stats.output()
 
         for activity in activities:
             if self.operations.is_activity_a_ride(activity):
                 input_ride_all_time_stats = ride_all_time_stats.calculate(input_ride_all_time_stats, activity)
 
-        stats['all_time_ride_stats'] = ride_all_time_stats.format(input_ride_all_time_stats, output_ride_all_time_stats)
-        logging.info("All ride time stats: {}".format(stats['all_time_ride_stats']))
+        stats['all_time_ride_stats'] = ride_all_time_stats.format(input_ride_all_time_stats)
 
         self.user_data['stats'] = stats
-        logging.info("User data stats: {}".format(stats))
         self.update.message.reply_text(self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU,
                                        reply_markup=InlineKeyboardMarkup(self.bot_constants.STATS_MAIN_KEYBOARD_MENU))

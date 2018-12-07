@@ -13,7 +13,8 @@ class RideAllTimeStats(object):
     def __init__(self):
         self.operations = Operations()
 
-    def input(self):
+    @staticmethod
+    def input():
         return {
             'rides': 0,
             'indoor_rides': 0,
@@ -28,7 +29,8 @@ class RideAllTimeStats(object):
             'two_hundreds': 0
         }
 
-    def output(self):
+    @staticmethod
+    def output():
         return "*All Time Stats:*\n\n" \
                "- _Rides_: {rides} (Includes {indoor_rides} Indoors)\n" \
                "- _Distance_: {distance} km (Includes {indoor_distance} km of Indoors)\n" \
@@ -60,7 +62,8 @@ class RideAllTimeStats(object):
 
         return input_ride_all_time_stats
 
-    def format(self, input_ride_all_time_stats, output_ride_all_time_stats):
+    def format(self, input_ride_all_time_stats):
+        output_ride_all_time_stats = self.output()
         return output_ride_all_time_stats.format(
             rides=input_ride_all_time_stats['rides'],
             indoor_rides=input_ride_all_time_stats['indoor_rides'],
