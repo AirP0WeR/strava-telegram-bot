@@ -42,7 +42,7 @@ class CalculateStats(object):
         input_ride_all_time_stats = ride_all_time_stats.input()
         input_ride_ytd_stats = ride_ytd_stats.input()
         input_ride_misc_stats = ride_misc_stats.input()
-        serial_no, input_list_ride_hundreds_stats = ride_hundreds_stats.input()
+        input_ride_hundred_serial_no, input_ride_hundred_message, input_ride_hundred_list = ride_hundreds_stats.input()
         input_run_all_time_stats = run_all_time_stats.input()
         input_run_ytd_stats = run_ytd_stats.input()
 
@@ -51,9 +51,8 @@ class CalculateStats(object):
                 input_ride_all_time_stats = ride_all_time_stats.calculate(input_ride_all_time_stats, activity)
                 input_ride_ytd_stats = ride_ytd_stats.calculate(input_ride_ytd_stats, activity, current_year)
                 input_ride_misc_stats = ride_misc_stats.calculate(input_ride_misc_stats, activity)
-                serial_no, input_list_ride_hundreds_stats = ride_hundreds_stats.calculate(serial_no,
-                                                                                          input_list_ride_hundreds_stats,
-                                                                                          activity)
+                input_ride_hundred_serial_no, input_ride_hundred_message, input_ride_hundred_list = ride_hundreds_stats.calculate(
+                    input_ride_hundred_serial_no, input_ride_hundred_list, activity)
             elif self.operations.is_activity_a_run(activity):
                 input_run_all_time_stats = run_all_time_stats.calculate(input_run_all_time_stats, activity)
                 input_run_ytd_stats = run_ytd_stats.calculate(input_run_ytd_stats, activity, current_year)
@@ -66,7 +65,7 @@ class CalculateStats(object):
         stats['all_time_run_stats'] = run_all_time_stats.format(input_run_all_time_stats)
         stats['ytd_run_stats'] = run_ytd_stats.format(input_run_ytd_stats)
         stats['misc_ride_stats'] = ride_misc_stats.format(input_ride_misc_stats)
-        stats['ride_hundreds'] = ride_hundreds_stats.format(input_list_ride_hundreds_stats)
+        stats['ride_hundreds'] = input_ride_hundred_list
 
         for hundred in stats['ride_hundreds']:
             self.update.message.reply_text(hundred, parse_mode="Markdown", disable_web_page_preview=True)

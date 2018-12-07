@@ -15,24 +15,21 @@ class RideHundredsStats(object):
     @staticmethod
     def input():
         serial_no = 0
+        message = "*100 km Rides:*\n\n"
         list_ride_hundreds_stats = list()
-        return serial_no, list_ride_hundreds_stats
+        return serial_no, message, list_ride_hundreds_stats
 
-    @staticmethod
-    def prepare_batches(batch_size, list_of_items):
-        return [list_of_items[i:i + batch_size] for i in range(0, len(list_of_items), batch_size)]
-
-    def calculate(self, serial_no, input_list_ride_hundreds_stats, activity):
+    def calculate(self, serial_no, message, input_list_ride_hundreds_stats, activity):
         if float(activity.distance) >= 100000:
             serial_no += 1
-            input_list_ride_hundreds_stats.append(self.MESSAGE_RIDE_HUNDREDS_STATS.format(
+            message += self.MESSAGE_RIDE_HUNDREDS_STATS.format(
                 serial_no=serial_no,
                 activity_name=activity.name,
                 activity_id=activity.id,
-                activity_date=activity.start_date_local.date()
-            ))
+                activity_date=activity.start_date_local.date())
 
-        return serial_no, input_list_ride_hundreds_stats
+        if serial_no % 25 == 0:
+            input_list_ride_hundreds_stats.append(message)
+            message = ""
 
-    def format(self, input_list_ride_hundreds_stats):
-        return self.prepare_batches(25, input_list_ride_hundreds_stats)
+        return serial_no, message, input_list_ride_hundreds_stats
