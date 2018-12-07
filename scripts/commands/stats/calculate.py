@@ -35,19 +35,7 @@ class CalculateStats(object):
         stats = dict()
 
         ride_all_time_stats = RideAllTimeStats()
-        input_ride_all_time_stats = {
-            'rides': 0,
-            'indoor_rides': 0,
-            'distance': 0,
-            'indoor_distance': 0,
-            'moving_time': 0,
-            'indoor_moving_time': 0,
-            'elevation_gain': 0,
-            'fifties': 0,
-            'hundreds': 0,
-            'one_hundred_fifties': 0,
-            'two_hundreds': 0
-        }
+        input_ride_all_time_stats = ride_all_time_stats.input()
         output_ride_all_time_stats = output_stats.OUTPUT_RIDE_ALL_TIME_STATS
 
         for activity in activities:
