@@ -41,4 +41,4 @@ class RideHundredsStats(object):
                 activity_date=activity.start_date_local.date()
             ))
 
-        return input_list_ride_hundreds_stats
+        return serial_no, input_list_ride_hundreds_stats
