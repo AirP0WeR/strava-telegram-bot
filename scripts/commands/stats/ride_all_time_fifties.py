@@ -15,7 +15,7 @@ class RideAllTimeFiftiesStats(object):
     @staticmethod
     def input():
         serial_no = 0
-        message = "*50 km Rides:*\n\n"
+        message = ""
         ride_fifties_list = list()
         return serial_no, message, ride_fifties_list
 

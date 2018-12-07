@@ -78,12 +78,6 @@ class CalculateStats(object):
         stats['ride_all_time_fifties'] = input_ride_all_time_fifties_list
         stats['ride_all_time_hundreds'] = input_ride_all_time_hundreds_list
 
-        for fifty in stats['ride_all_time_fifties']:
-            self.update.message.reply_text(fifty, parse_mode="Markdown", disable_web_page_preview=True)
-
-        for hundred in stats['ride_all_time_hundreds']:
-            self.update.message.reply_text(hundred, parse_mode="Markdown", disable_web_page_preview=True)
-
         self.user_data['stats'] = stats
         self.update.message.reply_text(self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU,
                                        reply_markup=InlineKeyboardMarkup(self.bot_constants.STATS_MAIN_KEYBOARD_MENU))
