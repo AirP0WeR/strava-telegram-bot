@@ -67,8 +67,7 @@ class CalculateStats(object):
         stats['ytd_run_stats'] = run_ytd_stats.format(input_run_ytd_stats)
         stats['misc_ride_stats'] = ride_misc_stats.format(input_ride_misc_stats)
 
-        for hundred in input_list_ride_hundreds_stats:
-            print(hundred)
+        print(input_list_ride_hundreds_stats)
 
         self.user_data['stats'] = stats
         self.update.message.reply_text(self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU,
