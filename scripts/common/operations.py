@@ -15,6 +15,10 @@ class Operations(object):
         return int(number)
 
     @staticmethod
+    def round_off_two_decimal_places(number):
+        return str(round(number, 2))
+
+    @staticmethod
     def seconds_to_human_readable(time_in_seconds):
         return str(datetime.timedelta(seconds=time_in_seconds))
 
