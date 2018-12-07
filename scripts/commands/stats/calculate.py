@@ -22,10 +22,11 @@ class CalculateStats(object):
         self.athlete_token = athlete_token
         self.bot_constants = BotConstants()
         self.operations = Operations()
-        self.input_stats = InputStats()
-        self.output_stats = OutputStats()
 
     def process(self):
+        input_stats = InputStats()
+        output_stats = OutputStats()
+
         strava_client = StravaClient(self.athlete_token).get_client()
         athlete_info = strava_client.get_athlete()
         activities = strava_client.get_activities()
@@ -33,8 +34,8 @@ class CalculateStats(object):
         stats = dict()
 
         ride_all_time_stats = RideAllTimeStats()
-        input_ride_all_time_stats = self.input_stats.INPUT_RIDE_ALL_TIME_STATS
-        output_ride_all_time_stats = self.output_stats.OUTPUT_RIDE_ALL_TIME_STATS
+        input_ride_all_time_stats = input_stats.INPUT_RIDE_ALL_TIME_STATS
+        output_ride_all_time_stats = output_stats.OUTPUT_RIDE_ALL_TIME_STATS
 
         for activity in activities:
             if self.operations.is_activity_a_ride(activity):
