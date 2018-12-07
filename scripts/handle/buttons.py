@@ -23,7 +23,7 @@ class HandleButtons(object):
         self.all_time_ride_stats = self.user_data['stats']['all_time_ride_stats']
         self.ytd_ride_stats = self.user_data['stats']['ytd_ride_stats']
         # self.misc_ride_stats = self.user_data['stats']['misc_ride_stats']
-        # self.all_time_run_stats = self.user_data['stats']['all_time_run_stats']
+        self.all_time_run_stats = self.user_data['stats']['all_time_run_stats']
         # self.ytd_run_stats = self.user_data['stats']['ytd_run_stats']
 
     def stats_ride_button(self):
