@@ -10,7 +10,6 @@ sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from scripts.clients.strava import StravaClient
 from scripts.common.constants_and_variables import BotConstants
 from scripts.common.operations import Operations
-from scripts.commands.stats.input_and_output import InputStats, OutputStats
 from scripts.commands.stats.ride_all_time import RideAllTimeStats
 
 
@@ -25,9 +24,6 @@ class CalculateStats(object):
         self.operations = Operations()
 
     def process(self):
-        input_stats = InputStats()
-        output_stats = OutputStats()
-
         strava_client = StravaClient(self.athlete_token).get_client()
         athlete_info = strava_client.get_athlete()
         activities = strava_client.get_activities()
@@ -36,7 +32,7 @@ class CalculateStats(object):
 
         ride_all_time_stats = RideAllTimeStats()
         input_ride_all_time_stats = ride_all_time_stats.input()
-        output_ride_all_time_stats = output_stats.OUTPUT_RIDE_ALL_TIME_STATS
+        output_ride_all_time_stats = ride_all_time_stats.output()
 
         for activity in activities:
             if self.operations.is_activity_a_ride(activity):
