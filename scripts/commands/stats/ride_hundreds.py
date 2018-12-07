@@ -28,8 +28,11 @@ class RideHundredsStats(object):
                 activity_id=activity.id,
                 activity_date=activity.start_date_local.date())
 
-        if serial_no % 25 == 0:
-            ride_hundreds_list.append(message)
-            message = ""
+            if serial_no % 25 == 0:
+                ride_hundreds_list.append(message)
+                message = ""
+
+            if message != "":
+                ride_hundreds_list.append(message)
 
         return serial_no, message, ride_hundreds_list
