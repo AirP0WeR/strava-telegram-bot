@@ -28,13 +28,16 @@ class RunAllTimeStats(object):
 
     @staticmethod
     def output():
-        return "*Year to Date Stats:*\n\n" \
-               "- _Rides_: {ytd_rides} (Includes {ytd_indoor_rides} Indoors)\n" \
-               "- _Distance_: {ytd_distance} km (Includes {ytd_indoor_distance} km of Indoors)\n" \
-               "- _Moving Time_: {ytd_moving_time} hours (Includes {ytd_indoor_moving_time} hours of Indoors)\n" \
-               "- _Elevation Gain_: {ytd_elevation_gain} km\n" \
-               "- _50's_: {ytd_fifties}\n" \
-               "- _100's_: {ytd_hundreds} (Includes {ytd_one_hundred_fifties} _150's_ & {ytd_two_hundreds} _200's_)"
+        return "*All Time Stats:*\n\n" \
+               "- _Runs_: {all_time_runs}\n" \
+               "- _Distance_: {all_time_distance} km\n" \
+               "- _Moving Time_: {all_time_moving_time} hours\n" \
+               "- _Elevation Gain_: {all_time_elevation_gain} km\n" \
+               "- _5's_: {all_time_five}\n" \
+               "- _10's_: {all_time_ten}\n" \
+               "- _HM's_: {all_time_hm}\n" \
+               "- _FM's_: {all_time_fm}\n" \
+               "- _Ultra's_: {all_time_ultra}"
 
     def calculate(self, input_run_all_time_stats, activity):
         if not self.operations.is_flagged_or_private(activity):
