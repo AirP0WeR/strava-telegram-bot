@@ -10,6 +10,7 @@ from scripts.clients.strava import StravaClient
 from scripts.common.constants_and_variables import BotConstants
 from scripts.common.operations import Operations
 from scripts.commands.stats.ride_all_time import RideAllTimeStats
+from scripts.commands.stats.ride_ytd import RideYtdStats
 
 
 class CalculateStats(object):
@@ -27,16 +28,20 @@ class CalculateStats(object):
         athlete_info = strava_client.get_athlete()
         activities = strava_client.get_activities()
         current_year = date.today().year
-        stats = dict()
 
         ride_all_time_stats = RideAllTimeStats()
+        ride_ytd_stats = RideYtdStats()
         input_ride_all_time_stats = ride_all_time_stats.input()
+        input_ride_ytd_stats = ride_ytd_stats.input()
 
         for activity in activities:
             if self.operations.is_activity_a_ride(activity):
                 input_ride_all_time_stats = ride_all_time_stats.calculate(input_ride_all_time_stats, activity)
+                input_ride_ytd_stats = ride_ytd_stats.calculate(input_ride_ytd_stats, activity, current_year)
 
+        stats = dict()
         stats['all_time_ride_stats'] = ride_all_time_stats.format(input_ride_all_time_stats)
+        stats['ytd_ride_stats'] = ride_ytd_stats.format(input_ride_ytd_stats)
 
         self.user_data['stats'] = stats
         self.update.message.reply_text(self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU,
