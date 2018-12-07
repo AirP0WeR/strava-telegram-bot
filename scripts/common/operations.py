@@ -15,12 +15,16 @@ class Operations(object):
         return int(number)
 
     @staticmethod
+    def round_off_two_decimal_places(number):
+        return str(round(number, 2))
+
+    @staticmethod
     def seconds_to_human_readable(time_in_seconds):
         return str(datetime.timedelta(seconds=time_in_seconds))
 
     @staticmethod
     def strava_activity_hyperlink():
-        return """[%s %s](https://www.strava.com/activities/%s)"""
+        return "[{text}](https://www.strava.com/activities/{activity_id})"
 
     @staticmethod
     def is_flagged_or_private(activity):
@@ -33,3 +37,7 @@ class Operations(object):
     @staticmethod
     def is_activity_a_run(activity):
         return True if (activity.type == 'Run' or activity.type == 'VirtualRun') else False
+
+    @staticmethod
+    def is_indoor(activity):
+        return True if (activity.trainer or activity.type == 'VirtualRide') else False
