@@ -24,7 +24,7 @@ class Operations(object):
 
     @staticmethod
     def strava_activity_hyperlink():
-        return """[%s %s](https://www.strava.com/activities/%s)"""
+        return "[{text}](https://www.strava.com/activities/{activity_id})"
 
     @staticmethod
     def is_flagged_or_private(activity):
