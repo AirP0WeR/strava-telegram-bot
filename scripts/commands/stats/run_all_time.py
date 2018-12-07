@@ -28,7 +28,7 @@ class RunAllTimeStats(object):
 
     @staticmethod
     def output():
-        return "*All Time Stats:*\n\n" \
+        return "*Run - All Time Stats:*\n\n" \
                "- _Runs_: {all_time_runs}\n" \
                "- _Distance_: {all_time_distance} km\n" \
                "- _Moving Time_: {all_time_moving_time} hours\n" \

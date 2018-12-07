@@ -28,7 +28,7 @@ class RunYtdStats(object):
 
     @staticmethod
     def output():
-        return "*Year to Date Stats:*\n\n" \
+        return "*Run - Year to Date Stats:*\n\n" \
                "- _Runs_: {ytd_time_runs}\n" \
                "- _Distance_: {ytd_time_distance} km\n" \
                "- _Moving Time_: {ytd_time_moving_time} hours\n" \

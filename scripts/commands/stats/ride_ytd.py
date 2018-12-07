@@ -30,7 +30,7 @@ class RideYtdStats(object):
 
     @staticmethod
     def output():
-        return "*Year to Date Stats:*\n\n" \
+        return "*Ride - Year to Date Stats:*\n\n" \
                "- _Rides_: {ytd_rides} (Includes {ytd_indoor_rides} Indoors)\n" \
                "- _Distance_: {ytd_distance} km (Includes {ytd_indoor_distance} km of Indoors)\n" \
                "- _Moving Time_: {ytd_moving_time} hours (Includes {ytd_indoor_moving_time} hours of Indoors)\n" \
