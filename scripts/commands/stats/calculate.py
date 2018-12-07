@@ -58,6 +58,7 @@ class CalculateStats(object):
                 input_run_ytd_stats = run_ytd_stats.calculate(input_run_ytd_stats, activity, current_year)
 
         input_ride_misc_stats = ride_misc_stats.calculate_athlete_info(input_ride_misc_stats, athlete_info)
+        input_ride_hundred_list.append(input_ride_hundred_message)
 
         stats = dict()
         stats['all_time_ride_stats'] = ride_all_time_stats.format(input_ride_all_time_stats)

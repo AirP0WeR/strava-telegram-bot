@@ -32,7 +32,4 @@ class RideHundredsStats(object):
                 ride_hundreds_list.append(message)
                 message = ""
 
-            if message != "":
-                ride_hundreds_list.append(message)
-
         return serial_no, message, ride_hundreds_list
