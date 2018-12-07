@@ -21,10 +21,10 @@ class HandleButtons(object):
         self.chat_id = self.query.message.chat_id
         self.message_id = self.query.message.message_id
         self.all_time_ride_stats = self.user_data['stats']['all_time_ride_stats']
-        self.ytd_ride_stats = self.user_data['stats']['ytd_ride_stats']
-        self.misc_ride_stats = self.user_data['stats']['misc_ride_stats']
-        self.all_time_run_stats = self.user_data['stats']['all_time_run_stats']
-        self.ytd_run_stats = self.user_data['stats']['ytd_run_stats']
+        # self.ytd_ride_stats = self.user_data['stats']['ytd_ride_stats']
+        # self.misc_ride_stats = self.user_data['stats']['misc_ride_stats']
+        # self.all_time_run_stats = self.user_data['stats']['all_time_run_stats']
+        # self.ytd_run_stats = self.user_data['stats']['ytd_run_stats']
 
     def stats_ride_button(self):
         self.bot.edit_message_text(text=self.bot_constants.MESSAGE_STATS_RIDE_KEYBOARD_MENU, chat_id=self.chat_id,

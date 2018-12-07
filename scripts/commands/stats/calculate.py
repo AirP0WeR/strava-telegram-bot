@@ -30,6 +30,7 @@ class CalculateStats(object):
         athlete_info = strava_client.get_athlete()
         activities = strava_client.get_activities()
         current_year = date.today().year
+        stats = dict()
 
         ride_all_time_stats = RideAllTimeStats()
         input_ride_all_time_stats = self.input_stats.INPUT_RIDE_ALL_TIME_STATS
@@ -39,8 +40,8 @@ class CalculateStats(object):
             if self.operations.is_activity_a_ride(activity):
                 input_ride_all_time_stats = ride_all_time_stats.calculate(input_ride_all_time_stats, activity)
 
-        output_ride_all_time_stats = ride_all_time_stats.format(input_ride_all_time_stats, output_ride_all_time_stats)
+        stats['all_time_ride_stats'] = ride_all_time_stats.format(input_ride_all_time_stats, output_ride_all_time_stats)
 
-        self.user_data['stats']['all_time_ride_stats'] = output_ride_all_time_stats
+        self.user_data['stats'] = stats
         self.update.message.reply_text(self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU,
                                        reply_markup=InlineKeyboardMarkup(self.bot_constants.STATS_MAIN_KEYBOARD_MENU))
