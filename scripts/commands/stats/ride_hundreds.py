@@ -16,10 +16,10 @@ class RideHundredsStats(object):
     def input():
         serial_no = 0
         message = "*100 km Rides:*\n\n"
-        list_ride_hundreds_stats = list()
-        return serial_no, message, list_ride_hundreds_stats
+        ride_hundreds_list = list()
+        return serial_no, message, ride_hundreds_list
 
-    def calculate(self, serial_no, message, input_list_ride_hundreds_stats, activity):
+    def calculate(self, serial_no, message, ride_hundreds_list, activity):
         if float(activity.distance) >= 100000:
             serial_no += 1
             message += self.MESSAGE_RIDE_HUNDREDS_STATS.format(
@@ -29,7 +29,7 @@ class RideHundredsStats(object):
                 activity_date=activity.start_date_local.date())
 
         if serial_no % 25 == 0:
-            input_list_ride_hundreds_stats.append(message)
+            ride_hundreds_list.append(message)
             message = ""
 
-        return serial_no, message, input_list_ride_hundreds_stats
+        return serial_no, message, ride_hundreds_list

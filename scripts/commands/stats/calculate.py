@@ -52,7 +52,7 @@ class CalculateStats(object):
                 input_ride_ytd_stats = ride_ytd_stats.calculate(input_ride_ytd_stats, activity, current_year)
                 input_ride_misc_stats = ride_misc_stats.calculate(input_ride_misc_stats, activity)
                 input_ride_hundred_serial_no, input_ride_hundred_message, input_ride_hundred_list = ride_hundreds_stats.calculate(
-                    input_ride_hundred_serial_no, input_ride_hundred_list, activity)
+                    input_ride_hundred_serial_no, input_ride_hundred_message, input_ride_hundred_list, activity)
             elif self.operations.is_activity_a_run(activity):
                 input_run_all_time_stats = run_all_time_stats.calculate(input_run_all_time_stats, activity)
                 input_run_ytd_stats = run_ytd_stats.calculate(input_run_ytd_stats, activity, current_year)
