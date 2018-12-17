@@ -65,8 +65,12 @@ class CalculateStats(object):
                 input_run_all_time_stats = run_all_time_stats.calculate(input_run_all_time_stats, activity)
                 input_run_ytd_stats = run_ytd_stats.calculate(input_run_ytd_stats, activity, current_year)
 
-        input_ride_all_time_fifties_list.append(input_ride_all_time_fifties_message)  # Add the remaining 50 km rides
-        input_ride_all_time_hundreds_list.append(input_ride_all_time_hundreds_message)  # Add the remaining 100 km rides
+        if input_ride_all_time_fifties_message != "":
+            input_ride_all_time_fifties_list.append(
+                input_ride_all_time_fifties_message)  # Add the remaining 50 km rides
+        if input_ride_all_time_hundreds_message != "":
+            input_ride_all_time_hundreds_list.append(
+                input_ride_all_time_hundreds_message)  # Add the remaining 100 km rides
         input_ride_misc_stats = ride_misc_stats.calculate_athlete_info(input_ride_misc_stats, athlete_info)
 
         stats = dict()
