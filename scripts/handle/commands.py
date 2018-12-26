@@ -26,7 +26,7 @@ class HandleCommands(object):
         self.aes_cipher = AESCipher(self.bot_variables.crypt_key_length, self.bot_variables.crypt_key)
         self.athlete_token = None
 
-    def refresh_and_update_token(self, telegram_username, refresh_token):
+    def refresh_and_update_token(self, athlete_id, refresh_token):
         strava_client = StravaClient().get_client()
         access_info = strava_client.refresh_access_token(
             client_id=int(self.aes_cipher.decrypt(self.bot_variables.client_id)),
@@ -40,7 +40,7 @@ class HandleCommands(object):
             access_token=self.aes_cipher.encrypt(access_info['access_token']),
             refresh_token=self.aes_cipher.encrypt(access_info['refresh_token']),
             expires_at=access_info['expires_at'],
-            telegram_username=telegram_username
+            athlete_id=athlete_id
         ))
         cursor.close()
         database_connection.commit()
@@ -56,20 +56,21 @@ class HandleCommands(object):
         cursor.close()
         database_connection.close()
         if result:
-            access_token = self.aes_cipher.decrypt(result[0][0])
-            refresh_token = self.aes_cipher.decrypt(result[0][1])
-            expires_at = result[0][2]
+            athlete_id = result[0][0]
+            access_token = self.aes_cipher.decrypt(result[0][1])
+            refresh_token = self.aes_cipher.decrypt(result[0][2])
+            expires_at = result[0][3]
             current_time = int(time.time())
             if current_time > expires_at:
                 logging.info(
                     "Token has expired | Current Time: {current_time} | Token Expiry Time: {expires_at}".format(
-                    current_time=current_time, expires_at=expires_at))
-                access_token = self.refresh_and_update_token(telegram_username, refresh_token)
+                        current_time=current_time, expires_at=expires_at))
+                access_token = self.refresh_and_update_token(athlete_id, refresh_token)
                 return access_token
             else:
                 logging.info(
                     "Token is still valid | Current Time: {current_time} | Token Expiry Time: {expires_at}".format(
-                    current_time=current_time, expires_at=expires_at))
+                        current_time=current_time, expires_at=expires_at))
                 return access_token
         else:
             return None
