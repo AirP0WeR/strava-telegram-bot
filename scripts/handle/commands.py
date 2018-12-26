@@ -29,7 +29,7 @@ class HandleCommands(object):
     def refresh_and_update_token(self, athlete_id, refresh_token):
         strava_client = StravaClient().get_client()
         access_info = strava_client.refresh_access_token(
-            client_id=int(self.aes_cipher.decrypt(self.bot_variables.client_id)),
+            client_id=self.aes_cipher.decrypt(self.bot_variables.client_id),
             client_secret=self.aes_cipher.decrypt(self.bot_variables.client_secret),
             refresh_token=refresh_token
         )
