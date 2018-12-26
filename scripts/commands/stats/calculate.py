@@ -29,7 +29,7 @@ class CalculateStats(object):
         self.operations = Operations()
 
     def process(self):
-        strava_client = StravaClient(self.athlete_token).get_client()
+        strava_client = StravaClient().get_client_with_token(self.athlete_token)
         athlete_info = strava_client.get_athlete()
         activities = strava_client.get_activities(after="1970-01-01T00:00:00Z")
         current_year = date.today().year

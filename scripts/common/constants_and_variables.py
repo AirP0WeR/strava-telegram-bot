@@ -9,7 +9,8 @@ import os
 
 
 class BotConstants(object):
-    QUERY_FETCH_TOKEN = "select access_token from athlete_tokens where telegram_username='{telegram_username}'"
+    QUERY_FETCH_TOKEN = "select access_token, refresh_token, expires_at from athlete_tokens where telegram_username='{telegram_username}'"
+    QUERY_UPDATE_TOKEN = "UPDATE athlete_tokens SET access_token='{access_token}', refresh_token='{refresh_token}', expires_at={expires_at}, updated=now() where telegram_username={telegram_username}"
 
     MESSAGE_START_COMMAND = "Hey {first_name}! I'm your Strava Bot. Type '/' to get the list of command(s) that I understand."
     MESSAGE_STATS_COMMAND = "Hey {first_name}! Give me a minute or two while I fetch your data."
@@ -47,3 +48,5 @@ class BotVariables(object):
     port = os.environ.get('PORT')
     registration_url = os.environ['REGISTRATION_URL']
     telegram_bot_token = os.environ['TELEGRAM_BOT_TOKEN']
+    client_id = os.environ.get('CLIENT_ID')
+    client_secret = os.environ.get('CLIENT_SECRET')
