@@ -37,8 +37,8 @@ class HandleCommands(object):
         database_connection = psycopg2.connect(self.bot_variables.database_url, sslmode='require')
         cursor = database_connection.cursor()
         cursor.execute(self.bot_constants.QUERY_UPDATE_TOKEN.format(
-            access_token=self.aes_cipher.encrypt(access_info['access_token']),
-            refresh_token=self.aes_cipher.encrypt(access_info['refresh_token']),
+            access_token=self.aes_cipher.encrypt(str(access_info['access_token'])),
+            refresh_token=self.aes_cipher.encrypt(str(access_info['refresh_token'])),
             expires_at=access_info['expires_at'],
             telegram_username=telegram_username
         ))
