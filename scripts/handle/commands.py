@@ -59,14 +59,15 @@ class HandleCommands(object):
             access_token = self.aes_cipher.decrypt(result[0][0])
             refresh_token = self.aes_cipher.decrypt(result[0][1])
             expires_at = result[0][2]
-            if expires_at > int(time.time()):
-                logging.info("Token is still valid")
-                print("Token is still valid")
+            current_time = time.time()
+            if current_time > expires_at:
+                logging.info("Token has expired | Current Time: {current_time} | Token Expiry: {expires_at}".format(
+                    current_time=current_time, expires_at=expires_at))
+                access_token = self.refresh_and_update_token(telegram_username, refresh_token)
                 return access_token
             else:
-                logging.info("Token has expired")
-                print("Token has expired")
-                access_token = self.refresh_and_update_token(telegram_username, refresh_token)
+                logging.info("Token is still valid | Current Time: {current_time} | Token Expiry: {expires_at}".format(
+                    current_time=current_time, expires_at=expires_at))
                 return access_token
         else:
             return None
