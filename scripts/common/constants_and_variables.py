@@ -9,7 +9,7 @@ import os
 
 
 class BotConstants(object):
-    QUERY_FETCH_TOKEN = "select access_token from athletes where telegram_username='{telegram_username}'"
+    QUERY_FETCH_TOKEN = "select access_token from athlete_tokens where telegram_username='{telegram_username}'"
 
     MESSAGE_START_COMMAND = "Hey {first_name}! I'm your Strava Bot. Type '/' to get the list of command(s) that I understand."
     MESSAGE_STATS_COMMAND = "Hey {first_name}! Give me a minute or two while I fetch your data."
