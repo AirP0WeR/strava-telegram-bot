@@ -52,12 +52,13 @@ class HandleCommands(object):
         cursor = database_connection.cursor()
         cursor.execute(self.bot_constants.QUERY_FETCH_TOKEN.format(telegram_username=telegram_username))
         result = cursor.fetchall()
+        print(result)
         cursor.close()
         database_connection.close()
         if result:
-            access_token = self.aes_cipher.decrypt(result[0])
-            refresh_token = self.aes_cipher.decrypt(result[1])
-            expires_at = result[2]
+            access_token = self.aes_cipher.decrypt(result[0][0])
+            refresh_token = self.aes_cipher.decrypt(result[0][1])
+            expires_at = result[0][2]
             if expires_at > int(time.time()):
                 return access_token
             else:
