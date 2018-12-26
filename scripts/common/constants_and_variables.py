@@ -48,5 +48,5 @@ class BotVariables(object):
     port = int(os.environ.get('PORT'))
     registration_url = os.environ['REGISTRATION_URL']
     telegram_bot_token = os.environ['TELEGRAM_BOT_TOKEN']
-    client_id = int(os.environ.get('CLIENT_ID'))
+    client_id = os.environ.get('CLIENT_ID')
     client_secret = os.environ.get('CLIENT_SECRET')
