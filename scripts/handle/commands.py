@@ -52,7 +52,6 @@ class HandleCommands(object):
         cursor = database_connection.cursor()
         cursor.execute(self.bot_constants.QUERY_FETCH_TOKEN.format(telegram_username=telegram_username))
         result = cursor.fetchall()
-        print(result)
         cursor.close()
         database_connection.close()
         if result:
