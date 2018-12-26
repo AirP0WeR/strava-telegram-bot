@@ -1,5 +1,6 @@
 #  -*- encoding: utf-8 -*-
 
+import logging
 import time
 from collections import defaultdict
 from os import sys, path
@@ -59,9 +60,11 @@ class HandleCommands(object):
             refresh_token = self.aes_cipher.decrypt(result[0][1])
             expires_at = result[0][2]
             if expires_at > int(time.time()):
+                logging.info("Token is still valid")
                 print("Token is still valid")
                 return access_token
             else:
+                logging.info("Token has expired")
                 print("Token has expired")
                 access_token = self.refresh_and_update_token(telegram_username, refresh_token)
                 return access_token
