@@ -21,6 +21,8 @@ class BotConstants(object):
     MESSAGE_STATS_RIDE_ALL_TIME_FIFTIES = "*All Time 50 km Rides:*"
     MESSAGE_STATS_RIDE_ALL_TIME_HUNDREDS = "*All Time 100 km Rides:*"
 
+    API_TOKEN_EXCHANGE = 'https://www.strava.com/oauth/token'
+
     STATS_MAIN_KEYBOARD_MENU = [[InlineKeyboardButton("Ride", callback_data='stats_ride'),
                                  InlineKeyboardButton("Run", callback_data='stats_run')],
                                 [InlineKeyboardButton("Exit", callback_data='exit')]]

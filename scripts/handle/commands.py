@@ -6,13 +6,13 @@ from collections import defaultdict
 from os import sys, path
 
 import psycopg2
+import requests
 import telegram
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from scripts.common.aes_cipher import AESCipher
 from scripts.common.constants_and_variables import BotVariables, BotConstants
 from scripts.commands.stats.calculate import CalculateStats
-from scripts.clients.strava import StravaClient
 
 
 class HandleCommands(object):
@@ -27,18 +27,23 @@ class HandleCommands(object):
         self.athlete_token = None
 
     def refresh_and_update_token(self, athlete_id, refresh_token):
-        strava_client = StravaClient().get_client()
-        access_info = strava_client.refresh_access_token(
-            client_id=self.aes_cipher.decrypt(self.bot_variables.client_id),
-            client_secret=self.aes_cipher.decrypt(self.bot_variables.client_secret),
-            refresh_token=refresh_token
-        )
+        response = requests.post(self.bot_constants.API_TOKEN_EXCHANGE, data={
+            'client_id': int(self.aes_cipher.decrypt(self.bot_variables.client_id)),
+            'client_secret': self.aes_cipher.decrypt(self.bot_variables.client_secret),
+            'grant_type': 'refresh_token',
+            'refresh_token': refresh_token,
+        }).json()
+
+        access_info = dict()
+        access_info['access_token'] = self.aes_cipher.encrypt(response['access_token'])
+        access_info['refresh_token'] = self.aes_cipher.encrypt(response['refresh_token'])
+        access_info['expires_at'] = response['expires_at']
 
         database_connection = psycopg2.connect(self.bot_variables.database_url, sslmode='require')
         cursor = database_connection.cursor()
         cursor.execute(self.bot_constants.QUERY_UPDATE_TOKEN.format(
-            access_token=self.aes_cipher.encrypt(access_info['access_token']),
-            refresh_token=self.aes_cipher.encrypt(access_info['refresh_token']),
+            access_token=access_info['access_token'],
+            refresh_token=access_info['refresh_token'],
             expires_at=access_info['expires_at'],
             athlete_id=athlete_id
         ))
@@ -46,7 +51,7 @@ class HandleCommands(object):
         database_connection.commit()
         database_connection.close()
 
-        return access_info['access_token']
+        return response['access_token']
 
     def get_athlete_token(self, telegram_username):
         database_connection = psycopg2.connect(self.bot_variables.database_url, sslmode='require')
