@@ -42,7 +42,7 @@ class StravaTelegramBot(object):
 
         dispatcher_handler.add_error_handler(self.error)
 
-        updater.start_webhook(listen="0.0.0.0", port=int(self.bot_variables.port),
+        updater.start_webhook(listen="0.0.0.0", port=self.bot_variables.port,
                               url_path=self.aes_cipher.decrypt(self.bot_variables.telegram_bot_token))
 
         updater.bot.setWebhook("{app_name}/{telegram_bot_token}".format(app_name=self.bot_variables.app_name,

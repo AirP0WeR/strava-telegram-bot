@@ -9,7 +9,8 @@ import os
 
 
 class BotConstants(object):
-    QUERY_FETCH_TOKEN = "select access_token from athletes where telegram_username='{telegram_username}'"
+    QUERY_FETCH_TOKEN = "select athlete_id, access_token, refresh_token, expires_at from athlete_tokens where telegram_username='{telegram_username}'"
+    QUERY_UPDATE_TOKEN = "UPDATE athlete_tokens SET access_token='{access_token}', refresh_token='{refresh_token}', expires_at={expires_at}, updated=now() where athlete_id={athlete_id}"
 
     MESSAGE_START_COMMAND = "Hey {first_name}! I'm your Strava Bot. Type '/' to get the list of command(s) that I understand."
     MESSAGE_STATS_COMMAND = "Hey {first_name}! Give me a minute or two while I fetch your data."
@@ -19,6 +20,8 @@ class BotConstants(object):
     MESSAGE_EXIT_BUTTON = "Thank you!"
     MESSAGE_STATS_RIDE_ALL_TIME_FIFTIES = "*All Time 50 km Rides:*"
     MESSAGE_STATS_RIDE_ALL_TIME_HUNDREDS = "*All Time 100 km Rides:*"
+
+    API_TOKEN_EXCHANGE = 'https://www.strava.com/oauth/token'
 
     STATS_MAIN_KEYBOARD_MENU = [[InlineKeyboardButton("Ride", callback_data='stats_ride'),
                                  InlineKeyboardButton("Run", callback_data='stats_run')],
@@ -40,10 +43,12 @@ class BotConstants(object):
 
 class BotVariables(object):
     database_url = os.environ['DATABASE_URL']
-    crypt_key_length = os.environ['CRYPT_KEY_LENGTH']
+    crypt_key_length = int(os.environ['CRYPT_KEY_LENGTH'])
     crypt_key = os.environ['CRYPT_KEY']
     admin_user_name = os.environ['ADMIN_USER_NAME']
     app_name = os.environ.get('APP_NAME')
-    port = os.environ.get('PORT')
+    port = int(os.environ.get('PORT'))
     registration_url = os.environ['REGISTRATION_URL']
     telegram_bot_token = os.environ['TELEGRAM_BOT_TOKEN']
+    client_id = os.environ.get('CLIENT_ID')
+    client_secret = os.environ.get('CLIENT_SECRET')

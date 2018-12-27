@@ -1,3 +1,4 @@
+requests==2.21.0
 psycopg2_binary==2.7.6.1
 python_telegram_bot==11.1.0
 stravalib==0.10.2
