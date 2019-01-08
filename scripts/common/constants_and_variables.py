@@ -43,8 +43,6 @@ class BotConstants(object):
 
 class BotVariables(object):
     database_url = os.environ['DATABASE_URL']
-    crypt_key_length = int(os.environ['CRYPT_KEY_LENGTH'])
-    crypt_key = os.environ['CRYPT_KEY']
     admin_user_name = os.environ['ADMIN_USER_NAME']
     app_name = os.environ.get('APP_NAME')
     port = int(os.environ.get('PORT'))
