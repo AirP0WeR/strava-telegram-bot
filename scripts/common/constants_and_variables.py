@@ -9,8 +9,8 @@ import os
 
 
 class BotConstants(object):
-    QUERY_FETCH_TOKEN = "select athlete_id, access_token, refresh_token, expires_at from athlete_tokens where telegram_username='{telegram_username}'"
-    QUERY_UPDATE_TOKEN = "UPDATE athlete_tokens SET access_token='{access_token}', refresh_token='{refresh_token}', expires_at={expires_at}, updated=now() where athlete_id={athlete_id}"
+    QUERY_FETCH_TOKEN = "select athlete_id, access_token, refresh_token, expires_at from strava_telegram_bot where telegram_username='{telegram_username}'"
+    QUERY_UPDATE_TOKEN = "UPDATE strava_telegram_bot SET access_token='{access_token}', refresh_token='{refresh_token}', expires_at={expires_at}, updated=now() where athlete_id={athlete_id}"
 
     MESSAGE_START_COMMAND = "Hey {first_name}! I'm your Strava Bot. Type '/' to get the list of command(s) that I understand."
     MESSAGE_STATS_COMMAND = "Hey {first_name}! Give me a minute or two while I fetch your data."
@@ -43,8 +43,6 @@ class BotConstants(object):
 
 class BotVariables(object):
     database_url = os.environ['DATABASE_URL']
-    crypt_key_length = int(os.environ['CRYPT_KEY_LENGTH'])
-    crypt_key = os.environ['CRYPT_KEY']
     admin_user_name = os.environ['ADMIN_USER_NAME']
     app_name = os.environ.get('APP_NAME')
     port = int(os.environ.get('PORT'))

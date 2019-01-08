@@ -6,7 +6,6 @@ from os import sys, path
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-from scripts.common.aes_cipher import AESCipher
 from scripts.handle.buttons import HandleButtons
 from scripts.common.constants_and_variables import BotVariables
 from scripts.handle.commands import HandleCommands
@@ -16,7 +15,6 @@ class StravaTelegramBot(object):
 
     def __init__(self):
         self.bot_variables = BotVariables()
-        self.aes_cipher = AESCipher(self.bot_variables.crypt_key_length, self.bot_variables.crypt_key)
 
     @staticmethod
     def error(update, error):
@@ -33,7 +31,7 @@ class StravaTelegramBot(object):
         buttons.process()
 
     def main(self):
-        updater = Updater(self.aes_cipher.decrypt(self.bot_variables.telegram_bot_token))
+        updater = Updater(self.bot_variables.telegram_bot_token)
         dispatcher_handler = updater.dispatcher
 
         dispatcher_handler.add_handler(CommandHandler("start", self.handle_commands, pass_user_data=True))
@@ -43,11 +41,10 @@ class StravaTelegramBot(object):
         dispatcher_handler.add_error_handler(self.error)
 
         updater.start_webhook(listen="0.0.0.0", port=self.bot_variables.port,
-                              url_path=self.aes_cipher.decrypt(self.bot_variables.telegram_bot_token))
+                              url_path=self.bot_variables.telegram_bot_token)
 
         updater.bot.setWebhook("{app_name}/{telegram_bot_token}".format(app_name=self.bot_variables.app_name,
-                                                                        telegram_bot_token=self.aes_cipher.decrypt(
-                                                                            self.bot_variables.telegram_bot_token)))
+                                                                        telegram_bot_token=self.bot_variables.telegram_bot_token))
         updater.idle()
 
 
