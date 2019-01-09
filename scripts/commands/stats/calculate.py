@@ -314,7 +314,7 @@ class CalculateStats(object):
                             rider_stats["run_ytd_indoor_moving_time"] += moving_time
                         if activity.commute:
                             rider_stats["run_ytd_commutes"] += 1
-                        if distance > rider_stats["run_at_biggest_run"]:
+                        if distance > rider_stats["run_ytd_biggest_run"]:
                             rider_stats["run_ytd_biggest_run"] = distance
                         if total_elevation_gain > rider_stats["run_ytd_max_elevation_gain"]:
                             rider_stats["run_ytd_max_elevation_gain"] = total_elevation_gain
@@ -368,7 +368,7 @@ class CalculateStats(object):
                             rider_stats["run_py_indoor_moving_time"] += moving_time
                         if activity.commute:
                             rider_stats["run_py_commutes"] += 1
-                        if distance > rider_stats["run_at_biggest_run"]:
+                        if distance > rider_stats["run_py_biggest_run"]:
                             rider_stats["run_py_biggest_run"] = distance
                         if total_elevation_gain > rider_stats["run_py_max_elevation_gain"]:
                             rider_stats["run_py_max_elevation_gain"] = total_elevation_gain
@@ -422,7 +422,7 @@ class CalculateStats(object):
                             rider_stats["run_cm_indoor_moving_time"] += moving_time
                         if activity.commute:
                             rider_stats["run_cm_commutes"] += 1
-                        if distance > rider_stats["run_at_biggest_run"]:
+                        if distance > rider_stats["run_cm_biggest_run"]:
                             rider_stats["run_cm_biggest_run"] = distance
                         if total_elevation_gain > rider_stats["run_cm_max_elevation_gain"]:
                             rider_stats["run_cm_max_elevation_gain"] = total_elevation_gain
@@ -476,7 +476,7 @@ class CalculateStats(object):
                             rider_stats["run_pm_indoor_moving_time"] += moving_time
                         if activity.commute:
                             rider_stats["run_pm_commutes"] += 1
-                        if distance > rider_stats["run_at_biggest_run"]:
+                        if distance > rider_stats["run_pm_biggest_run"]:
                             rider_stats["run_pm_biggest_run"] = distance
                         if total_elevation_gain > rider_stats["run_pm_max_elevation_gain"]:
                             rider_stats["run_pm_max_elevation_gain"] = total_elevation_gain
