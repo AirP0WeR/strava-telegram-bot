@@ -19,7 +19,7 @@ class FormatStats(object):
                "- _Distance_: {distance} km (Includes {indoor_distance} km of Indoors)\n" \
                "- _Moving Time_: {moving_time} hours (Includes {indoor_moving_time} hours of Indoors)\n" \
                "- _Elevation Gain_: {elevation_gain} km\n" \
-               "- _Biggest Ride_: {biggest_ride} km" \
+               "- _Biggest Ride_: {biggest_ride} km\n" \
                "- _50's_: {fifties}\n" \
                "- _100's_: {hundreds}"
 
@@ -30,11 +30,11 @@ class FormatStats(object):
                "- _Distance_: {distance} km (Includes {indoor_distance} km of Indoors)\n" \
                "- _Moving Time_: {moving_time} hours (Includes {indoor_moving_time} hours of Indoors)\n" \
                "- _Elevation Gain_: {elevation_gain} km\n" \
-               "- _Biggest Run: {biggest_run} km" \
+               "- _Biggest Run: {biggest_run} km\n" \
                "- _5's_: {five}\n" \
-               "- _10's_: {ten}" \
-               "- _HM's_: {hm}" \
-               "- _HM's_: {fm}" \
+               "- _10's_: {ten}\n" \
+               "- _HM's_: {hm}\n" \
+               "- _HM's_: {fm}\n" \
                "- _Ultra's_: {ultra}"
 
     def all_time_ride_stats(self):
