@@ -18,6 +18,7 @@ class ProcessStats(object):
     def __init__(self, bot, update, user_data, athlete_token):
         self.bot = bot
         self.update = update
+        self.telegram_username = self.update.message.from_user.username
         self.user_data = user_data
         self.athlete_token = athlete_token
         self.bot_constants = BotConstants()
@@ -27,21 +28,32 @@ class ProcessStats(object):
     def insert_strava_data(self, strava_data):
         database_connection = psycopg2.connect(self.bot_variables.database_url, sslmode='require')
         cursor = database_connection.cursor()
-        cursor.execute(
-            "UPDATE strava_telegram_bot SET strava_data='{strava_data}' where telegram_username='panchambharadwaj'".format(
-                strava_data=strava_data))
+        cursor.execute(self.bot_constants.QUERY_UPDATE_STRAVA_DATA.format(strava_data=strava_data,
+                                                                          telegram_username=self.telegram_username))
         cursor.close()
         database_connection.commit()
         database_connection.close()
+
+    def get_strava_data(self):
+        database_connection = psycopg2.connect(self.bot_variables.database_url, sslmode='require')
+        cursor = database_connection.cursor()
+        cursor.execute(self.bot_constants.QUERY_GET_STRAVA_DATA.format(telegram_username=self.telegram_username))
+        strava_data = cursor.fetchone()[0]
+        cursor.close()
+        database_connection.close()
+
+        return strava_data
 
     def process(self):
         calculate_stats = CalculateStats(self.bot, self.update, self.user_data, self.athlete_token)
 
         calculated_stats = calculate_stats.calculate()
-        calculated_stats_json = json.dumps(calculated_stats)
-        self.insert_strava_data(calculated_stats_json)
+        calculated_stats = json.dumps(calculated_stats)
+        self.insert_strava_data(calculated_stats)
 
-        format_stats = FormatStats(calculated_stats)
+        strava_data = self.get_strava_data()
+
+        format_stats = FormatStats(strava_data)
 
         stats = dict()
         stats['all_time_ride_stats'] = format_stats.all_time_ride_stats()

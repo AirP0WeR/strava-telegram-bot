@@ -11,7 +11,8 @@ import os
 class BotConstants(object):
     QUERY_FETCH_TOKEN = "select athlete_id, access_token, refresh_token, expires_at from strava_telegram_bot where telegram_username='{telegram_username}'"
     QUERY_UPDATE_TOKEN = "UPDATE strava_telegram_bot SET access_token='{access_token}', refresh_token='{refresh_token}', expires_at={expires_at}, updated=now() where athlete_id={athlete_id}"
-
+    QUERY_UPDATE_STRAVA_DATA = "UPDATE strava_telegram_bot SET strava_data='{strava_data}' WHERE telegram_username='{telegram_username}'"
+    QUERY_GET_STRAVA_DATA = "SELECT strava_data from strava_telegram_bot WHERE telegram_username='{telegram_username}'"
     MESSAGE_START_COMMAND = "Hi {first_name}! Type '/' to get the list of command(s)."
     MESSAGE_STATS_COMMAND = "Hi {first_name}! Give me a minute or two while I fetch your data."
     MESSAGE_STATS_MAIN_KEYBOARD_MENU = "Choose an activity type to view your stats:"
