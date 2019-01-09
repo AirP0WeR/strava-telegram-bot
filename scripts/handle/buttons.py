@@ -22,11 +22,14 @@ class HandleButtons(object):
         self.message_id = self.query.message.message_id
         self.all_time_ride_stats = self.user_data['stats']['all_time_ride_stats']
         self.ytd_ride_stats = self.user_data['stats']['ytd_ride_stats']
-        self.misc_ride_stats = self.user_data['stats']['misc_ride_stats']
-        self.all_time_ride_fifties = self.user_data['stats']['ride_all_time_fifties']
-        self.all_time_ride_hundreds = self.user_data['stats']['ride_all_time_hundreds']
+        self.py_ride_stats = self.user_data['stats']['py_ride_stats']
+        self.cm_ride_stats = self.user_data['stats']['cm_ride_stats']
+        self.pm_ride_stats = self.user_data['stats']['pm_ride_stats']
         self.all_time_run_stats = self.user_data['stats']['all_time_run_stats']
         self.ytd_run_stats = self.user_data['stats']['ytd_run_stats']
+        self.py_run_stats = self.user_data['stats']['py_run_stats']
+        self.cm_run_stats = self.user_data['stats']['cm_run_stats']
+        self.pm_run_stats = self.user_data['stats']['pm_run_stats']
 
     def stats_ride_button(self):
         self.bot.edit_message_text(text=self.bot_constants.MESSAGE_STATS_RIDE_KEYBOARD_MENU, chat_id=self.chat_id,
@@ -45,31 +48,21 @@ class HandleButtons(object):
         self.bot.send_message(text=self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU, chat_id=self.chat_id,
                               reply_markup=InlineKeyboardMarkup(self.bot_constants.STATS_MAIN_KEYBOARD_MENU))
 
-    def stats_ride_misc_button(self):
-        self.bot.edit_message_text(text=self.misc_ride_stats, chat_id=self.chat_id, message_id=self.message_id,
+    def stats_ride_py_button(self):
+        self.bot.edit_message_text(text=self.py_ride_stats, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.bot.send_message(text=self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU, chat_id=self.chat_id,
                               reply_markup=InlineKeyboardMarkup(self.bot_constants.STATS_MAIN_KEYBOARD_MENU))
 
-    def stats_ride_all_time_fifties(self):
-        self.bot.edit_message_text(text=self.bot_constants.MESSAGE_STATS_RIDE_ALL_TIME_FIFTIES, chat_id=self.chat_id,
-                                   message_id=self.message_id, parse_mode="Markdown", disable_web_page_preview=True)
-
-        for fifties in self.all_time_ride_fifties:
-            self.bot.send_message(text=fifties, chat_id=self.chat_id, parse_mode="Markdown",
-                                  disable_web_page_preview=True)
-
+    def stats_ride_cm_button(self):
+        self.bot.edit_message_text(text=self.cm_ride_stats, chat_id=self.chat_id, message_id=self.message_id,
+                                   parse_mode="Markdown", disable_web_page_preview=True)
         self.bot.send_message(text=self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU, chat_id=self.chat_id,
                               reply_markup=InlineKeyboardMarkup(self.bot_constants.STATS_MAIN_KEYBOARD_MENU))
 
-    def stats_ride_all_time_hundreds(self):
-        self.bot.edit_message_text(text=self.bot_constants.MESSAGE_STATS_RIDE_ALL_TIME_HUNDREDS, chat_id=self.chat_id,
-                                   message_id=self.message_id, parse_mode="Markdown", disable_web_page_preview=True)
-
-        for hundreds in self.all_time_ride_hundreds:
-            self.bot.send_message(text=hundreds, chat_id=self.chat_id, parse_mode="Markdown",
-                                  disable_web_page_preview=True)
-
+    def stats_ride_pm_button(self):
+        self.bot.edit_message_text(text=self.pm_ride_stats, chat_id=self.chat_id, message_id=self.message_id,
+                                   parse_mode="Markdown", disable_web_page_preview=True)
         self.bot.send_message(text=self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU, chat_id=self.chat_id,
                               reply_markup=InlineKeyboardMarkup(self.bot_constants.STATS_MAIN_KEYBOARD_MENU))
 
@@ -91,6 +84,24 @@ class HandleButtons(object):
         self.bot.send_message(text=self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU, chat_id=self.chat_id,
                               reply_markup=InlineKeyboardMarkup(self.bot_constants.STATS_MAIN_KEYBOARD_MENU))
 
+    def stats_run_py_button(self):
+        self.bot.edit_message_text(text=self.py_run_stats, chat_id=self.chat_id, message_id=self.message_id,
+                                   parse_mode="Markdown", disable_web_page_preview=True)
+        self.bot.send_message(text=self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU, chat_id=self.chat_id,
+                              reply_markup=InlineKeyboardMarkup(self.bot_constants.STATS_MAIN_KEYBOARD_MENU))
+
+    def stats_run_cm_button(self):
+        self.bot.edit_message_text(text=self.cm_run_stats, chat_id=self.chat_id, message_id=self.message_id,
+                                   parse_mode="Markdown", disable_web_page_preview=True)
+        self.bot.send_message(text=self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU, chat_id=self.chat_id,
+                              reply_markup=InlineKeyboardMarkup(self.bot_constants.STATS_MAIN_KEYBOARD_MENU))
+
+    def stats_run_pm_button(self):
+        self.bot.edit_message_text(text=self.pm_run_stats, chat_id=self.chat_id, message_id=self.message_id,
+                                   parse_mode="Markdown", disable_web_page_preview=True)
+        self.bot.send_message(text=self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU, chat_id=self.chat_id,
+                              reply_markup=InlineKeyboardMarkup(self.bot_constants.STATS_MAIN_KEYBOARD_MENU))
+
     def back_button(self):
         self.bot.edit_message_text(text=self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU, chat_id=self.chat_id,
                                    message_id=self.message_id,
@@ -106,12 +117,15 @@ class HandleButtons(object):
             'stats_ride': self.stats_ride_button,
             'stats_ride_all_time': self.stats_ride_all_time_button,
             'stats_ride_ytd': self.stats_ride_ytd_button,
-            'stats_ride_misc': self.stats_ride_misc_button,
-            'stats_ride_all_time_fifties': self.stats_ride_all_time_fifties,
-            'stats_ride_all_time_hundreds': self.stats_ride_all_time_hundreds,
+            'stats_ride_py': self.stats_ride_py_button,
+            'stats_ride_cm': self.stats_ride_cm_button,
+            'stats_ride_pm': self.stats_ride_pm_button,
             'stats_run': self.stats_run_button,
             'stats_run_all_time': self.stats_run_all_time_button,
             'stats_run_ytd': self.stats_run_ytd_button,
+            'stats_run_py': self.stats_run_py_button,
+            'stats_run_cm': self.stats_run_cm_button,
+            'stats_run_pm': self.stats_run_pm_button,
             'back': self.back_button,
             'exit': self.exit_button,
         })
