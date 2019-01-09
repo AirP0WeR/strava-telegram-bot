@@ -37,10 +37,8 @@ class ProcessStats(object):
         calculate_stats = CalculateStats(self.bot, self.update, self.user_data, self.athlete_token)
 
         calculated_stats = calculate_stats.calculate()
-        print(type(calculated_stats))
-        print(calculated_stats)
-        print(type(json.dumps(calculated_stats)))
-        print(json.dumps(calculated_stats))
+        calculated_stats_json = json.dumps(calculated_stats)
+        self.insert_strava_data(calculated_stats_json)
 
         format_stats = FormatStats(calculated_stats)
 
