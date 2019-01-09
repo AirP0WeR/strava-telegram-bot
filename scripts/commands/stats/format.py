@@ -30,7 +30,7 @@ class FormatStats(object):
                "- _Distance_: {distance} km (Includes {indoor_distance} km of Indoors)\n" \
                "- _Moving Time_: {moving_time} hours (Includes {indoor_moving_time} hours of Indoors)\n" \
                "- _Elevation Gain_: {elevation_gain} km\n" \
-               "- _Biggest Run: {biggest_run} km\n" \
+               "- _Biggest Run_: {biggest_run} km\n" \
                "- _5's_: {five}\n" \
                "- _10's_: {ten}\n" \
                "- _HM's_: {hm}\n" \
