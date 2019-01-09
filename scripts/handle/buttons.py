@@ -113,6 +113,7 @@ class HandleButtons(object):
                                    message_id=self.message_id)
 
     def process(self):
+        print(self.user_data)
         options = defaultdict(lambda: self.exit_button, {
             'stats_ride': self.stats_ride_button,
             'stats_ride_all_time': self.stats_ride_all_time_button,
