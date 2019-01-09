@@ -221,9 +221,6 @@ class CalculateStats(object):
                 total_elevation_gain = float(activity.total_elevation_gain)
                 activity_year = activity.start_date_local.year
                 activity_month = activity.start_date_local.month
-                print(moving_time)
-                print(type(moving_time))
-                exit(0)
                 if self.operations.is_activity_a_ride(activity):
                     rider_stats["ride_at_total"] += 1
                     rider_stats["ride_at_distance"] += distance

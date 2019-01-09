@@ -23,8 +23,10 @@ class ProcessStats(object):
 
     def process(self):
         calculate_stats = CalculateStats(self.bot, self.update, self.user_data, self.athlete_token)
+
         calculated_stats = calculate_stats.calculate()
         format_stats = FormatStats(calculated_stats)
+
         stats = dict()
         stats['all_time_ride_stats'] = format_stats.all_time_ride_stats()
         stats['ytd_ride_stats'] = format_stats.ytd_ride_stats()
