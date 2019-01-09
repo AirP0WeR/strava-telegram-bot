@@ -1,12 +1,14 @@
 #  -*- encoding: utf-8 -*-
 
+import json
 from os import sys, path
 
+import psycopg2
 from telegram import InlineKeyboardMarkup
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from scripts.commands.stats.calculate import CalculateStats
-from scripts.common.constants_and_variables import BotConstants
+from scripts.common.constants_and_variables import BotConstants, BotVariables
 from scripts.common.operations import Operations
 from scripts.commands.stats.format import FormatStats
 
@@ -19,12 +21,23 @@ class ProcessStats(object):
         self.user_data = user_data
         self.athlete_token = athlete_token
         self.bot_constants = BotConstants()
+        self.bot_variables = BotVariables()
         self.operations = Operations()
+
+    def insert_strava_data(self):
+        database_connection = psycopg2.connect(self.bot_variables.database_url, sslmode='require')
+        cursor = database_connection.cursor()
+        cursor.execute()
+        cursor.close()
+        database_connection.commit()
+        database_connection.close()
 
     def process(self):
         calculate_stats = CalculateStats(self.bot, self.update, self.user_data, self.athlete_token)
 
         calculated_stats = calculate_stats.calculate()
+        print(type(calculated_stats))
+        print(type(json.dumps(calculated_stats)))
         format_stats = FormatStats(calculated_stats)
 
         stats = dict()
