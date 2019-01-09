@@ -27,8 +27,8 @@ class Operations(object):
         return "[{text}](https://www.strava.com/activities/{activity_id})"
 
     @staticmethod
-    def is_flagged_or_private(activity):
-        return True if (activity.flagged or activity.private) else False
+    def is_flagged(activity):
+        return True if activity.flagged else False
 
     @staticmethod
     def is_activity_a_ride(activity):
