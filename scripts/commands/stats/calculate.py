@@ -210,7 +210,7 @@ class CalculateStats(object):
         rider_stats["athlete_name"] = "{first_name} {last_name}".format(first_name=athlete_info.firstname,
                                                                         last_name=athlete_info.lastname)
         rider_stats["athlete_email"] = athlete_info.email
-        rider_stats["athlete_strava_joined_date"] = athlete_info.created_at.date().strftime('%Y-%m/%d')
+        rider_stats["athlete_strava_joined_date"] = athlete_info.created_at.date().strftime('%Y-%m-%d')
         rider_stats["athlete_followers"] = athlete_info.follower_count
         rider_stats["athlete_following"] = athlete_info.friend_count
 
