@@ -24,10 +24,11 @@ class ProcessStats(object):
         self.bot_variables = BotVariables()
         self.operations = Operations()
 
-    def insert_strava_data(self):
+    def insert_strava_data(self, strava_data):
         database_connection = psycopg2.connect(self.bot_variables.database_url, sslmode='require')
         cursor = database_connection.cursor()
-        cursor.execute()
+        cursor.execute(
+            "INSERT INTO strava_telegram_bot (strava_data) values ('{strava_data}')".format(strava_data=strava_data))
         cursor.close()
         database_connection.commit()
         database_connection.close()
@@ -37,7 +38,10 @@ class ProcessStats(object):
 
         calculated_stats = calculate_stats.calculate()
         print(type(calculated_stats))
+        print(calculated_stats)
         print(type(json.dumps(calculated_stats)))
+        print(json.dumps(calculated_stats))
+
         format_stats = FormatStats(calculated_stats)
 
         stats = dict()
