@@ -28,7 +28,7 @@ class ProcessStats(object):
         database_connection = psycopg2.connect(self.bot_variables.database_url, sslmode='require')
         cursor = database_connection.cursor()
         cursor.execute(
-            "UPDATE strava_telegram_bot SET strava_data='{strava_data}' where athlete_id=11591902".format(
+            "UPDATE strava_telegram_bot SET strava_data='{strava_data}' where telegram_username=panchambharadwaj".format(
                 strava_data=strava_data))
         cursor.close()
         database_connection.commit()
