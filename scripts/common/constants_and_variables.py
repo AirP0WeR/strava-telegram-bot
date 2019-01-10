@@ -9,18 +9,16 @@ import os
 
 
 class BotConstants(object):
-    QUERY_FETCH_TOKEN = "select athlete_id, access_token, refresh_token, expires_at from strava_telegram_bot where telegram_username='{telegram_username}'"
-    QUERY_UPDATE_TOKEN = "UPDATE strava_telegram_bot SET access_token='{access_token}', refresh_token='{refresh_token}', expires_at={expires_at}, updated=now() where athlete_id={athlete_id}"
-    QUERY_UPDATE_STRAVA_DATA = "UPDATE strava_telegram_bot SET strava_data='{strava_data}', updated=now() WHERE telegram_username='{telegram_username}'"
-    QUERY_GET_STRAVA_DATA = "SELECT strava_data from strava_telegram_bot WHERE telegram_username='{telegram_username}'"
+    QUERY_GET_ATHLETE_ID = "select athlete_id from strava_telegram_bot where telegram_username='{telegram_username}'"
+    QUERY_GET_STRAVA_DATA = "select strava_data from strava_telegram_bot where athlete_id={athlete_id}"
     MESSAGE_START_COMMAND = "Hi {first_name}! Type '/' to get the list of command(s)."
-    MESSAGE_STATS_COMMAND = "Hi {first_name}! Give me a minute or two while I fetch your data."
+    MESSAGE_STATS_COMMAND = "Hi {first_name}! Give me a moment while I fetch your stats."
     MESSAGE_STATS_MAIN_KEYBOARD_MENU = "Choose an activity type to view your stats:"
     MESSAGE_STATS_RIDE_KEYBOARD_MENU = "Choose the type of stat you want to see:"
     MESSAGE_UNREGISTERED_ATHLETE = "Hi {first_name}! You are not a registered user yet.\n\nVisit the following link to register: {registration_url}\n\nPing {admin_user_name} in case you face any issue."
     MESSAGE_EXIT_BUTTON = "Thank you!"
 
-    API_TOKEN_EXCHANGE = 'https://www.strava.com/oauth/token'
+    API_WEBHOOK_UPDATE_STATS = "https://strava-telegram-webhooks-stage.herokuapp.com/stats/{athlete_id}"
 
     STATS_MAIN_KEYBOARD_MENU = [[InlineKeyboardButton("Ride", callback_data='stats_ride'),
                                  InlineKeyboardButton("Run", callback_data='stats_run')],
@@ -50,5 +48,3 @@ class BotVariables(object):
     port = int(os.environ.get('PORT'))
     registration_url = os.environ['REGISTRATION_URL']
     telegram_bot_token = os.environ['TELEGRAM_BOT_TOKEN']
-    client_id = os.environ.get('CLIENT_ID')
-    client_secret = os.environ.get('CLIENT_SECRET')
