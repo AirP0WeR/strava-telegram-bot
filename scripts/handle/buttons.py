@@ -37,7 +37,6 @@ class HandleButtons(object):
                                    reply_markup=InlineKeyboardMarkup(self.bot_constants.STATS_RIDE_KEYBOARD_MENU))
 
     def stats_ride_all_time_button(self):
-        print(self.all_time_ride_stats)
         self.bot.edit_message_text(text=self.all_time_ride_stats, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.bot.send_message(text=self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU, chat_id=self.chat_id,
@@ -73,7 +72,6 @@ class HandleButtons(object):
                                    reply_markup=InlineKeyboardMarkup(self.bot_constants.STATS_RUN_KEYBOARD_MENU))
 
     def stats_run_all_time_button(self):
-        print(self.all_time_run_stats)
         self.bot.edit_message_text(text=self.all_time_run_stats, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.bot.send_message(text=self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU, chat_id=self.chat_id,
