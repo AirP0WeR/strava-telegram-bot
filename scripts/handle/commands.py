@@ -47,10 +47,10 @@ class HandleCommands(object):
         stats.process()
 
     def refresh_command(self):
-        message = "Failed to update stats."
+        message = self.bot_constants.MESSAGE_UPDATE_STATS_FAILED
         response = requests.post(self.bot_constants.API_WEBHOOK_UPDATE_STATS.format(athlete_id=self.athlete_id))
         if response.status_code == 200:
-            message = "Refreshing.. Check stats after a minute."
+            message = self.bot_constants.MESSAGE_UPDATE_STATS_STARTED
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
 
     def process(self):
@@ -64,7 +64,7 @@ class HandleCommands(object):
             options = defaultdict(lambda: self.start_command, {
                 '/start': self.start_command,
                 '/stats': self.stats_command,
-                '/refresh': self.refresh_command
+                '/refreshstats': self.refresh_command
             })
 
             options[command]()

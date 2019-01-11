@@ -36,7 +36,7 @@ class StravaTelegramBot(object):
 
         dispatcher_handler.add_handler(CommandHandler("start", self.handle_commands, pass_user_data=True))
         dispatcher_handler.add_handler(CommandHandler("stats", self.handle_commands, pass_user_data=True))
-        dispatcher_handler.add_handler(CommandHandler("refresh", self.handle_commands, pass_user_data=True))
+        dispatcher_handler.add_handler(CommandHandler("refreshstats", self.handle_commands, pass_user_data=True))
         dispatcher_handler.add_handler(CallbackQueryHandler(self.handle_buttons, pass_user_data=True))
 
         dispatcher_handler.add_error_handler(self.error)
@@ -50,7 +50,8 @@ class StravaTelegramBot(object):
 
 
 if __name__ == '__main__':
-    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
+    logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+                        level=logging.os.environ.get('LOGGING_LEVEL'))
     logger = logging.getLogger(__name__)
     strava_telegram_bot = StravaTelegramBot()
     strava_telegram_bot.main()

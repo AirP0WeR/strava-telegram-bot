@@ -18,6 +18,10 @@ $ pip install pycryptodome
 $ pip install psycopg2
 ```
 
+```
+$ heroku addons:attach <database-app-name> -a <this-app-name>
+```
+
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/panchambharadwaj/strava-telegram-bot/blob/master/LICENSE) file for details

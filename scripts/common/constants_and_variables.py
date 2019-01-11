@@ -10,11 +10,14 @@ import os
 
 class BotConstants(object):
     QUERY_GET_ATHLETE_ID = "select athlete_id from strava_telegram_bot where telegram_username='{telegram_username}'"
-    QUERY_GET_STRAVA_DATA = "select strava_data from strava_telegram_bot where athlete_id={athlete_id}"
+    QUERY_GET_STRAVA_DATA = "select updated, strava_data from strava_telegram_bot where athlete_id={athlete_id}"
     MESSAGE_START_COMMAND = "Hi {first_name}! Type '/' to get the list of command(s)."
     MESSAGE_STATS_COMMAND = "Hi {first_name}! Give me a moment while I fetch your stats."
     MESSAGE_STATS_MAIN_KEYBOARD_MENU = "Choose an activity type to view your stats:"
     MESSAGE_STATS_RIDE_KEYBOARD_MENU = "Choose the type of stat you want to see:"
+    MESSAGE_STATS_NOT_UPDATED = "Stats are not synced yet. Please check again after a minute."
+    MESSAGE_UPDATE_STATS_FAILED = "Failed to update stats."
+    MESSAGE_UPDATE_STATS_STARTED = "Updating.. Check stats after a minute or two."
     MESSAGE_UNREGISTERED_ATHLETE = "Hi {first_name}! You are not a registered user yet.\n\nVisit the following link to register: {registration_url}\n\nPing {admin_user_name} in case you face any issue."
     MESSAGE_EXIT_BUTTON = "Thank you!"
 
@@ -42,9 +45,9 @@ class BotConstants(object):
 
 
 class BotVariables(object):
-    database_url = os.environ['DATABASE_URL']
-    admin_user_name = os.environ['ADMIN_USER_NAME']
+    database_url = os.environ.get('DATABASE_URL')
+    admin_user_name = os.environ.get('ADMIN_USER_NAME')
     app_name = os.environ.get('APP_NAME')
     port = int(os.environ.get('PORT'))
-    registration_url = os.environ['REGISTRATION_URL']
-    telegram_bot_token = os.environ['TELEGRAM_BOT_TOKEN']
+    registration_url = os.environ.get('REGISTRATION_URL')
+    telegram_bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
