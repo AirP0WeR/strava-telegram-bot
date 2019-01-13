@@ -3,7 +3,7 @@
 import logging
 from os import sys, path
 
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, Filters
 
 sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from scripts.handle.buttons import HandleButtons
@@ -36,7 +36,12 @@ class StravaTelegramBot(object):
 
         dispatcher_handler.add_handler(CommandHandler("start", self.handle_commands, pass_user_data=True))
         dispatcher_handler.add_handler(CommandHandler("stats", self.handle_commands, pass_user_data=True))
-        dispatcher_handler.add_handler(CommandHandler("refreshstats", self.handle_commands, pass_user_data=True))
+        dispatcher_handler.add_handler(CommandHandler("refresh_stats", self.handle_commands, pass_user_data=True))
+        dispatcher_handler.add_handler(
+            CommandHandler("auto_update_indoor_ride", self.handle_commands, pass_user_data=True))
+        dispatcher_handler.add_handler(CommandHandler("cancel", self.handle_commands, pass_user_data=True))
+        dispatcher_handler.add_handler(CommandHandler("refresh_all_stats", self.handle_commands, pass_user_data=True,
+                                                      filters=Filters.user(username=self.bot_variables.admins)))
         dispatcher_handler.add_handler(CallbackQueryHandler(self.handle_buttons, pass_user_data=True))
 
         dispatcher_handler.add_error_handler(self.error)
