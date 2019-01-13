@@ -16,6 +16,7 @@ class BotConstants(object):
     QUERY_FETCH_UPDATE_INDOOR_RIDE = "select update_indoor_ride from strava_telegram_bot where athlete_id={athlete_id}"
     QUERY_UPDATE_INDOOR_RIDE_DISABLE = "UPDATE strava_telegram_bot SET update_indoor_ride=False, update_indoor_ride_data=NULL where athlete_id={athlete_id}"
     QUERY_UPDATE_INDOOR_RIDE_ENABLE = "UPDATE strava_telegram_bot SET update_indoor_ride=True, update_indoor_ride_data='{update_indoor_ride_data}' where athlete_id={athlete_id}"
+    QUERY_GET_ATHLETES = "select name from strava_telegram_bot"
 
     MESSAGE_START_COMMAND = "Hi {first_name}! Type '/' to get the list of command(s)."
     MESSAGE_STATS_COMMAND = "Hi {first_name}! Give me a moment while I fetch your stats."

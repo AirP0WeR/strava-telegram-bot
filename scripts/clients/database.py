@@ -22,6 +22,16 @@ class DatabaseClient(object):
 
         return result
 
+    def read_all_operation(self, query):
+        database_connection = psycopg2.connect(self.bot_variables.database_url, sslmode='require')
+        cursor = database_connection.cursor()
+        cursor.execute(query)
+        result = cursor.fetchall()
+        cursor.close()
+        database_connection.close()
+
+        return result
+
     def write_operation(self, query):
         database_connection = psycopg2.connect(self.bot_variables.database_url, sslmode='require')
         cursor = database_connection.cursor()

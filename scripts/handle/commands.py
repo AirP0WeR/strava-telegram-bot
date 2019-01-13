@@ -120,6 +120,17 @@ class HandleCommands(object):
             message = self.bot_constants.MESSAGE_UPDATE_STATS_STARTED_ALL
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
 
+    def all_athletes_command(self):
+        self.user_data.clear()
+        all_athletes = self.database_client.read_all_operation(self.bot_constants.QUERY_GET_ATHLETES)
+        sl_no = 1
+        names = "List of registered athletes:\n\n"
+        for name in all_athletes:
+            names += "{sl_no}. {name}\n".format(sl_no=sl_no, name=name[0])
+            sl_no += 1
+
+        self.update.message.reply_text(names, parse_mode="Markdown", disable_web_page_preview=True)
+
     def cancel_command(self):
         self.user_data.clear()
         self.update.message.reply_text(self.bot_constants.MESSAGE_CANCEL_CURRENT_OPERATION)
@@ -138,7 +149,8 @@ class HandleCommands(object):
                 '/refresh_stats': self.refresh_command,
                 '/auto_update_indoor_ride': self.auto_update_indoor_ride_command,
                 '/cancel': self.cancel_command,
-                '/refresh_all_stats': self.refresh_all_stats_command
+                '/refresh_all_stats': self.refresh_all_stats_command,
+                '/all_athletes': self.all_athletes_command
             })
 
             options[command]()
