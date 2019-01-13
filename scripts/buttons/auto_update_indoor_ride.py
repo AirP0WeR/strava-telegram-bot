@@ -27,6 +27,7 @@ class AutoUpdateIndoorRide(object):
         self.chat_id = self.query.message.chat_id
         self.message_id = self.query.message.message_id
         self.database_client = DatabaseClient()
+        self.strava_client = StravaClient()
 
     def auto_update_indoor_ride_disable(self):
         self.database_client.write_operation(self.bot_constants.QUERY_UPDATE_INDOOR_RIDE_DISABLE.format(
@@ -87,7 +88,17 @@ class AutoUpdateIndoorRide(object):
                 found = False
         self.bot.deleteMessage(self.chat_id, self.message_id)
         if found:
-            self.bot.send_message(text=self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CONFIRMATION,
+            configured_data = ""
+            if 'name' in self.user_data['auto_update_indoor_ride']:
+                configured_data += "Activity Name: {activity_name}\n".format(
+                    activity_name=self.user_data['auto_update_indoor_ride']['name'])
+            if 'gear_id' in self.user_data['auto_update_indoor_ride']:
+                strava_client = self.strava_client.get_client_with_token(
+                    self.user_data['auto_update_indoor_ride']['athlete_token'])
+                bike_name = strava_client.get_gear(gear_id=self.user_data['auto_update_indoor_ride']['gear_id']).name
+                configured_data += "Bike: {bike_name}".format(bike_name=bike_name)
+            self.bot.send_message(text=self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CONFIRMATION.format(
+                configuration=configured_data),
                                   chat_id=self.chat_id,
                                   reply_markup=self.bot_constants.KEYBOARD_AUTO_UPDATE_INDOOR_RIDE_CONFIRMATION)
         else:

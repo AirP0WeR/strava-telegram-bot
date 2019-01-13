@@ -12,6 +12,7 @@ sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from scripts.common.constants_and_variables import BotVariables, BotConstants
 from scripts.commands.stats.process import ProcessStats
 from scripts.clients.database import DatabaseClient
+from scripts.clients.strava import StravaClient
 
 
 class HandleCommands(object):
@@ -23,6 +24,7 @@ class HandleCommands(object):
         self.bot_variables = BotVariables()
         self.bot_constants = BotConstants()
         self.database_client = DatabaseClient()
+        self.strava_client = StravaClient()
         self.athlete_id = None
 
     def get_athlete_id(self, telegram_username):
@@ -106,7 +108,16 @@ class HandleCommands(object):
         update_indoor_ride = self.database_client.read_operation(
             self.bot_constants.QUERY_FETCH_UPDATE_INDOOR_RIDE.format(athlete_id=self.athlete_id))
         if update_indoor_ride[0]:
-            self.update.message.reply_text(self.bot_constants.MESSAGE_SHOULD_UPDATE_INDOOR_RIDE_DISABLE,
+            configured_data = ""
+            if update_indoor_ride[1]['name']:
+                configured_data += "Activity Name: {activity_name}\n".format(
+                    activity_name=update_indoor_ride[1]['name'])
+            if update_indoor_ride[1]['gear_id']:
+                strava_client = self.strava_client.get_client_with_token(athlete_token)
+                bike_name = strava_client.get_gear(gear_id=update_indoor_ride[1]['gear_id']).name
+                configured_data += "Bike: {bike_name}".format(bike_name=bike_name)
+            self.update.message.reply_text(
+                self.bot_constants.MESSAGE_SHOULD_UPDATE_INDOOR_RIDE_DISABLE.format(configuration=configured_data),
                                            reply_markup=self.bot_constants.KEYBOARD_AUTO_UPDATE_INDOOR_RIDE_DISABLE_PROMPT)
         else:
             self.update.message.reply_text(self.bot_constants.MESSAGE_UPDATE_INDOOR_RIDE_CHOOSE_ACTIVITY_NAME,
@@ -124,7 +135,7 @@ class HandleCommands(object):
         self.user_data.clear()
         all_athletes = self.database_client.read_all_operation(self.bot_constants.QUERY_GET_ATHLETES)
         sl_no = 1
-        names = "List of registered athletes:\n\n"
+        names = "*List of registered athletes:*\n\n"
         for name in all_athletes:
             names += "{sl_no}. {name}\n".format(sl_no=sl_no, name=name[0])
             sl_no += 1
