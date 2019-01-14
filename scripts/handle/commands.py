@@ -13,6 +13,7 @@ from scripts.common.constants_and_variables import BotVariables, BotConstants
 from scripts.commands.stats.process import ProcessStats
 from scripts.clients.database import DatabaseClient
 from scripts.clients.strava import StravaClient
+from scripts.common.shadow_mode import ShadowMode
 
 
 class HandleCommands(object):
@@ -26,6 +27,8 @@ class HandleCommands(object):
         self.database_client = DatabaseClient()
         self.strava_client = StravaClient()
         self.athlete_id = None
+        self.telegram_user_first_name = self.update.message.from_user.first_name
+        self.shadow_mode = ShadowMode()
 
     def get_athlete_id(self, telegram_username):
         athlete_id = self.database_client.read_operation(
@@ -80,15 +83,15 @@ class HandleCommands(object):
 
     def start_command(self):
         self.user_data.clear()
-        message = self.bot_constants.MESSAGE_START_COMMAND.format(
-            first_name=self.update.message.from_user.first_name)
+        message = self.bot_constants.MESSAGE_START_COMMAND.format(first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+        self.shadow_mode.send_message(message=message)
 
     def stats_command(self):
         self.user_data.clear()
-        message = self.bot_constants.MESSAGE_STATS_COMMAND.format(
-            first_name=self.update.message.from_user.first_name)
+        message = self.bot_constants.MESSAGE_STATS_COMMAND.format(first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+        self.shadow_mode.send_message(message=message)
         stats = ProcessStats(self.bot, self.update, self.user_data, self.athlete_id)
         stats.process()
 
@@ -98,7 +101,9 @@ class HandleCommands(object):
         response = requests.post(self.bot_constants.API_WEBHOOK_UPDATE_STATS.format(athlete_id=self.athlete_id))
         if response.status_code == 200:
             message = self.bot_constants.MESSAGE_UPDATE_STATS_STARTED
-        self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+        self.update.message.reply_text(message.format(first_name=self.telegram_user_first_name), parse_mode="Markdown",
+                                       disable_web_page_preview=True)
+        self.shadow_mode.send_message(message=message)
 
     def auto_update_indoor_ride_command(self):
         self.user_data.clear()
@@ -116,12 +121,17 @@ class HandleCommands(object):
                 strava_client = self.strava_client.get_client_with_token(athlete_token)
                 bike_name = strava_client.get_gear(gear_id=update_indoor_ride[1]['gear_id']).name
                 configured_data += "Bike: {bike_name}".format(bike_name=bike_name)
-            self.update.message.reply_text(
-                self.bot_constants.MESSAGE_SHOULD_UPDATE_INDOOR_RIDE_DISABLE.format(configuration=configured_data),
+            message = self.bot_constants.MESSAGE_SHOULD_UPDATE_INDOOR_RIDE_DISABLE.format(
+                first_name=self.telegram_user_first_name, configuration=configured_data)
+            self.update.message.reply_text(message,
                                            reply_markup=self.bot_constants.KEYBOARD_AUTO_UPDATE_INDOOR_RIDE_DISABLE_PROMPT)
+            self.shadow_mode.send_message(message=message)
         else:
-            self.update.message.reply_text(self.bot_constants.MESSAGE_UPDATE_INDOOR_RIDE_CHOOSE_ACTIVITY_NAME,
+            message = self.bot_constants.MESSAGE_UPDATE_INDOOR_RIDE_CHOOSE_ACTIVITY_NAME.format(
+                first_name=self.telegram_user_first_name)
+            self.update.message.reply_text(message,
                                            reply_markup=self.bot_constants.KEYBOARD_AUTO_UPDATE_INDOOR_RIDE_NAME)
+            self.shadow_mode.send_message(message=message)
 
     def refresh_all_stats_command(self):
         self.user_data.clear()
@@ -129,10 +139,16 @@ class HandleCommands(object):
         response = requests.post(self.bot_constants.API_WEBHOOK_UPDATE_STATS_ALL)
         if response.status_code == 200:
             message = self.bot_constants.MESSAGE_UPDATE_STATS_STARTED_ALL
-        self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+        self.update.message.reply_text(message.format(first_name=self.telegram_user_first_name), parse_mode="Markdown",
+                                       disable_web_page_preview=True)
+        self.shadow_mode.send_message(message=message)
 
     def all_athletes_command(self):
         self.user_data.clear()
+        message = self.bot_constants.MESSAGE_FETCHING_REGISTERED_ATHLETES.format(
+            first_name=self.telegram_user_first_name)
+        self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+        self.shadow_mode.send_message(message=message)
         all_athletes = self.database_client.read_all_operation(self.bot_constants.QUERY_GET_ATHLETES)
         sl_no = 1
         names = "*List of registered athletes:*\n\n"
@@ -141,10 +157,13 @@ class HandleCommands(object):
             sl_no += 1
 
         self.update.message.reply_text(names, parse_mode="Markdown", disable_web_page_preview=True)
+        self.shadow_mode.send_message(message=names)
 
     def cancel_command(self):
         self.user_data.clear()
-        self.update.message.reply_text(self.bot_constants.MESSAGE_CANCEL_CURRENT_OPERATION)
+        message = self.bot_constants.MESSAGE_CANCEL_CURRENT_OPERATION
+        self.update.message.reply_text(message)
+        self.shadow_mode.send_message(message=message)
 
     def process(self):
         self.bot.send_chat_action(chat_id=self.update.message.chat_id, action=telegram.ChatAction.TYPING)
@@ -168,7 +187,8 @@ class HandleCommands(object):
 
         else:
             message = self.bot_constants.MESSAGE_UNREGISTERED_ATHLETE.format(
-                first_name=self.update.message.from_user.first_name,
+                first_name=self.telegram_user_first_name,
                 registration_url=self.bot_variables.registration_url,
                 admin_user_name=self.bot_variables.admin_user_name)
             self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+            self.shadow_mode.send_message(message=message)

@@ -8,6 +8,7 @@ from scripts.common.constants_and_variables import BotConstants, BotVariables
 from scripts.common.operations import Operations
 from scripts.commands.stats.format import FormatStats
 from scripts.clients.database import DatabaseClient
+from scripts.common.shadow_mode import ShadowMode
 
 
 class ProcessStats(object):
@@ -21,6 +22,7 @@ class ProcessStats(object):
         self.bot_variables = BotVariables()
         self.operations = Operations()
         self.database_client = DatabaseClient()
+        self.shadow_mode = ShadowMode()
 
     def get_strava_data(self):
         result = self.database_client.read_operation(
@@ -51,9 +53,11 @@ class ProcessStats(object):
             stats['cm_run_stats'] = format_stats.cm_run_stats()
             stats['pm_run_stats'] = format_stats.pm_run_stats()
             self.user_data['stats'] = stats
-            self.update.message.reply_text(self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU,
-                                           reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
+            message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
+            self.update.message.reply_text(message, reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
+            self.shadow_mode.send_message(message=message)
 
         else:
-            self.update.message.reply_text(self.bot_constants.MESSAGE_STATS_NOT_UPDATED, parse_mode="Markdown",
-                                           disable_web_page_preview=True)
+            message = self.bot_constants.MESSAGE_STATS_NOT_UPDATED
+            self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+            self.shadow_mode.send_message(message=message)

@@ -11,6 +11,7 @@ from scripts.common.constants_and_variables import BotConstants, BotVariables
 from scripts.common.operations import Operations
 from scripts.clients.strava import StravaClient
 from scripts.clients.database import DatabaseClient
+from scripts.common.shadow_mode import ShadowMode
 
 
 class AutoUpdateIndoorRide(object):
@@ -28,18 +29,21 @@ class AutoUpdateIndoorRide(object):
         self.message_id = self.query.message.message_id
         self.database_client = DatabaseClient()
         self.strava_client = StravaClient()
+        self.shadow_mode = ShadowMode()
 
     def auto_update_indoor_ride_disable(self):
         self.database_client.write_operation(self.bot_constants.QUERY_UPDATE_INDOOR_RIDE_DISABLE.format(
             athlete_id=self.user_data['auto_update_indoor_ride']['athlete_id']))
         self.user_data.clear()
-        self.bot.edit_message_text(text=self.bot_constants.MESSAGE_UPDATE_INDOOR_RIDE_DISABLED, chat_id=self.chat_id,
-                                   message_id=self.message_id)
+        message = self.bot_constants.MESSAGE_UPDATE_INDOOR_RIDE_DISABLED
+        self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
+        self.shadow_mode.send_message(message=message)
 
     def auto_update_indoor_ride_ignore(self):
         self.user_data.clear()
-        self.bot.edit_message_text(text=self.bot_constants.MESSAGE_UPDATE_INDOOR_RIDE_DISABLE_CANCEL,
-                                   chat_id=self.chat_id, message_id=self.message_id)
+        message = self.bot_constants.MESSAGE_UPDATE_INDOOR_RIDE_DISABLE_CANCEL
+        self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
+        self.shadow_mode.send_message(message=message)
 
     def auto_update_indoor_ride_name_indoor_ride(self):
         self.user_data['auto_update_indoor_ride'].update({'name': 'Indoor Ride'})
@@ -75,8 +79,11 @@ class AutoUpdateIndoorRide(object):
                 list_bikes += "{sl_no}. {bike_name}\n".format(sl_no=sl_no, bike_name=bikes[sl_no]['bike_name'])
             self.user_data['auto_update_indoor_ride'].update({'gear_id': bikes})
             self.bot.send_message(text=list_bikes, chat_id=self.chat_id)
-            self.bot.edit_message_text(text=self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CHOOSE_BIKE,
-                                       chat_id=self.chat_id, message_id=self.message_id, reply_markup=keyboard_bikes)
+            self.shadow_mode.send_message(message=list_bikes)
+            message = self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CHOOSE_BIKE
+            self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
+                                       reply_markup=keyboard_bikes)
+            self.shadow_mode.send_message(message=message)
         else:
             self.user_data['auto_update_indoor_ride'].update({'bike': None})
             self.update_indoor_ride_setup_confirmation()
@@ -97,14 +104,16 @@ class AutoUpdateIndoorRide(object):
                     self.user_data['auto_update_indoor_ride']['athlete_token'])
                 bike_name = strava_client.get_gear(gear_id=self.user_data['auto_update_indoor_ride']['gear_id']).name
                 configured_data += "Bike: {bike_name}".format(bike_name=bike_name)
-            self.bot.send_message(text=self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CONFIRMATION.format(
-                configuration=configured_data),
-                                  chat_id=self.chat_id,
+            message = self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CONFIRMATION.format(
+                configuration=configured_data)
+            self.bot.send_message(text=message, chat_id=self.chat_id,
                                   reply_markup=self.bot_constants.KEYBOARD_AUTO_UPDATE_INDOOR_RIDE_CONFIRMATION)
+            self.shadow_mode.send_message(message=message)
         else:
             self.user_data.clear()
-            self.bot.send_message(text=self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_INSUFFICIENT_INFORMATION,
-                                  chat_id=self.chat_id)
+            message = self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_INSUFFICIENT_INFORMATION
+            self.bot.send_message(text=message, chat_id=self.chat_id)
+            self.shadow_mode.send_message(message=message)
 
     def auto_update_indoor_ride_update_confirm_yes(self):
         update_indoor_ride_data = dict()
@@ -118,18 +127,21 @@ class AutoUpdateIndoorRide(object):
             athlete_id=self.user_data['auto_update_indoor_ride']['athlete_id']))
 
         self.user_data.clear()
-        self.bot.edit_message_text(text=self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_ENABLED,
-                                   chat_id=self.chat_id, message_id=self.message_id)
+        message = self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_ENABLED
+        self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
+        self.shadow_mode.send_message(message=message)
 
     def auto_update_indoor_ride_confirm_no(self):
         self.user_data.clear()
-        self.bot.edit_message_text(text=self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CANCELLED,
-                                   chat_id=self.chat_id, message_id=self.message_id)
+        message = self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CANCELLED
+        self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
+        self.shadow_mode.send_message(message=message)
 
     def exit_button(self):
         self.user_data.clear()
-        self.bot.edit_message_text(text=self.bot_constants.MESSAGE_EXIT_BUTTON, chat_id=self.chat_id,
-                                   message_id=self.message_id)
+        message = self.bot_constants.MESSAGE_EXIT_BUTTON
+        self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
+        self.shadow_mode.send_message(message=message)
 
     def process(self):
         options = defaultdict(lambda: self.exit_button, {

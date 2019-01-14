@@ -23,14 +23,14 @@ class BotConstants(object):
     MESSAGE_STATS_MAIN_KEYBOARD_MENU = "Choose an activity type to view your stats:"
     MESSAGE_STATS_RIDE_KEYBOARD_MENU = "Choose the type of stat you want to see:"
     MESSAGE_STATS_NOT_UPDATED = "Stats are not synced yet. Please check again after a minute."
-    MESSAGE_UPDATE_STATS_FAILED = "Failed to update stats."
-    MESSAGE_UPDATE_STATS_STARTED = "Refreshing.. Check stats after a minute or two."
-    MESSAGE_UPDATE_STATS_STARTED_ALL = "Refreshing.."
+    MESSAGE_UPDATE_STATS_FAILED = "Hi {first_name}! Failed to update stats."
+    MESSAGE_UPDATE_STATS_STARTED = "Hi {first_name}! Refreshing.. Check stats after a minute or two."
+    MESSAGE_UPDATE_STATS_STARTED_ALL = "Hi {first_name}! Refreshing.."
     MESSAGE_UNREGISTERED_ATHLETE = "Hi {first_name}! You are not a registered user yet.\n\nVisit the following link to register: {registration_url}\n\nPing {admin_user_name} in case you face any issue."
     MESSAGE_EXIT_BUTTON = "Thank you!"
-    MESSAGE_SHOULD_UPDATE_INDOOR_RIDE_DISABLE = "You have automated update of Indoor Rides with the below configuration:\n\n{configuration}\n\nDo you want to disable it?"
+    MESSAGE_SHOULD_UPDATE_INDOOR_RIDE_DISABLE = "Hi {first_name}! You have automated update of Indoor Rides with the below configuration:\n\n{configuration}\n\nDo you want to disable it?"
     MESSAGE_UPDATE_INDOOR_RIDE_DISABLE_CANCEL = "Auto update of Indoor Rides is still enabled. Thank you!"
-    MESSAGE_UPDATE_INDOOR_RIDE_CHOOSE_ACTIVITY_NAME = "Choose the activity name: (Send /cancel to cancel ongoing operation)"
+    MESSAGE_UPDATE_INDOOR_RIDE_CHOOSE_ACTIVITY_NAME = "Hi {first_name}! Choose the activity name: (Send /cancel to cancel ongoing operation)"
     MESSAGE_CANCEL_CURRENT_OPERATION = "Cancelled current operation."
     MESSAGE_UPDATE_INDOOR_RIDE_DISABLED = "Disabled auto update of Indoor Rides."
     MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CHOOSE_BIKE = "Choose the bike you want to set for Indoor Rides: (Send /cancel to cancel ongoing operation)"
@@ -38,10 +38,12 @@ class BotConstants(object):
     MESSAGE_AUTO_UPDATE_INDOOR_RIDE_INSUFFICIENT_INFORMATION = 'Insufficient information to enable auto updates of Indoor Rides. Bye!'
     MESSAGE_AUTO_UPDATE_INDOOR_RIDE_ENABLED = "Enabled auto update of Indoor Rides."
     MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CANCELLED = "Cancelled setup for auto update of Indoor Rides"
+    MESSAGE_FETCHING_REGISTERED_ATHLETES = "Hi {first_name}! Fetching the list of registered athletes."
 
     API_TOKEN_EXCHANGE = 'https://www.strava.com/oauth/token'
     API_WEBHOOK_UPDATE_STATS = "https://strava-telegram-webhooks-stage.herokuapp.com/stats/{athlete_id}"
     API_WEBHOOK_UPDATE_STATS_ALL = "https://strava-telegram-webhooks-stage.herokuapp.com/stats/all"
+    API_TELEGRAM_SEND_MESSAGE = "'https://api.telegram.org/bot{bot_token}/sendMessage'"
 
     KEYBOARD_STATS_MAIN_KEYBOARD_MENU = InlineKeyboardMarkup([[InlineKeyboardButton("Ride", callback_data='stats_ride'),
                                                                InlineKeyboardButton("Run", callback_data='stats_run')],
@@ -92,3 +94,5 @@ class BotVariables(object):
     client_id = os.environ.get('CLIENT_ID')
     client_secret = os.environ.get('CLIENT_SECRET')
     admins = os.environ.get('ADMINS', '').split(',')
+    shadow_mode = os.environ.get('SHADOW_MODE')
+    shadow_mode_chat_id = os.environ.get('SHADOW_MODE_CHAT_ID')
