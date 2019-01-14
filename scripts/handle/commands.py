@@ -101,9 +101,9 @@ class HandleCommands(object):
         response = requests.post(self.bot_constants.API_WEBHOOK_UPDATE_STATS.format(athlete_id=self.athlete_id))
         if response.status_code == 200:
             message = self.bot_constants.MESSAGE_UPDATE_STATS_STARTED
+        self.shadow_mode.send_message(message=message)
         self.update.message.reply_text(message.format(first_name=self.telegram_user_first_name), parse_mode="Markdown",
                                        disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=message)
 
     def auto_update_indoor_ride_command(self):
         self.user_data.clear()
