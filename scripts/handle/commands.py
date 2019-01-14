@@ -97,7 +97,7 @@ class HandleCommands(object):
 
     def refresh_command(self):
         self.user_data.clear()
-        message = self.bot_constants.MESSAGE_UPDATE_STATS_FAILED
+        message = self.bot_constants.MESSAGE_UPDATE_STATS_FAILED.format(first_name=self.telegram_user_first_name)
         response = requests.post(self.bot_constants.API_WEBHOOK_UPDATE_STATS.format(athlete_id=self.athlete_id))
         if response.status_code == 200:
             message = self.bot_constants.MESSAGE_UPDATE_STATS_STARTED.format(first_name=self.telegram_user_first_name)
