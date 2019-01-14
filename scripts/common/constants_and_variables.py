@@ -43,7 +43,7 @@ class BotConstants(object):
     API_TOKEN_EXCHANGE = 'https://www.strava.com/oauth/token'
     API_WEBHOOK_UPDATE_STATS = "https://strava-telegram-webhooks-stage.herokuapp.com/stats/{athlete_id}"
     API_WEBHOOK_UPDATE_STATS_ALL = "https://strava-telegram-webhooks-stage.herokuapp.com/stats/all"
-    API_TELEGRAM_SEND_MESSAGE = "'http://api.telegram.org/bot{bot_token}/sendMessage'"
+    API_TELEGRAM_SEND_MESSAGE = "https://api.telegram.org/bot{bot_token}/sendMessage"
 
     KEYBOARD_STATS_MAIN_KEYBOARD_MENU = InlineKeyboardMarkup([[InlineKeyboardButton("Ride", callback_data='stats_ride'),
                                                                InlineKeyboardButton("Run", callback_data='stats_run')],
