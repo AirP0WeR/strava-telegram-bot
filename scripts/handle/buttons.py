@@ -27,6 +27,6 @@ class HandleButtons(object):
         elif 'auto_update_indoor_ride' in self.user_data:
             if 'gear_id' in self.user_data['auto_update_indoor_ride']:
                 self.user_data['auto_update_indoor_ride']['gear_id'] = self.chosen_option
-                self.chosen_option = 'update_indoor_ride_setup_confirmation'
+                self.chosen_option = 'auto_update_indoor_ride_setup_confirmation'
                 setup = AutoUpdateIndoorRide(self.bot, self.update, self.user_data, self.chosen_option)
                 setup.process()

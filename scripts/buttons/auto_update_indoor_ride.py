@@ -84,9 +84,9 @@ class AutoUpdateIndoorRide(object):
             self.shadow_mode.send_message(message=message)
         else:
             self.user_data['auto_update_indoor_ride'].update({'bike': None})
-            self.update_indoor_ride_setup_confirmation()
+            self.auto_update_indoor_ride_setup_confirmation()
 
-    def update_indoor_ride_setup_confirmation(self):
+    def auto_update_indoor_ride_setup_confirmation(self):
         found = True
         if 'name' not in self.user_data['auto_update_indoor_ride']:
             if 'gear_id' not in self.user_data['auto_update_indoor_ride']:
@@ -149,7 +149,7 @@ class AutoUpdateIndoorRide(object):
             'auto_update_indoor_ride_name_indoor_cycling': self.auto_update_indoor_ride_name_indoor_cycling,
             'auto_update_indoor_ride_name_automatic': self.auto_update_indoor_ride_name_automatic,
             'auto_update_indoor_ride_name_skip': self.auto_update_indoor_ride_name_skip,
-            'update_indoor_ride_setup_confirmation': self.update_indoor_ride_setup_confirmation,
+            'auto_update_indoor_ride_setup_confirmation': self.auto_update_indoor_ride_setup_confirmation,
             'auto_update_indoor_ride_update_confirm_yes': self.auto_update_indoor_ride_update_confirm_yes,
             'auto_update_indoor_ride_confirm_no': self.auto_update_indoor_ride_confirm_no
         })
