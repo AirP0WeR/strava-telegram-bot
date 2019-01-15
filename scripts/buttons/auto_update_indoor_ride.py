@@ -96,7 +96,7 @@ class AutoUpdateIndoorRide(object):
         self.bot.deleteMessage(self.chat_id, self.message_id)
         if found:
             configured_data = ""
-            if 'name' in self.user_data['auto_update_indoor_ride']:
+            if self.user_data['auto_update_indoor_ride']['name']:
                 configured_data += "Activity Name: {activity_name}\n".format(
                     activity_name=self.user_data['auto_update_indoor_ride']['name'])
             if 'gear_id' in self.user_data['auto_update_indoor_ride']:
