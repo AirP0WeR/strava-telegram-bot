@@ -2,7 +2,7 @@
 
 import psycopg2
 
-from scripts.common.constants_and_variables import BotVariables
+from common.constants_and_variables import BotVariables
 
 
 class DatabaseClient(object):

@@ -2,11 +2,11 @@
 
 from datetime import timedelta
 
-from scripts.clients.database import DatabaseClient
-from scripts.commands.stats.format import FormatStats
-from scripts.common.constants_and_variables import BotConstants, BotVariables
-from scripts.common.operations import Operations
-from scripts.common.shadow_mode import ShadowMode
+from clients.database import DatabaseClient
+from commands.stats.format import FormatStats
+from common.constants_and_variables import BotConstants, BotVariables
+from common.operations import Operations
+from common.shadow_mode import ShadowMode
 
 
 class ProcessStats(object):

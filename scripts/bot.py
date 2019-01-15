@@ -5,10 +5,10 @@ import traceback
 
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, Filters
 
-from scripts.common.constants_and_variables import BotVariables
-from scripts.common.shadow_mode import ShadowMode
-from scripts.handle.buttons import HandleButtons
-from scripts.handle.commands import HandleCommands
+from common.constants_and_variables import BotVariables
+from common.shadow_mode import ShadowMode
+from handle.buttons import HandleButtons
+from handle.commands import HandleCommands
 
 
 class StravaTelegramBot(object):

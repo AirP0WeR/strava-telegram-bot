@@ -7,11 +7,11 @@ from collections import defaultdict
 import requests
 import telegram
 
-from scripts.clients.database import DatabaseClient
-from scripts.clients.strava import StravaClient
-from scripts.commands.stats.process import ProcessStats
-from scripts.common.constants_and_variables import BotVariables, BotConstants
-from scripts.common.shadow_mode import ShadowMode
+from clients.database import DatabaseClient
+from clients.strava import StravaClient
+from commands.stats.process import ProcessStats
+from common.constants_and_variables import BotVariables, BotConstants
+from common.shadow_mode import ShadowMode
 
 
 class HandleCommands(object):

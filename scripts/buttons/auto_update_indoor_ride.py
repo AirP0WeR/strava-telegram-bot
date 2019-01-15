@@ -5,11 +5,11 @@ from collections import defaultdict
 
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 
-from scripts.clients.database import DatabaseClient
-from scripts.clients.strava import StravaClient
-from scripts.common.constants_and_variables import BotConstants, BotVariables
-from scripts.common.operations import Operations
-from scripts.common.shadow_mode import ShadowMode
+from clients.database import DatabaseClient
+from clients.strava import StravaClient
+from common.constants_and_variables import BotConstants, BotVariables
+from common.operations import Operations
+from common.shadow_mode import ShadowMode
 
 
 class AutoUpdateIndoorRide(object):

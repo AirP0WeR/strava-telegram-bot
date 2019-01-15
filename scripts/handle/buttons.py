@@ -2,7 +2,7 @@
 
 from buttons.auto_update_indoor_ride import AutoUpdateIndoorRide
 from buttons.stats import Stats
-from scripts.common.constants_and_variables import BotConstants
+from common.constants_and_variables import BotConstants
 
 
 class HandleButtons(object):

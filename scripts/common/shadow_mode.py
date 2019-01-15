@@ -5,7 +5,7 @@ import traceback
 
 import requests
 
-from scripts.common.constants_and_variables import BotConstants, BotVariables
+from common.constants_and_variables import BotConstants, BotVariables
 
 
 class ShadowMode(object):

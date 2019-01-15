@@ -2,8 +2,8 @@
 
 from collections import defaultdict
 
-from scripts.common.constants_and_variables import BotConstants
-from scripts.common.shadow_mode import ShadowMode
+from common.constants_and_variables import BotConstants
+from common.shadow_mode import ShadowMode
 
 
 class Stats(object):

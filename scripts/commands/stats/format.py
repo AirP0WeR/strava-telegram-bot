@@ -1,6 +1,6 @@
 #  -*- encoding: utf-8 -*-
 
-from scripts.common.operations import Operations
+from common.operations import Operations
 
 
 class FormatStats(object):
