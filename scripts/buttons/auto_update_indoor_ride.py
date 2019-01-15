@@ -85,13 +85,13 @@ class AutoUpdateIndoorRide(object):
                                        reply_markup=keyboard_bikes)
             self.shadow_mode.send_message(message=message)
         else:
-            self.user_data['auto_update_indoor_ride'].update({'bike': None})
+            self.user_data['auto_update_indoor_ride'].update({'gear_id': None})
             self.auto_update_indoor_ride_setup_confirmation()
 
     def auto_update_indoor_ride_setup_confirmation(self):
         found = True
         if not self.user_data['auto_update_indoor_ride']['name']:
-            if 'gear_id' not in self.user_data['auto_update_indoor_ride']:
+            if not self.user_data['auto_update_indoor_ride']['gear_id']:
                 found = False
         self.bot.deleteMessage(self.chat_id, self.message_id)
         if found:
