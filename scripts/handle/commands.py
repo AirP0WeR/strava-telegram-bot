@@ -113,12 +113,12 @@ class HandleCommands(object):
         if update_indoor_ride[0]:
             configured_data = ""
             if update_indoor_ride[1]['name']:
-                configured_data += "Activity Name: {activity_name}\n".format(
+                configured_data += "\nActivity Name: {activity_name}".format(
                     activity_name=update_indoor_ride[1]['name'])
             if update_indoor_ride[1]['gear_id']:
                 strava_client = self.strava_client.get_client_with_token(athlete_token)
                 bike_name = strava_client.get_gear(gear_id=update_indoor_ride[1]['gear_id']).name
-                configured_data += "Bike: {bike_name}".format(bike_name=bike_name)
+                configured_data += "\nBike: {bike_name}".format(bike_name=bike_name)
             message = self.bot_constants.MESSAGE_SHOULD_UPDATE_INDOOR_RIDE_DISABLE.format(
                 first_name=self.telegram_user_first_name, configuration=configured_data)
             self.update.message.reply_text(message,

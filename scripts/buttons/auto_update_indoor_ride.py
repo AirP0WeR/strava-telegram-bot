@@ -70,7 +70,9 @@ class AutoUpdateIndoorRide(object):
         if len(bikes) > 0:
             bikes_list = []
             for sl_no in bikes:
-                bikes_list += [InlineKeyboardButton(text=sl_no, callback_data=bikes[sl_no]['bike_id'])]
+                bikes_list += [InlineKeyboardButton(text=sl_no,
+                                                    callback_data="auto_update_indoor_ride_gear_id_{gear_id}".format(
+                                                        gear_id=bikes[sl_no]['bike_id']))]
             keyboard_bikes = InlineKeyboardMarkup(inline_keyboard=[bikes_list])
             list_bikes = ""
             for sl_no in bikes:
@@ -83,21 +85,21 @@ class AutoUpdateIndoorRide(object):
                                        reply_markup=keyboard_bikes)
             self.shadow_mode.send_message(message=message)
         else:
-            self.user_data['auto_update_indoor_ride'].update({'bike': None})
-            self.update_indoor_ride_setup_confirmation()
+            self.user_data['auto_update_indoor_ride'].update({'gear_id': None})
+            self.auto_update_indoor_ride_setup_confirmation()
 
-    def update_indoor_ride_setup_confirmation(self):
+    def auto_update_indoor_ride_setup_confirmation(self):
         found = True
-        if 'name' not in self.user_data['auto_update_indoor_ride']:
-            if 'gear_id' not in self.user_data['auto_update_indoor_ride']:
+        if not self.user_data['auto_update_indoor_ride']['name']:
+            if not self.user_data['auto_update_indoor_ride']['gear_id']:
                 found = False
         self.bot.deleteMessage(self.chat_id, self.message_id)
         if found:
             configured_data = ""
-            if 'name' in self.user_data['auto_update_indoor_ride']:
+            if self.user_data['auto_update_indoor_ride']['name']:
                 configured_data += "Activity Name: {activity_name}\n".format(
                     activity_name=self.user_data['auto_update_indoor_ride']['name'])
-            if 'gear_id' in self.user_data['auto_update_indoor_ride']:
+            if self.user_data['auto_update_indoor_ride']['gear_id']:
                 strava_client = self.strava_client.get_client_with_token(
                     self.user_data['auto_update_indoor_ride']['athlete_token'])
                 bike_name = strava_client.get_gear(gear_id=self.user_data['auto_update_indoor_ride']['gear_id']).name
@@ -142,6 +144,11 @@ class AutoUpdateIndoorRide(object):
         self.shadow_mode.send_message(message=message)
 
     def process(self):
+        if 'auto_update_indoor_ride_gear_id_' in self.chosen_option:
+            gear_id = self.chosen_option.split("auto_update_indoor_ride_gear_id_")[1]
+            self.user_data['auto_update_indoor_ride']['gear_id'] = gear_id
+            self.chosen_option = "auto_update_indoor_ride_setup_confirmation"
+
         options = defaultdict(lambda: self.exit_button, {
             'auto_update_indoor_ride_disable': self.auto_update_indoor_ride_disable,
             'auto_update_indoor_ride_ignore': self.auto_update_indoor_ride_ignore,
@@ -149,7 +156,7 @@ class AutoUpdateIndoorRide(object):
             'auto_update_indoor_ride_name_indoor_cycling': self.auto_update_indoor_ride_name_indoor_cycling,
             'auto_update_indoor_ride_name_automatic': self.auto_update_indoor_ride_name_automatic,
             'auto_update_indoor_ride_name_skip': self.auto_update_indoor_ride_name_skip,
-            'update_indoor_ride_setup_confirmation': self.update_indoor_ride_setup_confirmation,
+            'auto_update_indoor_ride_setup_confirmation': self.auto_update_indoor_ride_setup_confirmation,
             'auto_update_indoor_ride_update_confirm_yes': self.auto_update_indoor_ride_update_confirm_yes,
             'auto_update_indoor_ride_confirm_no': self.auto_update_indoor_ride_confirm_no
         })
