@@ -99,7 +99,7 @@ class AutoUpdateIndoorRide(object):
             if self.user_data['auto_update_indoor_ride']['name']:
                 configured_data += "Activity Name: {activity_name}\n".format(
                     activity_name=self.user_data['auto_update_indoor_ride']['name'])
-            if 'gear_id' in self.user_data['auto_update_indoor_ride']:
+            if self.user_data['auto_update_indoor_ride']['gear_id']:
                 strava_client = self.strava_client.get_client_with_token(
                     self.user_data['auto_update_indoor_ride']['athlete_token'])
                 bike_name = strava_client.get_gear(gear_id=self.user_data['auto_update_indoor_ride']['gear_id']).name
