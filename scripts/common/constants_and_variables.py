@@ -1,11 +1,8 @@
 #  -*- encoding: utf-8 -*-
 
-from os import sys, path
-
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+import os
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-import os
 
 
 class BotConstants(object):
@@ -26,7 +23,7 @@ class BotConstants(object):
     MESSAGE_UPDATE_STATS_FAILED = "Hi {first_name}! Failed to update stats."
     MESSAGE_UPDATE_STATS_STARTED = "Hi {first_name}! Refreshing.. Check stats after a minute or two."
     MESSAGE_UPDATE_STATS_STARTED_ALL = "Hi {first_name}! Refreshing.."
-    MESSAGE_UNREGISTERED_ATHLETE = "Hi {first_name}! You are not a registered user yet.\n\nVisit the following link to register: {registration_url}\n\nPing {admin_user_name} in case you face any issue."
+    MESSAGE_UNREGISTERED_ATHLETE = "Hi {first_name}! You are not a registered user yet.\n\nVisit the following link to register: {registration_url}\n\nContact {admin_user_name} in case you face any issue."
     MESSAGE_EXIT_BUTTON = "Thank you!"
     MESSAGE_SHOULD_UPDATE_INDOOR_RIDE_DISABLE = "Hi {first_name}! You have automated update of Indoor Rides with the below configuration:\n\n{configuration}\n\nDo you want to disable it?"
     MESSAGE_UPDATE_INDOOR_RIDE_DISABLE_CANCEL = "Auto update of Indoor Rides is still enabled. Thank you!"

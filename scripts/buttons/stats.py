@@ -1,9 +1,7 @@
 #  -*- encoding: utf-8 -*-
 
 from collections import defaultdict
-from os import sys, path
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from scripts.common.constants_and_variables import BotConstants
 from scripts.common.shadow_mode import ShadowMode
 

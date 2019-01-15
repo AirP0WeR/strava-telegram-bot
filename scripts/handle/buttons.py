@@ -1,11 +1,8 @@
 #  -*- encoding: utf-8 -*-
 
-from os import sys, path
-
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-from scripts.common.constants_and_variables import BotConstants
-from buttons.stats import Stats
 from buttons.auto_update_indoor_ride import AutoUpdateIndoorRide
+from buttons.stats import Stats
+from scripts.common.constants_and_variables import BotConstants
 
 
 class HandleButtons(object):
