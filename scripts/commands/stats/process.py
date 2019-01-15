@@ -1,13 +1,11 @@
 #  -*- encoding: utf-8 -*-
 
 from datetime import timedelta
-from os import sys, path
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+from scripts.clients.database import DatabaseClient
+from scripts.commands.stats.format import FormatStats
 from scripts.common.constants_and_variables import BotConstants, BotVariables
 from scripts.common.operations import Operations
-from scripts.commands.stats.format import FormatStats
-from scripts.clients.database import DatabaseClient
 from scripts.common.shadow_mode import ShadowMode
 
 

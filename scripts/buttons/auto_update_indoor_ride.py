@@ -2,15 +2,13 @@
 
 import json
 from collections import defaultdict
-from os import sys, path
 
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
+from scripts.clients.database import DatabaseClient
+from scripts.clients.strava import StravaClient
 from scripts.common.constants_and_variables import BotConstants, BotVariables
 from scripts.common.operations import Operations
-from scripts.clients.strava import StravaClient
-from scripts.clients.database import DatabaseClient
 from scripts.common.shadow_mode import ShadowMode
 
 

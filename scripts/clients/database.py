@@ -1,10 +1,7 @@
 #  -*- encoding: utf-8 -*-
 
-from os import sys, path
-
 import psycopg2
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
 from scripts.common.constants_and_variables import BotVariables
 
 

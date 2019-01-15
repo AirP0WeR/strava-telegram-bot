@@ -3,16 +3,14 @@
 import logging
 import time
 from collections import defaultdict
-from os import sys, path
 
 import requests
 import telegram
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-from scripts.common.constants_and_variables import BotVariables, BotConstants
-from scripts.commands.stats.process import ProcessStats
 from scripts.clients.database import DatabaseClient
 from scripts.clients.strava import StravaClient
+from scripts.commands.stats.process import ProcessStats
+from scripts.common.constants_and_variables import BotVariables, BotConstants
 from scripts.common.shadow_mode import ShadowMode
 
 

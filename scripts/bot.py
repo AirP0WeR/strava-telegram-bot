@@ -2,15 +2,13 @@
 
 import logging
 import traceback
-from os import sys, path
 
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, Filters
 
-sys.path.append(path.dirname(path.dirname(path.abspath(__file__))))
-from scripts.handle.buttons import HandleButtons
 from scripts.common.constants_and_variables import BotVariables
-from scripts.handle.commands import HandleCommands
 from scripts.common.shadow_mode import ShadowMode
+from scripts.handle.buttons import HandleButtons
+from scripts.handle.commands import HandleCommands
 
 
 class StravaTelegramBot(object):
