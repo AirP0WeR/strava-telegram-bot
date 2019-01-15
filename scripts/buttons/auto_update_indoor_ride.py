@@ -90,8 +90,8 @@ class AutoUpdateIndoorRide(object):
 
     def auto_update_indoor_ride_setup_confirmation(self):
         found = True
-        if 'name' not in self.user_data['auto_update_indoor_ride']:
-            if 'gear_id' not in self.user_data['auto_update_indoor_ride']:
+        if not self.user_data['auto_update_indoor_ride']['name']:
+            if not self.user_data['auto_update_indoor_ride']['gear_id']:
                 found = False
         self.bot.deleteMessage(self.chat_id, self.message_id)
         if found:
