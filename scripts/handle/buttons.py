@@ -21,12 +21,7 @@ class HandleButtons(object):
         if self.chosen_option.startswith('stats'):
             stats = Stats(self.bot, self.update, self.user_data)
             stats.process()
+
         elif self.chosen_option.startswith('auto_update_indoor_ride'):
             setup = AutoUpdateIndoorRide(self.bot, self.update, self.user_data, self.chosen_option)
             setup.process()
-        elif 'auto_update_indoor_ride' in self.user_data:
-            if 'gear_id' in self.user_data['auto_update_indoor_ride']:
-                self.user_data['auto_update_indoor_ride']['gear_id'] = self.chosen_option
-                self.chosen_option = 'auto_update_indoor_ride_setup_confirmation'
-                setup = AutoUpdateIndoorRide(self.bot, self.update, self.user_data, self.chosen_option)
-                setup.process()

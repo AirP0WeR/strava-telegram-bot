@@ -70,7 +70,9 @@ class AutoUpdateIndoorRide(object):
         if len(bikes) > 0:
             bikes_list = []
             for sl_no in bikes:
-                bikes_list += [InlineKeyboardButton(text=sl_no, callback_data=bikes[sl_no]['bike_id'])]
+                bikes_list += [InlineKeyboardButton(text=sl_no,
+                                                    callback_data="auto_update_indoor_ride_gear_id_{gear_id}".format(
+                                                        gear_id=bikes[sl_no]['bike_id']))]
             keyboard_bikes = InlineKeyboardMarkup(inline_keyboard=[bikes_list])
             list_bikes = ""
             for sl_no in bikes:
@@ -142,6 +144,11 @@ class AutoUpdateIndoorRide(object):
         self.shadow_mode.send_message(message=message)
 
     def process(self):
+        if 'auto_update_indoor_ride_gear_id_' in self.chosen_option:
+            gear_id = self.chosen_option.split("auto_update_indoor_ride_gear_id_")[1]
+            self.user_data['auto_update_indoor_ride']['gear_id'] = gear_id
+            self.chosen_option = "auto_update_indoor_ride_setup_confirmation"
+
         options = defaultdict(lambda: self.exit_button, {
             'auto_update_indoor_ride_disable': self.auto_update_indoor_ride_disable,
             'auto_update_indoor_ride_ignore': self.auto_update_indoor_ride_ignore,
