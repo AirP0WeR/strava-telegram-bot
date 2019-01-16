@@ -2,6 +2,7 @@
 
 import logging
 import time
+import traceback
 from collections import defaultdict
 
 import requests
@@ -165,29 +166,35 @@ class HandleCommands(object):
         self.shadow_mode.send_message(message=message)
 
     def process(self):
-        self.bot.send_chat_action(chat_id=self.update.message.chat_id, action=telegram.ChatAction.TYPING)
-        telegram_username = self.update.message.from_user.username
-        self.athlete_id = self.get_athlete_id(telegram_username)
-        if self.athlete_id:
-            command = self.update.message.text
+        try:
             self.bot.send_chat_action(chat_id=self.update.message.chat_id, action=telegram.ChatAction.TYPING)
+            telegram_username = self.update.message.from_user.username
+            self.athlete_id = self.get_athlete_id(telegram_username)
+            if self.athlete_id:
+                command = self.update.message.text
+                self.bot.send_chat_action(chat_id=self.update.message.chat_id, action=telegram.ChatAction.TYPING)
 
-            options = defaultdict(lambda: self.start_command, {
-                '/start': self.start_command,
-                '/stats': self.stats_command,
-                '/refresh_stats': self.refresh_command,
-                '/auto_update_indoor_ride': self.auto_update_indoor_ride_command,
-                '/cancel': self.cancel_command,
-                '/refresh_all_stats': self.refresh_all_stats_command,
-                '/all_athletes': self.all_athletes_command
-            })
+                options = defaultdict(lambda: self.start_command, {
+                    '/start': self.start_command,
+                    '/stats': self.stats_command,
+                    '/refresh_stats': self.refresh_command,
+                    '/auto_update_indoor_ride': self.auto_update_indoor_ride_command,
+                    '/cancel': self.cancel_command,
+                    '/refresh_all_stats': self.refresh_all_stats_command,
+                    '/all_athletes': self.all_athletes_command
+                })
 
-            options[command]()
+                options[command]()
 
-        else:
-            message = self.bot_constants.MESSAGE_UNREGISTERED_ATHLETE.format(
-                first_name=self.telegram_user_first_name,
-                registration_url=self.bot_variables.registration_url,
-                admin_user_name=self.bot_variables.admin_user_name)
-            self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-            self.shadow_mode.send_message(message=message)
+            else:
+                message = self.bot_constants.MESSAGE_UNREGISTERED_ATHLETE.format(
+                    first_name=self.telegram_user_first_name,
+                    registration_url=self.bot_variables.registration_url,
+                    admin_user_name=self.bot_variables.admin_user_name)
+                self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+                self.shadow_mode.send_message(message=message)
+
+        except Exception:
+            message = "Something went wrong. Exception: {exception}".format(exception=traceback.format_exc())
+            logging.error(message)
+            self.shadow_mode.send_message(message)
