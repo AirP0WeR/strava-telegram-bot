@@ -5,11 +5,10 @@ from collections import defaultdict
 
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 
-from scripts.clients.database import DatabaseClient
-from scripts.clients.strava import StravaClient
-from scripts.common.constants_and_variables import BotConstants, BotVariables
-from scripts.common.operations import Operations
-from scripts.common.shadow_mode import ShadowMode
+from clients.database import DatabaseClient
+from clients.strava import StravaClient
+from common.constants_and_variables import BotConstants
+from common.shadow_mode import ShadowMode
 
 
 class AutoUpdateIndoorRide(object):
@@ -19,8 +18,6 @@ class AutoUpdateIndoorRide(object):
         self.update = update
         self.user_data = user_data
         self.bot_constants = BotConstants()
-        self.bot_variables = BotVariables()
-        self.operations = Operations()
         self.query = self.update.callback_query
         self.chosen_option = chosen_option
         self.chat_id = self.query.message.chat_id

@@ -1,9 +1,14 @@
 #  -*- encoding: utf-8 -*-
 
+import json
+import logging
 from collections import defaultdict
 
-from scripts.common.constants_and_variables import BotConstants
-from scripts.common.shadow_mode import ShadowMode
+from clients.database import DatabaseClient
+from clients.iron_cache import IronCache
+from commands.stats.format import FormatStats
+from common.constants_and_variables import BotConstants
+from common.shadow_mode import ShadowMode
 
 
 class Stats(object):
@@ -17,17 +22,21 @@ class Stats(object):
         self.chosen_option = self.query.data
         self.chat_id = self.query.message.chat_id
         self.message_id = self.query.message.message_id
-        self.all_time_ride_stats = self.user_data['stats']['all_time_ride_stats']
-        self.ytd_ride_stats = self.user_data['stats']['ytd_ride_stats']
-        self.py_ride_stats = self.user_data['stats']['py_ride_stats']
-        self.cm_ride_stats = self.user_data['stats']['cm_ride_stats']
-        self.pm_ride_stats = self.user_data['stats']['pm_ride_stats']
-        self.all_time_run_stats = self.user_data['stats']['all_time_run_stats']
-        self.ytd_run_stats = self.user_data['stats']['ytd_run_stats']
-        self.py_run_stats = self.user_data['stats']['py_run_stats']
-        self.cm_run_stats = self.user_data['stats']['cm_run_stats']
-        self.pm_run_stats = self.user_data['stats']['pm_run_stats']
+        self.telegram_username = self.query.message.chat.username
         self.shadow_mode = ShadowMode()
+        self.iron_cache = IronCache()
+        self.database_client = DatabaseClient()
+
+    def get_strava_data(self):
+        try:
+            strava_data = json.loads(self.iron_cache.get(cache="stats", key=self.telegram_username).value)
+        except:
+            logging.error("Failed to fetch from cache! Querying database..")
+            strava_data = self.database_client.read_operation(
+                self.bot_constants.QUERY_GET_STRAVA_DATA.format(telegram_username=self.telegram_username))[0]
+            self.iron_cache.put(cache="stats", key=self.telegram_username, value=strava_data)
+
+        return strava_data
 
     def stats_ride_button(self):
         message = self.bot_constants.MESSAGE_STATS_RIDE_KEYBOARD_MENU
@@ -36,7 +45,8 @@ class Stats(object):
         self.shadow_mode.send_message(message=message)
 
     def stats_ride_all_time_button(self):
-        message = self.all_time_ride_stats
+        format_stats = FormatStats(self.get_strava_data())
+        message = format_stats.all_time_ride_stats()
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -46,7 +56,8 @@ class Stats(object):
         self.shadow_mode.send_message(message=message)
 
     def stats_ride_ytd_button(self):
-        message = self.ytd_ride_stats
+        format_stats = FormatStats(self.get_strava_data())
+        message = format_stats.ytd_ride_stats()
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -56,7 +67,8 @@ class Stats(object):
         self.shadow_mode.send_message(message=message)
 
     def stats_ride_py_button(self):
-        message = self.py_ride_stats
+        format_stats = FormatStats(self.get_strava_data())
+        message = format_stats.py_ride_stats()
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -66,7 +78,8 @@ class Stats(object):
         self.shadow_mode.send_message(message=message)
 
     def stats_ride_cm_button(self):
-        message = self.cm_ride_stats
+        format_stats = FormatStats(self.get_strava_data())
+        message = format_stats.cm_ride_stats()
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -76,7 +89,8 @@ class Stats(object):
         self.shadow_mode.send_message(message=message)
 
     def stats_ride_pm_button(self):
-        message = self.pm_ride_stats
+        format_stats = FormatStats(self.get_strava_data())
+        message = format_stats.pm_ride_stats()
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -92,7 +106,8 @@ class Stats(object):
         self.shadow_mode.send_message(message=message)
 
     def stats_run_all_time_button(self):
-        message = self.all_time_run_stats
+        format_stats = FormatStats(self.get_strava_data())
+        message = format_stats.all_time_run_stats()
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -102,7 +117,8 @@ class Stats(object):
         self.shadow_mode.send_message(message=message)
 
     def stats_run_ytd_button(self):
-        message = self.ytd_run_stats
+        format_stats = FormatStats(self.get_strava_data())
+        message = format_stats.ytd_run_stats()
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -112,7 +128,8 @@ class Stats(object):
         self.shadow_mode.send_message(message=message)
 
     def stats_run_py_button(self):
-        message = self.py_run_stats
+        format_stats = FormatStats(self.get_strava_data())
+        message = format_stats.py_run_stats()
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -122,7 +139,8 @@ class Stats(object):
         self.shadow_mode.send_message(message=message)
 
     def stats_run_cm_button(self):
-        message = self.cm_run_stats
+        format_stats = FormatStats(self.get_strava_data())
+        message = format_stats.cm_run_stats()
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -132,7 +150,8 @@ class Stats(object):
         self.shadow_mode.send_message(message=message)
 
     def stats_run_pm_button(self):
-        message = self.pm_run_stats
+        format_stats = FormatStats(self.get_strava_data())
+        message = format_stats.pm_run_stats()
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)

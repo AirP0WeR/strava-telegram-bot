@@ -7,7 +7,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 class BotConstants(object):
     QUERY_GET_ATHLETE_ID = "select athlete_id from strava_telegram_bot where telegram_username='{telegram_username}'"
-    QUERY_GET_STRAVA_DATA = "select updated, strava_data from strava_telegram_bot where athlete_id={athlete_id}"
+    QUERY_GET_STRAVA_DATA = "select strava_data from strava_telegram_bot where telegram_username='{telegram_username}'"
     QUERY_FETCH_TOKEN = "select access_token, refresh_token, expires_at from strava_telegram_bot where athlete_id={athlete_id}"
     QUERY_UPDATE_TOKEN = "UPDATE strava_telegram_bot SET access_token='{access_token}', refresh_token='{refresh_token}', expires_at={expires_at}, updated=now() where athlete_id={athlete_id}"
     QUERY_FETCH_UPDATE_INDOOR_RIDE = "select update_indoor_ride, update_indoor_ride_data from strava_telegram_bot where athlete_id={athlete_id}"
@@ -23,7 +23,7 @@ class BotConstants(object):
     MESSAGE_UPDATE_STATS_FAILED = "Hi {first_name}! Failed to update stats."
     MESSAGE_UPDATE_STATS_STARTED = "Hi {first_name}! Refreshing.. Check stats after a minute or two."
     MESSAGE_UPDATE_STATS_STARTED_ALL = "Hi {first_name}! Refreshing.."
-    MESSAGE_UNREGISTERED_ATHLETE = "Hi {first_name}! You are not a registered user yet.\n\nVisit the following link to register: {registration_url}\n\nContact {admin_user_name} in case you face any issue."
+    MESSAGE_UNREGISTERED_ATHLETE = "Hi {first_name}! You are not a registered user yet.\n\nVisit the following link to register: {registration_url}\n\nContact {admin_user_name} in case you face any issues."
     MESSAGE_EXIT_BUTTON = "Thank you!"
     MESSAGE_SHOULD_UPDATE_INDOOR_RIDE_DISABLE = "Hi {first_name}! You have automated update of Indoor Rides with the below configuration:\n{configuration}\n\nDo you want to disable it?"
     MESSAGE_UPDATE_INDOOR_RIDE_DISABLE_CANCEL = "Auto update of Indoor Rides is still enabled. Thank you!"
@@ -93,3 +93,5 @@ class BotVariables(object):
     admins = os.environ.get('ADMINS', '').split(',')
     shadow_mode = os.environ.get('SHADOW_MODE')
     shadow_mode_chat_id = os.environ.get('SHADOW_MODE_CHAT_ID')
+    iron_cache_project_id = os.environ.get('IRON_CACHE_PROJECT_ID')
+    iron_cache_token = os.environ.get('IRON_CACHE_TOKEN')

@@ -1,12 +1,11 @@
 #  -*- encoding: utf-8 -*-
 
-from scripts.common.operations import Operations
+from common.operations import Operations
 
 
 class FormatStats(object):
 
-    def __init__(self, updated, calculated_stats):
-        self.updated = updated
+    def __init__(self, calculated_stats):
         self.calculated_stats = calculated_stats
         self.operations = Operations()
 
@@ -39,7 +38,7 @@ class FormatStats(object):
         output_ride_stats = self.output_ride()
         return output_ride_stats.format(
             stats_type="All Time Stats",
-            stats_updated=self.updated,
+            stats_updated=self.calculated_stats['updated'],
             total=self.calculated_stats['ride_at_total'],
             total_indoor=self.calculated_stats['ride_at_indoor_total'],
             distance=self.operations.meters_to_kilometers(self.calculated_stats['ride_at_distance']),
@@ -56,7 +55,7 @@ class FormatStats(object):
         output_ride_stats = self.output_ride()
         return output_ride_stats.format(
             stats_type="Year to Date Stats",
-            stats_updated=self.updated,
+            stats_updated=self.calculated_stats['updated'],
             total=self.calculated_stats['ride_ytd_total'],
             total_indoor=self.calculated_stats['ride_ytd_indoor_total'],
             distance=self.operations.meters_to_kilometers(self.calculated_stats['ride_ytd_distance']),
@@ -73,7 +72,7 @@ class FormatStats(object):
         output_ride_stats = self.output_ride()
         return output_ride_stats.format(
             stats_type="Previous Year Stats",
-            stats_updated=self.updated,
+            stats_updated=self.calculated_stats['updated'],
             total=self.calculated_stats['ride_py_total'],
             total_indoor=self.calculated_stats['ride_py_indoor_total'],
             distance=self.operations.meters_to_kilometers(self.calculated_stats['ride_py_distance']),
@@ -90,7 +89,7 @@ class FormatStats(object):
         output_ride_stats = self.output_ride()
         return output_ride_stats.format(
             stats_type="Current Month Stats",
-            stats_updated=self.updated,
+            stats_updated=self.calculated_stats['updated'],
             total=self.calculated_stats['ride_cm_total'],
             total_indoor=self.calculated_stats['ride_cm_indoor_total'],
             distance=self.operations.meters_to_kilometers(self.calculated_stats['ride_cm_distance']),
@@ -107,7 +106,7 @@ class FormatStats(object):
         output_ride_stats = self.output_ride()
         return output_ride_stats.format(
             stats_type="Previous Month Stats",
-            stats_updated=self.updated,
+            stats_updated=self.calculated_stats['updated'],
             total=self.calculated_stats['ride_pm_total'],
             total_indoor=self.calculated_stats['ride_pm_indoor_total'],
             distance=self.operations.meters_to_kilometers(self.calculated_stats['ride_pm_distance']),
@@ -124,7 +123,7 @@ class FormatStats(object):
         output_run_stats = self.output_run()
         return output_run_stats.format(
             stats_type="All Time Stats",
-            stats_updated=self.updated,
+            stats_updated=self.calculated_stats['updated'],
             total=self.calculated_stats['run_at_total'],
             total_indoor=self.calculated_stats['run_at_indoor_total'],
             distance=self.operations.meters_to_kilometers(self.calculated_stats['run_at_distance']),
@@ -144,7 +143,7 @@ class FormatStats(object):
         output_run_stats = self.output_run()
         return output_run_stats.format(
             stats_type="Year to Date Stats",
-            stats_updated=self.updated,
+            stats_updated=self.calculated_stats['updated'],
             total=self.calculated_stats['run_ytd_total'],
             total_indoor=self.calculated_stats['run_ytd_indoor_total'],
             distance=self.operations.meters_to_kilometers(self.calculated_stats['run_ytd_distance']),
@@ -164,7 +163,7 @@ class FormatStats(object):
         output_run_stats = self.output_run()
         return output_run_stats.format(
             stats_type="Previous Year Stats",
-            stats_updated=self.updated,
+            stats_updated=self.calculated_stats['updated'],
             total=self.calculated_stats['run_py_total'],
             total_indoor=self.calculated_stats['run_py_indoor_total'],
             distance=self.operations.meters_to_kilometers(self.calculated_stats['run_py_distance']),
@@ -184,7 +183,7 @@ class FormatStats(object):
         output_run_stats = self.output_run()
         return output_run_stats.format(
             stats_type="Current Month Stats",
-            stats_updated=self.updated,
+            stats_updated=self.calculated_stats['updated'],
             total=self.calculated_stats['run_cm_total'],
             total_indoor=self.calculated_stats['run_cm_indoor_total'],
             distance=self.operations.meters_to_kilometers(self.calculated_stats['run_cm_distance']),
@@ -204,7 +203,7 @@ class FormatStats(object):
         output_run_stats = self.output_run()
         return output_run_stats.format(
             stats_type="Previous Month Stats",
-            stats_updated=self.updated,
+            stats_updated=self.calculated_stats['updated'],
             total=self.calculated_stats['run_pm_total'],
             total_indoor=self.calculated_stats['run_pm_indoor_total'],
             distance=self.operations.meters_to_kilometers(self.calculated_stats['run_pm_distance']),
