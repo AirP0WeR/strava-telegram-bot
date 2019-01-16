@@ -27,7 +27,11 @@ $ heroku addons:attach <database-app-name> -a <this-app-name>
 https://api.telegram.org/bot{telegram_bot_token}/sendMessage?chat_id={telegram_chat_id}&text={{app}}%20({{release}})%20deployed!
 ```
 
+# Deploy
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/panchambharadwaj/strava-telegram-bot)
+
+# Strava Telegram Bot
+[![Launch](https://telegram.org/img/t_logo.png)](https://t.me/cadence90_bot)
 
 ## License
 
