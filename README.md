@@ -30,8 +30,8 @@ https://api.telegram.org/bot{telegram_bot_token}/sendMessage?chat_id={telegram_c
 # Deploy
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/panchambharadwaj/strava-telegram-bot)
 
-# Strava Telegram Bot
-[![Launch](https://telegram.org/img/t_logo.png)](https://t.me/cadence90_bot)
+# Telegram Bot
+[![Open](https://telegram.org/img/t_logo.png)](https://t.me/cadence90_bot)
 
 ## License
 
