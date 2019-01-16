@@ -7,7 +7,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 class BotConstants(object):
     QUERY_GET_ATHLETE_ID = "select athlete_id from strava_telegram_bot where telegram_username='{telegram_username}'"
-    QUERY_GET_STRAVA_DATA = "select updated, strava_data from strava_telegram_bot where athlete_id={athlete_id}"
+    QUERY_GET_STRAVA_DATA = "select strava_data from strava_telegram_bot where telegram_username='{telegram_username}'"
     QUERY_FETCH_TOKEN = "select access_token, refresh_token, expires_at from strava_telegram_bot where athlete_id={athlete_id}"
     QUERY_UPDATE_TOKEN = "UPDATE strava_telegram_bot SET access_token='{access_token}', refresh_token='{refresh_token}', expires_at={expires_at}, updated=now() where athlete_id={athlete_id}"
     QUERY_FETCH_UPDATE_INDOOR_RIDE = "select update_indoor_ride, update_indoor_ride_data from strava_telegram_bot where athlete_id={athlete_id}"
@@ -93,3 +93,5 @@ class BotVariables(object):
     admins = os.environ.get('ADMINS', '').split(',')
     shadow_mode = os.environ.get('SHADOW_MODE')
     shadow_mode_chat_id = os.environ.get('SHADOW_MODE_CHAT_ID')
+    iron_cache_project_id = os.environ.get('IRON_CACHE_PROJECT_ID')
+    iron_cache_token = os.environ.get('IRON_CACHE_TOKEN')

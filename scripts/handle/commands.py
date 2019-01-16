@@ -90,7 +90,7 @@ class HandleCommands(object):
         message = self.bot_constants.MESSAGE_STATS_COMMAND.format(first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
-        stats = ProcessStats(self.bot, self.update, self.user_data, self.athlete_id)
+        stats = ProcessStats(self.update)
         stats.process()
 
     def refresh_command(self):
