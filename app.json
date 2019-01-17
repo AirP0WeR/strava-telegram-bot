@@ -10,12 +10,4 @@
     }
   },
   "image": "heroku/python",
-  "addons": [
-    {
-      "plan": "heroku-postgresql:hobby-dev"
-    },
-    {
-      "plan": "iron_cache:developer"
-    }
-  ]
 }
