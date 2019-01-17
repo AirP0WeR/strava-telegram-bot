@@ -9,5 +9,5 @@
       "size": "Free"
     }
   },
-  "image": "heroku/python",
+  "image": "heroku/python"
 }
