@@ -1,14 +1,22 @@
 #  -*- encoding: utf-8 -*-
 
 import logging
+import os
 import traceback
 
+import scout_apm.api
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, Filters
 
 from common.constants_and_variables import BotVariables
 from common.shadow_mode import ShadowMode
 from handle.buttons import HandleButtons
 from handle.commands import HandleCommands
+
+config = {'name': os.environ.get('SCOUT_NAME'),
+          'key': os.environ.get('SCOUT_KEY'),
+          'monitor': os.environ.get('SCOUT_MONITOR')}
+
+scout_apm.api.install(config=config)
 
 
 class StravaTelegramBot(object):
@@ -21,6 +29,7 @@ class StravaTelegramBot(object):
     def error(update, error):
         logger.error('Update "{update}" caused error "{error}"'.format(update=update, error=error))
 
+    @scout_apm.api.instrument("Computation")
     def handle_commands(self, bot, update, user_data):
         try:
             commands = HandleCommands(bot, update, user_data)
@@ -30,6 +39,7 @@ class StravaTelegramBot(object):
             logging.error(message)
             self.shadow_mode.send_message(message)
 
+    @scout_apm.api.instrument("Computation")
     def handle_buttons(self, bot, update, user_data):
         try:
             buttons = HandleButtons(bot, update, user_data)

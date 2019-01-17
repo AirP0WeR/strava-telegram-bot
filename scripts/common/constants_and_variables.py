@@ -95,3 +95,6 @@ class BotVariables(object):
     shadow_mode_chat_id = os.environ.get('SHADOW_MODE_CHAT_ID')
     iron_cache_project_id = os.environ.get('IRON_CACHE_PROJECT_ID')
     iron_cache_token = os.environ.get('IRON_CACHE_TOKEN')
+    scout_monitor = os.environ.get('SCOUT_MONITOR')
+    scout_key = os.environ.get('SCOUT_KEY')
+    scout_name = os.environ.get('SCOUT_NAME')
