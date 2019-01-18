@@ -57,7 +57,7 @@ class Stats(object):
 
     def stats_ride_ytd_button(self):
         format_stats = FormatStats(self.get_strava_data())
-        message = format_stats.ytd_ride_stats()
+        message = format_stats.ride_stats("Year to Date Stats", "ytd")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -68,7 +68,7 @@ class Stats(object):
 
     def stats_ride_py_button(self):
         format_stats = FormatStats(self.get_strava_data())
-        message = format_stats.py_ride_stats()
+        message = format_stats.ride_stats("Previous Year Stats", "py")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -79,7 +79,7 @@ class Stats(object):
 
     def stats_ride_cm_button(self):
         format_stats = FormatStats(self.get_strava_data())
-        message = format_stats.cm_ride_stats()
+        message = format_stats.ride_stats("Current Month Stats", "cm")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -90,7 +90,7 @@ class Stats(object):
 
     def stats_ride_pm_button(self):
         format_stats = FormatStats(self.get_strava_data())
-        message = format_stats.pm_ride_stats()
+        message = format_stats.ride_stats("Previous Month Stats", "pm")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -107,7 +107,7 @@ class Stats(object):
 
     def stats_run_all_time_button(self):
         format_stats = FormatStats(self.get_strava_data())
-        message = format_stats.all_time_run_stats()
+        message = format_stats.run_stats("All Time Stats", "at")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -118,7 +118,7 @@ class Stats(object):
 
     def stats_run_ytd_button(self):
         format_stats = FormatStats(self.get_strava_data())
-        message = format_stats.ytd_run_stats()
+        message = format_stats.run_stats("Year to Date Stats", "ytd")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -129,7 +129,7 @@ class Stats(object):
 
     def stats_run_py_button(self):
         format_stats = FormatStats(self.get_strava_data())
-        message = format_stats.py_run_stats()
+        message = format_stats.run_stats("Previous Year Stats", "py")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -140,7 +140,7 @@ class Stats(object):
 
     def stats_run_cm_button(self):
         format_stats = FormatStats(self.get_strava_data())
-        message = format_stats.cm_run_stats()
+        message = format_stats.run_stats("Current Month Stats", "cm")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -151,7 +151,7 @@ class Stats(object):
 
     def stats_run_pm_button(self):
         format_stats = FormatStats(self.get_strava_data())
-        message = format_stats.pm_run_stats()
+        message = format_stats.run_stats("Previous Month", "pm")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -168,7 +168,7 @@ class Stats(object):
 
     def stats_swim_all_time_button(self):
         format_stats = FormatStats(self.get_strava_data())
-        message = format_stats.all_time_swim_stats()
+        message = format_stats.swim_stats("All Time Stats", "at")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -179,7 +179,7 @@ class Stats(object):
 
     def stats_swim_ytd_button(self):
         format_stats = FormatStats(self.get_strava_data())
-        message = format_stats.ytd_swim_stats()
+        message = format_stats.swim_stats("Year to Date Stats", "ytd")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -190,7 +190,7 @@ class Stats(object):
 
     def stats_swim_py_button(self):
         format_stats = FormatStats(self.get_strava_data())
-        message = format_stats.py_swim_stats()
+        message = format_stats.swim_stats("Previous Year Stats", "py")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -201,7 +201,7 @@ class Stats(object):
 
     def stats_swim_cm_button(self):
         format_stats = FormatStats(self.get_strava_data())
-        message = format_stats.cm_swim_stats()
+        message = format_stats.swim_stats("Current Month Stats", "cm")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -212,7 +212,7 @@ class Stats(object):
 
     def stats_swim_pm_button(self):
         format_stats = FormatStats(self.get_strava_data())
-        message = format_stats.pm_swim_stats()
+        message = format_stats.swim_stats("Previous Month Stats", "pm")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
