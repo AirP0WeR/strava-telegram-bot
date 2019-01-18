@@ -28,7 +28,7 @@ class StravaTelegramBot(object):
         except Exception:
             message = "Something went wrong. Exception: {exception}".format(exception=traceback.format_exc())
             logging.error(message)
-            self.shadow_mode.send_message(message)
+            self.shadow_mode.send_message(bot, message)
 
     def handle_buttons(self, bot, update, user_data):
         try:
@@ -37,39 +37,33 @@ class StravaTelegramBot(object):
         except Exception:
             message = "Something went wrong. Exception: {exception}".format(exception=traceback.format_exc())
             logging.error(message)
-            self.shadow_mode.send_message(message)
+            self.shadow_mode.send_message(bot, message)
 
     def main(self):
-        try:
-            updater = Updater(self.bot_variables.telegram_bot_token)
-            dispatcher_handler = updater.dispatcher
+        updater = Updater(self.bot_variables.telegram_bot_token)
+        dispatcher_handler = updater.dispatcher
 
-            dispatcher_handler.add_handler(CommandHandler("start", self.handle_commands, pass_user_data=True))
-            dispatcher_handler.add_handler(CommandHandler("stats", self.handle_commands, pass_user_data=True))
-            dispatcher_handler.add_handler(CommandHandler("refresh_stats", self.handle_commands, pass_user_data=True))
-            dispatcher_handler.add_handler(
-                CommandHandler("auto_update_indoor_ride", self.handle_commands, pass_user_data=True))
-            dispatcher_handler.add_handler(CommandHandler("cancel", self.handle_commands, pass_user_data=True))
-            dispatcher_handler.add_handler(CommandHandler("all_athletes", self.handle_commands, pass_user_data=True,
-                                                          filters=Filters.user(username=self.bot_variables.admins)))
-            dispatcher_handler.add_handler(
-                CommandHandler("refresh_all_stats", self.handle_commands, pass_user_data=True,
-                               filters=Filters.user(username=self.bot_variables.admins)))
-            dispatcher_handler.add_handler(CallbackQueryHandler(self.handle_buttons, pass_user_data=True))
+        dispatcher_handler.add_handler(CommandHandler("start", self.handle_commands, pass_user_data=True))
+        dispatcher_handler.add_handler(CommandHandler("stats", self.handle_commands, pass_user_data=True))
+        dispatcher_handler.add_handler(CommandHandler("refresh_stats", self.handle_commands, pass_user_data=True))
+        dispatcher_handler.add_handler(
+            CommandHandler("auto_update_indoor_ride", self.handle_commands, pass_user_data=True))
+        dispatcher_handler.add_handler(CommandHandler("cancel", self.handle_commands, pass_user_data=True))
+        dispatcher_handler.add_handler(CommandHandler("all_athletes", self.handle_commands, pass_user_data=True,
+                                                      filters=Filters.user(username=self.bot_variables.admins)))
+        dispatcher_handler.add_handler(
+            CommandHandler("refresh_all_stats", self.handle_commands, pass_user_data=True,
+                           filters=Filters.user(username=self.bot_variables.admins)))
+        dispatcher_handler.add_handler(CallbackQueryHandler(self.handle_buttons, pass_user_data=True))
 
-            dispatcher_handler.add_error_handler(self.error)
+        dispatcher_handler.add_error_handler(self.error)
 
-            updater.start_webhook(listen="0.0.0.0", port=self.bot_variables.port,
-                                  url_path=self.bot_variables.telegram_bot_token)
+        updater.start_webhook(listen="0.0.0.0", port=self.bot_variables.port,
+                              url_path=self.bot_variables.telegram_bot_token)
 
-            updater.bot.setWebhook("{app_name}/{telegram_bot_token}".format(app_name=self.bot_variables.app_name,
-                                                                            telegram_bot_token=self.bot_variables.telegram_bot_token))
-            updater.idle()
-
-        except Exception:
-            message = "Something went wrong. Exception: {exception}".format(exception=traceback.format_exc())
-            logging.error(message)
-            self.shadow_mode.send_message(message)
+        updater.bot.setWebhook("{app_name}/{telegram_bot_token}".format(app_name=self.bot_variables.app_name,
+                                                                        telegram_bot_token=self.bot_variables.telegram_bot_token))
+        updater.idle()
 
 
 if __name__ == '__main__':
