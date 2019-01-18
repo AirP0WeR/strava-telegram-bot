@@ -10,7 +10,7 @@ class ProcessStats(object):
         self.update = update
         self.bot = bot
         self.bot_constants = BotConstants()
-        self.shadow_mode = ShadowMode()
+        self.shadow_mode = ShadowMode(bot)
 
     def process(self):
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU

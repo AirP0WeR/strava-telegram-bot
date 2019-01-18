@@ -26,7 +26,7 @@ class HandleCommands(object):
         self.strava_client = StravaClient()
         self.athlete_id = None
         self.telegram_user_first_name = self.update.message.from_user.first_name
-        self.shadow_mode = ShadowMode()
+        self.shadow_mode = ShadowMode(bot)
 
     def get_athlete_id(self, telegram_username):
         athlete_id = self.database_client.read_operation(

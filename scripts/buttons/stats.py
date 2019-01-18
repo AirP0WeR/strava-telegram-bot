@@ -23,7 +23,7 @@ class Stats(object):
         self.chat_id = self.query.message.chat_id
         self.message_id = self.query.message.message_id
         self.telegram_username = self.query.message.chat.username
-        self.shadow_mode = ShadowMode()
+        self.shadow_mode = ShadowMode(bot)
         self.iron_cache = IronCache()
         self.database_client = DatabaseClient()
 
