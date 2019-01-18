@@ -43,8 +43,8 @@ class BotConstants(object):
     API_TELEGRAM_SEND_MESSAGE = "https://api.telegram.org/bot{bot_token}/sendMessage"
 
     KEYBOARD_STATS_MAIN_KEYBOARD_MENU = InlineKeyboardMarkup([[InlineKeyboardButton("Ride", callback_data='stats_ride'),
-                                                               InlineKeyboardButton("Run", callback_data='stats_run')],
-                                                              [InlineKeyboardButton("Swim",
+                                                               InlineKeyboardButton("Run", callback_data='stats_run'),
+                                                               InlineKeyboardButton("Swim",
                                                                                     callback_data='stats_swim')],
                                                               [InlineKeyboardButton("Exit",
                                                                                     callback_data='stats_exit')]])
