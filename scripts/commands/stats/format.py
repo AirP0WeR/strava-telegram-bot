@@ -45,7 +45,7 @@ class FormatStats(object):
                "- _100 m_: {hundred}\n" \
                "- _200 m_: {two_hundred}\n" \
                "- _400 m_: {four_hundred}\n" \
-               "- _800 m_: {eight_hundred}" \
+               "- _800 m_: {eight_hundred}\n" \
                "- _1500+ m_: {thousand_five_hundred}"
 
     def all_time_ride_stats(self):
