@@ -1,7 +1,7 @@
 #  -*- encoding: utf-8 -*-
 
-import json
 import logging
+import ujson
 from collections import defaultdict
 
 from clients.database import DatabaseClient
@@ -29,7 +29,7 @@ class Stats(object):
 
     def get_strava_data(self):
         try:
-            strava_data = json.loads(self.iron_cache.get(cache="stats", key=self.telegram_username).value)
+            strava_data = ujson.loads(self.iron_cache.get(cache="stats", key=self.telegram_username).value)
         except:
             logging.error("Failed to fetch from cache! Querying database..")
             strava_data = self.database_client.read_operation(
