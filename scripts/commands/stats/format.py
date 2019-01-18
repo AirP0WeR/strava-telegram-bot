@@ -71,6 +71,8 @@ class FormatStats(object):
         if self.calculated_stats['ride_{}_hundred'.format(stats_type_key)] > 0:
             "- _100's_: {hundreds}".format(hundreds=self.calculated_stats['ride_{}_hundred'.format(stats_type_key)])
 
+        return ride_stats
+
     def run_stats(self, stats_type, stats_type_key):
         output_run_stats = self.output_run()
         return output_run_stats.format(
