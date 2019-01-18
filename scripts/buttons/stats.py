@@ -39,7 +39,7 @@ class Stats(object):
         return strava_data
 
     def stats_ride_button(self):
-        message = self.bot_constants.MESSAGE_STATS_RIDE_KEYBOARD_MENU
+        message = self.bot_constants.MESSAGE_STATS_SUB_KEYBOARD_MENU
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    reply_markup=self.bot_constants.KEYBOARD_STATS_RIDE_KEYBOARD_MENU)
         self.shadow_mode.send_message(message=message)
@@ -100,7 +100,7 @@ class Stats(object):
         self.shadow_mode.send_message(message=message)
 
     def stats_run_button(self):
-        message = self.bot_constants.MESSAGE_STATS_RIDE_KEYBOARD_MENU
+        message = self.bot_constants.MESSAGE_STATS_SUB_KEYBOARD_MENU
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    reply_markup=self.bot_constants.KEYBOARD_STATS_RUN_KEYBOARD_MENU)
         self.shadow_mode.send_message(message=message)
@@ -160,6 +160,67 @@ class Stats(object):
                               reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
         self.shadow_mode.send_message(message=message)
 
+    def stats_swim_button(self):
+        message = self.bot_constants.MESSAGE_STATS_SUB_KEYBOARD_MENU
+        self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
+                                   reply_markup=self.bot_constants.KEYBOARD_STATS_SWIM_KEYBOARD_MENU)
+        self.shadow_mode.send_message(message=message)
+
+    def stats_swim_all_time_button(self):
+        format_stats = FormatStats(self.get_strava_data())
+        message = format_stats.all_time_swim_stats()
+        self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
+                                   parse_mode="Markdown", disable_web_page_preview=True)
+        self.shadow_mode.send_message(message=message)
+        message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
+        self.bot.send_message(text=message, chat_id=self.chat_id,
+                              reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
+        self.shadow_mode.send_message(message=message)
+
+    def stats_swim_ytd_button(self):
+        format_stats = FormatStats(self.get_strava_data())
+        message = format_stats.ytd_swim_stats()
+        self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
+                                   parse_mode="Markdown", disable_web_page_preview=True)
+        self.shadow_mode.send_message(message=message)
+        message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
+        self.bot.send_message(text=message, chat_id=self.chat_id,
+                              reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
+        self.shadow_mode.send_message(message=message)
+
+    def stats_swim_py_button(self):
+        format_stats = FormatStats(self.get_strava_data())
+        message = format_stats.py_swim_stats()
+        self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
+                                   parse_mode="Markdown", disable_web_page_preview=True)
+        self.shadow_mode.send_message(message=message)
+        message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
+        self.bot.send_message(text=message, chat_id=self.chat_id,
+                              reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
+        self.shadow_mode.send_message(message=message)
+
+    def stats_swim_cm_button(self):
+        format_stats = FormatStats(self.get_strava_data())
+        message = format_stats.cm_swim_stats()
+        self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
+                                   parse_mode="Markdown", disable_web_page_preview=True)
+        self.shadow_mode.send_message(message=message)
+        message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
+        self.bot.send_message(text=message, chat_id=self.chat_id,
+                              reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
+        self.shadow_mode.send_message(message=message)
+
+    def stats_swim_pm_button(self):
+        format_stats = FormatStats(self.get_strava_data())
+        message = format_stats.pm_swim_stats()
+        self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
+                                   parse_mode="Markdown", disable_web_page_preview=True)
+        self.shadow_mode.send_message(message=message)
+        message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
+        self.bot.send_message(text=message, chat_id=self.chat_id,
+                              reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
+        self.shadow_mode.send_message(message=message)
+
     def back_button(self):
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
@@ -186,6 +247,12 @@ class Stats(object):
             'stats_run_py': self.stats_run_py_button,
             'stats_run_cm': self.stats_run_cm_button,
             'stats_run_pm': self.stats_run_pm_button,
+            'stats_swim': self.stats_swim_button,
+            'stats_swim_all_time': self.stats_swim_all_time_button,
+            'stats_swim_ytd': self.stats_swim_ytd_button,
+            'stats_swim_py': self.stats_swim_py_button,
+            'stats_swim_cm': self.stats_swim_cm_button,
+            'stats_swim_pm': self.stats_swim_pm_button,
             'stats_back': self.back_button,
             'stats_exit': self.exit_button
         })
