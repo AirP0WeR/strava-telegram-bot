@@ -15,29 +15,32 @@ class StravaTelegramBot(object):
 
     def __init__(self):
         self.bot_variables = BotVariables()
-        self.shadow_mode = ShadowMode()
 
     @staticmethod
     def error(update, error):
         logger.error('Update "{update}" caused error "{error}"'.format(update=update, error=error))
 
-    def handle_commands(self, bot, update, user_data):
+    @staticmethod
+    def handle_commands(bot, update, user_data):
+        shadow_mode = ShadowMode(bot)
         try:
             commands = HandleCommands(bot, update, user_data)
             commands.process()
         except Exception:
             message = "Something went wrong. Exception: {exception}".format(exception=traceback.format_exc())
             logging.error(message)
-            self.shadow_mode.send_message(bot, message)
+            shadow_mode.send_message(message)
 
-    def handle_buttons(self, bot, update, user_data):
+    @staticmethod
+    def handle_buttons(bot, update, user_data):
+        shadow_mode = ShadowMode(bot)
         try:
             buttons = HandleButtons(bot, update, user_data)
             buttons.process()
         except Exception:
             message = "Something went wrong. Exception: {exception}".format(exception=traceback.format_exc())
             logging.error(message)
-            self.shadow_mode.send_message(bot, message)
+            shadow_mode.send_message(message)
 
     def main(self):
         updater = Updater(self.bot_variables.telegram_bot_token)

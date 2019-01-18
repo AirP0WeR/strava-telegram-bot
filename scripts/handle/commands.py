@@ -83,13 +83,13 @@ class HandleCommands(object):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_START_COMMAND.format(first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(self.bot, message=message)
+        self.shadow_mode.send_message(message=message)
 
     def stats_command(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_STATS_COMMAND.format(first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(self.bot, message=message)
+        self.shadow_mode.send_message(message=message)
         stats = ProcessStats(self.update, self.bot)
         stats.process()
 
@@ -101,7 +101,7 @@ class HandleCommands(object):
             message = self.bot_constants.MESSAGE_UPDATE_STATS_STARTED.format(first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown",
                                        disable_web_page_preview=True)
-        self.shadow_mode.send_message(self.bot, message=message)
+        self.shadow_mode.send_message(message=message)
 
     def auto_update_indoor_ride_command(self):
         self.user_data.clear()
@@ -123,13 +123,13 @@ class HandleCommands(object):
                 first_name=self.telegram_user_first_name, configuration=configured_data)
             self.update.message.reply_text(message,
                                            reply_markup=self.bot_constants.KEYBOARD_AUTO_UPDATE_INDOOR_RIDE_DISABLE_PROMPT)
-            self.shadow_mode.send_message(self.bot, message=message)
+            self.shadow_mode.send_message(message=message)
         else:
             message = self.bot_constants.MESSAGE_UPDATE_INDOOR_RIDE_CHOOSE_ACTIVITY_NAME.format(
                 first_name=self.telegram_user_first_name)
             self.update.message.reply_text(message,
                                            reply_markup=self.bot_constants.KEYBOARD_AUTO_UPDATE_INDOOR_RIDE_NAME)
-            self.shadow_mode.send_message(self.bot, message=message)
+            self.shadow_mode.send_message(message=message)
 
     def refresh_all_stats_command(self):
         self.user_data.clear()
@@ -140,14 +140,14 @@ class HandleCommands(object):
                 first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown",
                                        disable_web_page_preview=True)
-        self.shadow_mode.send_message(self.bot, message=message)
+        self.shadow_mode.send_message(message=message)
 
     def all_athletes_command(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_FETCHING_REGISTERED_ATHLETES.format(
             first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(self.bot, message=message)
+        self.shadow_mode.send_message(message=message)
         all_athletes = self.database_client.read_all_operation(self.bot_constants.QUERY_GET_ATHLETES)
         sl_no = 1
         names = "*List of registered athletes:*\n\n"
@@ -156,13 +156,13 @@ class HandleCommands(object):
             sl_no += 1
 
         self.update.message.reply_text(names, parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(self.bot, message=names)
+        self.shadow_mode.send_message(message=names)
 
     def cancel_command(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_CANCEL_CURRENT_OPERATION
         self.update.message.reply_text(message)
-        self.shadow_mode.send_message(self.bot, message=message)
+        self.shadow_mode.send_message(message=message)
 
     def process(self):
         self.bot.send_chat_action(chat_id=self.update.message.chat_id, action=telegram.ChatAction.TYPING)
@@ -190,4 +190,4 @@ class HandleCommands(object):
                 registration_url=self.bot_variables.registration_url,
                 admin_user_name=self.bot_variables.admin_user_name)
             self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-            self.shadow_mode.send_message(self.bot, message=message)
+            self.shadow_mode.send_message(message=message)
