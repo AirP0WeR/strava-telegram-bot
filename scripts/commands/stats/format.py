@@ -42,10 +42,7 @@ class FormatStats(object):
                                                                                           stats_updated=
                                                                                           self.calculated_stats[
                                                                                               'updated'])
-        if self.calculated_stats['ride_{}_total'.format(stats_type_key)] == 0:
-            ride_stats = "No activities during this period."
-            return ride_stats
-        else:
+        if self.calculated_stats['ride_{}_total'.format(stats_type_key)] > 0:
             ride_stats += "- _Rides_: {total} (Includes {total_indoor} Indoors)\n".format(
                 total=self.calculated_stats['ride_{}_total'.format(stats_type_key)],
                 total_indoor=self.calculated_stats['ride_{}_indoor_total'.format(stats_type_key)])
@@ -65,11 +62,15 @@ class FormatStats(object):
             ride_stats += "- _Biggest Ride_: {biggest_ride} km\n".format(
                 biggest_ride=self.operations.meters_to_kilometers(
                     self.calculated_stats['ride_{}_biggest_ride'.format(stats_type_key)]))
-        if self.calculated_stats['ride_{}_fifty'.format(stats_type_key)] > 0:
-            ride_stats += "- _50's_: {fifties}\n".format(
-                fifties=self.calculated_stats['ride_{}_fifty'.format(stats_type_key)])
-        if self.calculated_stats['ride_{}_hundred'.format(stats_type_key)] > 0:
-            "- _100's_: {hundreds}".format(hundreds=self.calculated_stats['ride_{}_hundred'.format(stats_type_key)])
+            if self.calculated_stats['ride_{}_fifty'.format(stats_type_key)] > 0:
+                ride_stats += "- _50's_: {fifties}\n".format(
+                    fifties=self.calculated_stats['ride_{}_fifty'.format(stats_type_key)])
+            if self.calculated_stats['ride_{}_hundred'.format(stats_type_key)] > 0:
+                ride_stats += "- _100's_: {hundreds}".format(
+                    hundreds=self.calculated_stats['ride_{}_hundred'.format(stats_type_key)])
+        else:
+            ride_stats = "No activities during this period."
+            return ride_stats
 
         return ride_stats
 
