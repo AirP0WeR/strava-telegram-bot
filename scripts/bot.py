@@ -4,7 +4,6 @@ import logging
 import traceback
 
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, Filters
-from telegram.ext.dispatcher import run_async
 
 from common.constants_and_variables import BotVariables
 from common.shadow_mode import ShadowMode
@@ -22,7 +21,6 @@ class StravaTelegramBot(object):
     def error(update, error):
         logger.error('Update "{update}" caused error "{error}"'.format(update=update, error=error))
 
-    @run_async
     def handle_commands(self, bot, update, user_data):
         try:
             commands = HandleCommands(bot, update, user_data)
@@ -32,7 +30,6 @@ class StravaTelegramBot(object):
             logging.error(message)
             self.shadow_mode.send_message(message)
 
-    @run_async
     def handle_buttons(self, bot, update, user_data):
         try:
             buttons = HandleButtons(bot, update, user_data)

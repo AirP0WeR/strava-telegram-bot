@@ -15,19 +15,33 @@ class FormatStats(object):
                                                                                           self.calculated_stats[
                                                                                               'updated'])
         if self.calculated_stats['ride_{}_total'.format(stats_type_key)] > 0:
-            ride_stats += "- _Rides_: {total} (Includes {total_indoor} Indoors)\n\n".format(
-                total=self.calculated_stats['ride_{}_total'.format(stats_type_key)],
-                total_indoor=self.calculated_stats['ride_{}_indoor_total'.format(stats_type_key)])
-            ride_stats += "- _Distance_: {distance} km (Includes {indoor_distance} km of Indoors)\n\n".format(
-                distance=self.operations.meters_to_kilometers(
-                    self.calculated_stats['ride_{}_distance'.format(stats_type_key)]),
-                indoor_distance=self.operations.meters_to_kilometers(
-                    self.calculated_stats['ride_{}_indoor_distance'.format(stats_type_key)]))
-            ride_stats += "- _Moving Time_: {moving_time} hours (Includes {indoor_moving_time} hours of Indoors)\n\n".format(
+            ride_stats += "- _Rides_: {total} ".format(
+                total=self.calculated_stats['ride_{}_total'.format(stats_type_key)])
+            if self.calculated_stats['ride_{}_indoor_total'.format(stats_type_key)] > 0:
+                ride_stats += "(Includes {total_indoor} Indoors)\n\n".format(
+                    total_indoor=self.calculated_stats['ride_{}_indoor_total'.format(stats_type_key)])
+            else:
+                ride_stats += "\n\n"
+
+            ride_stats += "- _Distance_: {distance} km ".format(distance=self.operations.meters_to_kilometers(
+                self.calculated_stats['ride_{}_distance'.format(stats_type_key)]))
+            if self.calculated_stats['ride_{}_indoor_distance'.format(stats_type_key)] > 0:
+                ride_stats += "(Includes {indoor_distance} km of Indoors)\n\n".format(
+                    indoor_distance=self.operations.meters_to_kilometers(
+                        self.calculated_stats['ride_{}_indoor_distance'.format(stats_type_key)]))
+            else:
+                ride_stats += "\n\n"
+
+            ride_stats += "- _Moving Time_: {moving_time} hours ".format(
                 moving_time=self.operations.seconds_to_human_readable(
-                    self.calculated_stats['ride_{}_moving_time'.format(stats_type_key)]),
-                indoor_moving_time=self.operations.seconds_to_human_readable(
-                    self.calculated_stats['ride_{}_indoor_moving_time'.format(stats_type_key)]))
+                    self.calculated_stats['ride_{}_moving_time'.format(stats_type_key)]))
+            if self.calculated_stats['ride_{}_indoor_moving_time'.format(stats_type_key)] > 0:
+                ride_stats += "(Includes {indoor_moving_time} hours of Indoors)\n\n".format(
+                    indoor_moving_time=self.operations.seconds_to_human_readable(
+                        self.calculated_stats['ride_{}_indoor_moving_time'.format(stats_type_key)]))
+            else:
+                ride_stats += "\n\n"
+
             ride_stats += "- _Elevation Gain_: {elevation_gain} km\n\n".format(
                 elevation_gain=self.operations.meters_to_kilometers(
                     self.calculated_stats['ride_{}_elevation_gain'.format(stats_type_key)]))
@@ -50,19 +64,32 @@ class FormatStats(object):
         run_stats = "*Run - {stats_type}:* _(Stats as on: {stats_updated})_\n\n".format(
             stats_type="{stats_type}".format(stats_type=stats_type), stats_updated=self.calculated_stats['updated'])
         if self.calculated_stats['run_{}_total'.format(stats_type_key)] > 0:
-            run_stats += "- _Runs_: {total} (Includes {total_indoor} Indoors)\n\n".format(
-                total=self.calculated_stats['run_{}_total'.format(stats_type_key)],
-                total_indoor=self.calculated_stats['run_{}_indoor_total'.format(stats_type_key)])
-            run_stats += "- _Distance_: {distance} km (Includes {indoor_distance} km of Indoors)\n\n".format(
-                distance=self.operations.meters_to_kilometers(
-                    self.calculated_stats['run_{}_distance'.format(stats_type_key)]),
-                indoor_distance=self.operations.meters_to_kilometers(
-                    self.calculated_stats['run_{}_indoor_distance'.format(stats_type_key)]))
-            run_stats += "- _Moving Time_: {moving_time} hours (Includes {indoor_moving_time} hours of Indoors)\n\n".format(
+            run_stats += "- _Runs_: {total} ".format(total=self.calculated_stats['run_{}_total'.format(stats_type_key)])
+            if self.calculated_stats['run_{}_indoor_total'.format(stats_type_key)] > 0:
+                run_stats += "(Includes {total_indoor} Indoors)\n\n".format(
+                    total_indoor=self.calculated_stats['run_{}_indoor_total'.format(stats_type_key)])
+            else:
+                run_stats += "\n\n"
+
+            run_stats += "- _Distance_: {distance} km ".format(distance=self.operations.meters_to_kilometers(
+                self.calculated_stats['run_{}_distance'.format(stats_type_key)]))
+            if self.calculated_stats['run_{}_indoor_distance'.format(stats_type_key)] > 0:
+                run_stats += "(Includes {indoor_distance} km of Indoors)\n\n".format(
+                    indoor_distance=self.operations.meters_to_kilometers(
+                        self.calculated_stats['run_{}_indoor_distance'.format(stats_type_key)]))
+            else:
+                run_stats += "\n\n"
+
+            run_stats += "- _Moving Time_: {moving_time} hours ".format(
                 moving_time=self.operations.seconds_to_human_readable(
-                    self.calculated_stats['run_{}_moving_time'.format(stats_type_key)]),
-                indoor_moving_time=self.operations.seconds_to_human_readable(
-                    self.calculated_stats['run_{}_indoor_moving_time'.format(stats_type_key)]))
+                    self.calculated_stats['run_{}_moving_time'.format(stats_type_key)]))
+            if self.calculated_stats['run_{}_indoor_moving_time'.format(stats_type_key)] > 0:
+                run_stats += "(Includes {indoor_moving_time} hours of Indoors)\n\n".format(
+                    indoor_moving_time=self.operations.seconds_to_human_readable(
+                        self.calculated_stats['run_{}_indoor_moving_time'.format(stats_type_key)]))
+            else:
+                run_stats += "\n\n"
+
             run_stats += "- _Elevation Gain_: {elevation_gain} km\n\n".format(
                 elevation_gain=self.operations.meters_to_kilometers(
                     self.calculated_stats['run_{}_elevation_gain'.format(stats_type_key)]))
