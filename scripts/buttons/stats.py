@@ -46,7 +46,7 @@ class Stats(object):
 
     def stats_ride_all_time_button(self):
         format_stats = FormatStats(self.get_strava_data())
-        message = format_stats.all_time_ride_stats()
+        message = format_stats.ride_stats("All Time Stats", "at")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)

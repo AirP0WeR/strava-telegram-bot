@@ -48,6 +48,28 @@ class FormatStats(object):
                "- _800 m_: {eight_hundred}\n" \
                "- _1500+ m_: {thousand_five_hundred}"
 
+    def ride_stats(self, stats_type, stats_type_key):
+        output_ride_stats = self.output_ride()
+        return output_ride_stats.format(
+            stats_type="{stats_type}".format(stats_type=stats_type),
+            stats_updated=self.calculated_stats['updated'],
+            total=self.calculated_stats['ride_{}_total'.format(stats_type_key)],
+            total_indoor=self.calculated_stats['ride_{}_indoor_total'.format(stats_type_key)],
+            distance=self.operations.meters_to_kilometers(
+                self.calculated_stats['ride_{}_distance'.format(stats_type_key)]),
+            indoor_distance=self.operations.meters_to_kilometers(
+                self.calculated_stats['ride_{}_indoor_distance'.format(stats_type_key)]),
+            moving_time=self.operations.seconds_to_human_readable(
+                self.calculated_stats['ride_{}_moving_time'.format(stats_type_key)]),
+            indoor_moving_time=self.operations.seconds_to_human_readable(
+                self.calculated_stats['ride_{}_indoor_moving_time'.format(stats_type_key)]),
+            elevation_gain=self.operations.meters_to_kilometers(
+                self.calculated_stats['ride_{}_elevation_gain'.format(stats_type_key)]),
+            biggest_ride=self.operations.meters_to_kilometers(
+                self.calculated_stats['ride_{}_biggest_ride'.format(stats_type_key)]),
+            fifties=self.calculated_stats['ride_{}_fifty'.format(stats_type_key)],
+            hundreds=self.calculated_stats['ride_{}_hundred'.format(stats_type_key)])
+
     def all_time_ride_stats(self):
         output_ride_stats = self.output_ride()
         return output_ride_stats.format(
