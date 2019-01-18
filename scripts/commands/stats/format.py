@@ -34,6 +34,20 @@ class FormatStats(object):
                "- _HM's_: {fm}\n" \
                "- _Ultra's_: {ultra}"
 
+    @staticmethod
+    def output_swim():
+        return "*Swim - {stats_type}:* _(Stats as on: {stats_updated})_\n\n" \
+               "- _Swims_: {total}\n" \
+               "- _Distance_: {distance} km\n" \
+               "- _Moving Time_: {moving_time} hours\n" \
+               "- _Biggest Swim_: {biggest_swim} km\n" \
+               "- _50 m_: {fifty}\n" \
+               "- _100 m_: {hundred}\n" \
+               "- _200 m_: {two_hundred}\n" \
+               "- _400 m_: {four_hundred}\n" \
+               "- _800 m_: {eight_hundred}\n" \
+               "- _1500+ m_: {thousand_five_hundred}"
+
     def all_time_ride_stats(self):
         output_ride_stats = self.output_ride()
         return output_ride_stats.format(
@@ -218,3 +232,83 @@ class FormatStats(object):
             hm=self.calculated_stats['run_pm_hm'],
             fm=self.calculated_stats['run_pm_fm'],
             ultra=self.calculated_stats['run_pm_ultra'])
+
+    def all_time_swim_stats(self):
+        output_swim_stats = self.output_swim()
+        return output_swim_stats.format(
+            stats_type="All Time Stats",
+            stats_updated=self.calculated_stats['updated'],
+            total=self.calculated_stats['swim_at_total'],
+            distance=self.operations.meters_to_kilometers(self.calculated_stats['swim_at_distance']),
+            moving_time=self.operations.seconds_to_human_readable(self.calculated_stats['swim_at_moving_time']),
+            biggest_swim=self.operations.meters_to_kilometers(self.calculated_stats['swim_at_biggest_swim']),
+            fifty=self.calculated_stats['swim_at_50'],
+            hundred=self.calculated_stats['swim_at_100'],
+            two_hundred=self.calculated_stats['swim_at_200'],
+            four_hundred=self.calculated_stats['swim_at_400'],
+            eight_hundred=self.calculated_stats['swim_at_800'],
+            thousand_five_hundred=self.calculated_stats['swim_at_1500'])
+
+    def ytd_swim_stats(self):
+        output_swim_stats = self.output_swim()
+        return output_swim_stats.format(
+            stats_type="Year to Date Stats",
+            stats_updated=self.calculated_stats['updated'],
+            total=self.calculated_stats['swim_ytd_total'],
+            distance=self.operations.meters_to_kilometers(self.calculated_stats['swim_ytd_distance']),
+            moving_time=self.operations.seconds_to_human_readable(self.calculated_stats['swim_ytd_moving_time']),
+            biggest_swim=self.operations.meters_to_kilometers(self.calculated_stats['swim_ytd_biggest_swim']),
+            fifty=self.calculated_stats['swim_ytd_50'],
+            hundred=self.calculated_stats['swim_ytd_100'],
+            two_hundred=self.calculated_stats['swim_ytd_200'],
+            four_hundred=self.calculated_stats['swim_ytd_400'],
+            eight_hundred=self.calculated_stats['swim_ytd_800'],
+            thousand_five_hundred=self.calculated_stats['swim_ytd_1500'])
+
+    def py_swim_stats(self):
+        output_swim_stats = self.output_swim()
+        return output_swim_stats.format(
+            stats_type="Previous Year Stats",
+            stats_updated=self.calculated_stats['updated'],
+            total=self.calculated_stats['swim_py_total'],
+            distance=self.operations.meters_to_kilometers(self.calculated_stats['swim_py_distance']),
+            moving_time=self.operations.seconds_to_human_readable(self.calculated_stats['swim_py_moving_time']),
+            biggest_swim=self.operations.meters_to_kilometers(self.calculated_stats['swim_py_biggest_swim']),
+            fifty=self.calculated_stats['swim_py_50'],
+            hundred=self.calculated_stats['swim_py_100'],
+            two_hundred=self.calculated_stats['swim_py_200'],
+            four_hundred=self.calculated_stats['swim_py_400'],
+            eight_hundred=self.calculated_stats['swim_py_800'],
+            thousand_five_hundred=self.calculated_stats['swim_py_1500'])
+
+    def cm_swim_stats(self):
+        output_swim_stats = self.output_swim()
+        return output_swim_stats.format(
+            stats_type="Current Month Stats",
+            stats_updated=self.calculated_stats['updated'],
+            total=self.calculated_stats['swim_cm_total'],
+            distance=self.operations.meters_to_kilometers(self.calculated_stats['swim_cm_distance']),
+            moving_time=self.operations.seconds_to_human_readable(self.calculated_stats['swim_cm_moving_time']),
+            biggest_swim=self.operations.meters_to_kilometers(self.calculated_stats['swim_cm_biggest_swim']),
+            fifty=self.calculated_stats['swim_cm_50'],
+            hundred=self.calculated_stats['swim_cm_100'],
+            two_hundred=self.calculated_stats['swim_cm_200'],
+            four_hundred=self.calculated_stats['swim_cm_400'],
+            eight_hundred=self.calculated_stats['swim_cm_800'],
+            thousand_five_hundred=self.calculated_stats['swim_cm_1500'])
+
+    def pm_swim_stats(self):
+        output_swim_stats = self.output_swim()
+        return output_swim_stats.format(
+            stats_type="Previous Month Stats",
+            stats_updated=self.calculated_stats['updated'],
+            total=self.calculated_stats['swim_pm_total'],
+            distance=self.operations.meters_to_kilometers(self.calculated_stats['swim_pm_distance']),
+            moving_time=self.operations.seconds_to_human_readable(self.calculated_stats['swim_pm_moving_time']),
+            biggest_swim=self.operations.meters_to_kilometers(self.calculated_stats['swim_pm_biggest_swim']),
+            fifty=self.calculated_stats['swim_pm_50'],
+            hundred=self.calculated_stats['swim_pm_100'],
+            two_hundred=self.calculated_stats['swim_pm_200'],
+            four_hundred=self.calculated_stats['swim_pm_400'],
+            eight_hundred=self.calculated_stats['swim_pm_800'],
+            thousand_five_hundred=self.calculated_stats['swim_pm_1500'])

@@ -18,7 +18,7 @@ class BotConstants(object):
     MESSAGE_START_COMMAND = "Hi {first_name}! Type '/' to get the list of command(s)."
     MESSAGE_STATS_COMMAND = "Hi {first_name}! Give me a moment while I fetch your stats."
     MESSAGE_STATS_MAIN_KEYBOARD_MENU = "Choose an activity type to view your stats:"
-    MESSAGE_STATS_RIDE_KEYBOARD_MENU = "Choose the type of stat you want to see:"
+    MESSAGE_STATS_SUB_KEYBOARD_MENU = "Choose the type of stat you want to see:"
     MESSAGE_STATS_NOT_UPDATED = "Stats are not synced yet. Please check again after a minute."
     MESSAGE_UPDATE_STATS_FAILED = "Hi {first_name}! Failed to update stats."
     MESSAGE_UPDATE_STATS_STARTED = "Hi {first_name}! Refreshing.. Check stats after a minute or two."
@@ -43,7 +43,9 @@ class BotConstants(object):
     API_TELEGRAM_SEND_MESSAGE = "https://api.telegram.org/bot{bot_token}/sendMessage"
 
     KEYBOARD_STATS_MAIN_KEYBOARD_MENU = InlineKeyboardMarkup([[InlineKeyboardButton("Ride", callback_data='stats_ride'),
-                                                               InlineKeyboardButton("Run", callback_data='stats_run')],
+                                                               InlineKeyboardButton("Run", callback_data='stats_run'),
+                                                               InlineKeyboardButton("Swim",
+                                                                                    callback_data='stats_swim')],
                                                               [InlineKeyboardButton("Exit",
                                                                                     callback_data='stats_exit')]])
 
@@ -62,6 +64,15 @@ class BotConstants(object):
           InlineKeyboardButton("Previous Year", callback_data='stats_run_py')],
          [InlineKeyboardButton("Current Month", callback_data='stats_run_cm'),
           InlineKeyboardButton("Previous Month", callback_data='stats_run_pm')],
+         [InlineKeyboardButton("Back", callback_data='stats_back'),
+          InlineKeyboardButton("Exit", callback_data='stats_exit')]])
+
+    KEYBOARD_STATS_SWIM_KEYBOARD_MENU = InlineKeyboardMarkup(
+        [[InlineKeyboardButton("All Time", callback_data='stats_swim_all_time'),
+          InlineKeyboardButton("Year to Date", callback_data='stats_swim_ytd'),
+          InlineKeyboardButton("Previous Year", callback_data='stats_swim_py')],
+         [InlineKeyboardButton("Current Month", callback_data='stats_swim_cm'),
+          InlineKeyboardButton("Previous Month", callback_data='stats_swim_pm')],
          [InlineKeyboardButton("Back", callback_data='stats_back'),
           InlineKeyboardButton("Exit", callback_data='stats_exit')]])
 
