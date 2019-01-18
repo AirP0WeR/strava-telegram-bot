@@ -43,7 +43,7 @@ class StravaTelegramBot(object):
             shadow_mode.send_message(message)
 
     def main(self):
-        updater = Updater(self.bot_variables.telegram_bot_token)
+        updater = Updater(self.bot_variables.telegram_bot_token, workers=16)
         dispatcher_handler = updater.dispatcher
 
         dispatcher_handler.add_handler(CommandHandler("start", self.handle_commands, pass_user_data=True))
