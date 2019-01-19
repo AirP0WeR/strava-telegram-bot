@@ -25,7 +25,8 @@ class ShadowMode(object):
                                       parse_mode=parse_mode, disable_web_page_preview=disable_web_page_preview,
                                       disable_notification=disable_notification, reply_markup=reply_markup)
         except Exception:
-            logging.warning("Telegram Timed Out. Retrying with API...".format(exception=traceback.format_exc()))
+            logging.warning("Exception is Telegram Bot's send_message(). Retrying with core API...".format(
+                exception=traceback.format_exc()))
             data = {
                 'chat_id': '{chat_id}'.format(chat_id=self.bot_variables.shadow_mode_chat_id),
                 'text': '{message}'.format(message=message),
