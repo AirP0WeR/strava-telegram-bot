@@ -38,8 +38,6 @@ class BotConstants(object):
     MESSAGE_FETCHING_REGISTERED_ATHLETES = "Hi {first_name}! Fetching the list of registered athletes."
 
     API_TOKEN_EXCHANGE = 'https://www.strava.com/oauth/token'
-    API_WEBHOOK_UPDATE_STATS = "https://strava-telegram-webhooks-stage.herokuapp.com/stats/{athlete_id}"
-    API_WEBHOOK_UPDATE_STATS_ALL = "https://strava-telegram-webhooks-stage.herokuapp.com/stats/all"
     API_TELEGRAM_SEND_MESSAGE = "https://api.telegram.org/bot{bot_token}/sendMessage"
 
     KEYBOARD_STATS_MAIN_KEYBOARD_MENU = InlineKeyboardMarkup([[InlineKeyboardButton("Ride", callback_data='stats_ride'),
@@ -108,3 +106,5 @@ class BotVariables(object):
     shadow_mode_chat_id = os.environ.get('SHADOW_MODE_CHAT_ID')
     iron_cache_project_id = os.environ.get('IRON_CACHE_PROJECT_ID')
     iron_cache_token = os.environ.get('IRON_CACHE_TOKEN')
+    api_update_stats_webhook = os.environ.get('UPDATE_STATS_WEBHOOK_API')
+    api_update_stats_all_webhook = os.environ.get('UPDATE_STATS_ALL_WEBHOOK_API')
