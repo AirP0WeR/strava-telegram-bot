@@ -191,5 +191,5 @@ class HandleCommands(object):
                 first_name=self.telegram_user_first_name,
                 registration_url=self.bot_variables.registration_url,
                 admin_user_name=self.bot_variables.admin_user_name)
-            self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+            self.update.message.reply_text(message, disable_web_page_preview=True)
             self.shadow_mode.send_message(message=message)
