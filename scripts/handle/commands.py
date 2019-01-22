@@ -98,7 +98,7 @@ class HandleCommands(object):
     def refresh_command(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_UPDATE_STATS_FAILED.format(first_name=self.telegram_user_first_name)
-        response = requests.post(self.bot_constants.API_WEBHOOK_UPDATE_STATS.format(athlete_id=self.athlete_id))
+        response = requests.post(self.bot_variables.api_update_stats_webhook.format(athlete_id=self.athlete_id))
         if response.status_code == 200:
             message = self.bot_constants.MESSAGE_UPDATE_STATS_STARTED.format(first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown",
@@ -136,7 +136,7 @@ class HandleCommands(object):
     def refresh_all_stats_command(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_UPDATE_STATS_FAILED.format(first_name=self.telegram_user_first_name)
-        response = requests.post(self.bot_constants.API_WEBHOOK_UPDATE_STATS_ALL)
+        response = requests.post(self.bot_variables.api_update_stats_all_webhook)
         if response.status_code == 200:
             message = self.bot_constants.MESSAGE_UPDATE_STATS_STARTED_ALL.format(
                 first_name=self.telegram_user_first_name)
