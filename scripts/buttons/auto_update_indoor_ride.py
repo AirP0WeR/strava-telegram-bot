@@ -1,6 +1,6 @@
 #  -*- encoding: utf-8 -*-
 
-import json
+import ujson
 from collections import defaultdict
 
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
@@ -24,7 +24,7 @@ class AutoUpdateIndoorRide(object):
         self.message_id = self.query.message.message_id
         self.database_client = DatabaseClient()
         self.strava_client = StravaClient()
-        self.shadow_mode = ShadowMode()
+        self.shadow_mode = ShadowMode(bot)
 
     def auto_update_indoor_ride_disable(self):
         self.database_client.write_operation(self.bot_constants.QUERY_UPDATE_INDOOR_RIDE_DISABLE.format(
@@ -120,7 +120,7 @@ class AutoUpdateIndoorRide(object):
             update_indoor_ride_data.update({'gear_id': self.user_data['auto_update_indoor_ride']['gear_id']})
 
         self.database_client.write_operation(self.bot_constants.QUERY_UPDATE_INDOOR_RIDE_ENABLE.format(
-            update_indoor_ride_data=json.dumps(update_indoor_ride_data),
+            update_indoor_ride_data=ujson.dumps(update_indoor_ride_data),
             athlete_id=self.user_data['auto_update_indoor_ride']['athlete_id']))
 
         self.user_data.clear()

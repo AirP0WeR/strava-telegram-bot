@@ -10,6 +10,7 @@ import telegram
 from clients.database import DatabaseClient
 from clients.strava import StravaClient
 from commands.stats.process import ProcessStats
+from common.aes_cipher import AESCipher
 from common.constants_and_variables import BotVariables, BotConstants
 from common.shadow_mode import ShadowMode
 
@@ -26,7 +27,8 @@ class HandleCommands(object):
         self.strava_client = StravaClient()
         self.athlete_id = None
         self.telegram_user_first_name = self.update.message.from_user.first_name
-        self.shadow_mode = ShadowMode()
+        self.shadow_mode = ShadowMode(bot)
+        self.aes_cipher = AESCipher(self.bot_variables.crypt_key_length, self.bot_variables.crypt_key)
 
     def get_athlete_id(self, telegram_username):
         athlete_id = self.database_client.read_operation(
@@ -39,8 +41,8 @@ class HandleCommands(object):
     def get_athlete_token(self, athlete_id):
         result = self.database_client.read_operation(self.bot_constants.QUERY_FETCH_TOKEN.format(athlete_id=athlete_id))
         if len(result) > 0:
-            access_token = result[0]
-            refresh_token = result[1]
+            access_token = self.aes_cipher.decrypt(result[0])
+            refresh_token = self.aes_cipher.decrypt(result[1])
             expires_at = result[2]
             current_time = int(time.time())
             if current_time > expires_at:
@@ -71,8 +73,8 @@ class HandleCommands(object):
         access_info['expires_at'] = response['expires_at']
 
         self.database_client.write_operation(self.bot_constants.QUERY_UPDATE_TOKEN.format(
-            access_token=access_info['access_token'],
-            refresh_token=access_info['refresh_token'],
+            access_token=self.aes_cipher.encrypt(access_info['access_token']),
+            refresh_token=self.aes_cipher.encrypt(access_info['refresh_token']),
             expires_at=access_info['expires_at'],
             athlete_id=athlete_id
         ))
@@ -90,7 +92,7 @@ class HandleCommands(object):
         message = self.bot_constants.MESSAGE_STATS_COMMAND.format(first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
-        stats = ProcessStats(self.update)
+        stats = ProcessStats(self.update, self.bot)
         stats.process()
 
     def refresh_command(self):
