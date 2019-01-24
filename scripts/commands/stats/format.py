@@ -10,8 +10,8 @@ class FormatStats(object):
         self.operations = Operations()
 
     def ride_stats(self, stats_type, stats_type_key):
-        ride_stats = "*Ride - {stats_type}:* _(Stats as on: {stats_updated})_\n\n".format(stats_type=stats_type,
-                                                                                          stats_updated=
+        ride_stats = "*Ride - {stats_type}:* _(Stats as on: {stats_updated} UTC)_\n\n".format(stats_type=stats_type,
+                                                                                              stats_updated=
                                                                                           self.calculated_stats[
                                                                                               'updated'])
         if self.calculated_stats['ride_{}_total'.format(stats_type_key)] > 0:
@@ -61,7 +61,7 @@ class FormatStats(object):
         return ride_stats
 
     def run_stats(self, stats_type, stats_type_key):
-        run_stats = "*Run - {stats_type}:* _(Stats as on: {stats_updated})_\n\n".format(
+        run_stats = "*Run - {stats_type}:* _(Stats as on: {stats_updated} UTC)_\n\n".format(
             stats_type="{stats_type}".format(stats_type=stats_type), stats_updated=self.calculated_stats['updated'])
         if self.calculated_stats['run_{}_total'.format(stats_type_key)] > 0:
             run_stats += "- _Runs_: {total} ".format(total=self.calculated_stats['run_{}_total'.format(stats_type_key)])
@@ -116,7 +116,7 @@ class FormatStats(object):
         return run_stats
 
     def swim_stats(self, stats_type, stats_type_key):
-        swim_stats = "*Swim - {stats_type}:* _(Stats as on: {stats_updated})_\n\n".format(
+        swim_stats = "*Swim - {stats_type}:* _(Stats as on: {stats_updated} UTC)_\n\n".format(
             stats_type="{stats_type}".format(stats_type=stats_type), stats_updated=self.calculated_stats['updated'])
         if self.calculated_stats['swim_{}_total'.format(stats_type_key)] > 0:
             swim_stats += "- _Swims_: {total}\n".format(
