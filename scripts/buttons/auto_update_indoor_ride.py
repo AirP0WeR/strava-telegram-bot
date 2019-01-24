@@ -80,7 +80,6 @@ class AutoUpdateIndoorRide(object):
             message = self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CHOOSE_BIKE
             self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                        reply_markup=keyboard_bikes)
-            self.shadow_mode.send_message(message=message)
         else:
             self.user_data['auto_update_indoor_ride'].update({'gear_id': None})
             self.auto_update_indoor_ride_setup_confirmation()

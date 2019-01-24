@@ -16,7 +16,6 @@ class BotConstants(object):
     QUERY_GET_ATHLETES = "select name from strava_telegram_bot"
 
     MESSAGE_START_COMMAND = "Hi {first_name}! Type '/' to get the list of command(s)."
-    MESSAGE_STATS_COMMAND = "Hi {first_name}! Give me a moment while I fetch your stats."
     MESSAGE_STATS_MAIN_KEYBOARD_MENU = "Choose an activity type to view your stats:"
     MESSAGE_STATS_SUB_KEYBOARD_MENU = "Choose the type of stat you want to see:"
     MESSAGE_STATS_NOT_UPDATED = "Stats are not synced yet. Please check again after a minute."
