@@ -60,7 +60,7 @@ class FormatStats(object):
         return ride_stats
 
     def run_stats(self, stats_type, stats_type_key):
-        run_stats = "*Run - {stats_type}:* _({name}'s stats as on: {stats_updated} UTC)_".format(
+        run_stats = "*Run - {stats_type}:* _({name}'s stats as on: {stats_updated} UTC)_\n\n".format(
             stats_type="{stats_type}".format(stats_type=stats_type), stats_updated=self.calculated_stats['updated'],
             name=self.calculated_stats['athlete_name'])
         if self.calculated_stats['run_{}_total'.format(stats_type_key)] > 0:
@@ -116,7 +116,7 @@ class FormatStats(object):
         return run_stats
 
     def swim_stats(self, stats_type, stats_type_key):
-        swim_stats = "*Swim - {stats_type}:* _({name}'s stats as on: {stats_updated} UTC)_".format(
+        swim_stats = "*Swim - {stats_type}:* _({name}'s stats as on: {stats_updated} UTC)_\n\n".format(
             stats_type="{stats_type}".format(stats_type=stats_type), stats_updated=self.calculated_stats['updated'],
             name=self.calculated_stats['athlete_name'])
         if self.calculated_stats['swim_{}_total'.format(stats_type_key)] > 0:
