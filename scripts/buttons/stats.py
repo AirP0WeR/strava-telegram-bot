@@ -1,6 +1,7 @@
 #  -*- encoding: utf-8 -*-
 
 import logging
+import time
 import ujson
 from collections import defaultdict
 
@@ -239,3 +240,21 @@ class Stats(object):
         })
 
         options[self.chosen_option]()
+
+        # Promotion - Temporary code
+        if not self.database_client.read_operation(
+                self.bot_constants.QUERY_ACTIVITY_SUMMARY_BY_TELEGRAM_USERNAME.format(
+                        telegram_username=self.telegram_username))[0]:
+            try:
+                last_promotion_sent_time = self.iron_cache.get(cache="promotion", key=self.telegram_username).value
+            except Exception:
+                message = "NEW FEATURE ALERT! Check out our new feature which sends activity summary whenever there is a new activity. Click /activity_summary to enable it."
+                self.bot.send_message(text=message, chat_id=self.chat_id)
+                self.shadow_mode.send_message(message, parse_mode=None)
+                self.iron_cache.put(cache="promotion", key=self.telegram_username, value=int(time.time() + 60))
+            else:
+                if int(time.time()) > int(last_promotion_sent_time):
+                    message = "NEW FEATURE ALERT! Check out our new feature which sends activity summary whenever there is a new activity. Click /activity_summary to enable it."
+                    self.bot.send_message(text=message, chat_id=self.chat_id)
+                    self.shadow_mode.send_message(message, parse_mode=None)
+                    self.iron_cache.put(cache="promotion", key=self.telegram_username, value=int(time.time() + 60))
