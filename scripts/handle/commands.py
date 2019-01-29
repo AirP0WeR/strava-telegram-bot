@@ -118,17 +118,17 @@ class HandleCommands(object):
                 strava_client = self.strava_client.get_client_with_token(athlete_token)
                 bike_name = strava_client.get_gear(gear_id=update_indoor_ride[1]['gear_id']).name
                 configured_data += "\nBike: {bike_name}".format(bike_name=bike_name)
+
             message = self.bot_constants.MESSAGE_SHOULD_UPDATE_INDOOR_RIDE_DISABLE.format(
                 first_name=self.telegram_user_first_name, configuration=configured_data)
-            self.update.message.reply_text(message,
-                                           reply_markup=self.bot_constants.KEYBOARD_AUTO_UPDATE_INDOOR_RIDE_DISABLE_PROMPT)
-            self.shadow_mode.send_message(message=message)
+            reply_markup = self.bot_constants.KEYBOARD_AUTO_UPDATE_INDOOR_RIDE_DISABLE_PROMPT
         else:
             message = self.bot_constants.MESSAGE_UPDATE_INDOOR_RIDE_CHOOSE_ACTIVITY_NAME.format(
                 first_name=self.telegram_user_first_name)
-            self.update.message.reply_text(message,
-                                           reply_markup=self.bot_constants.KEYBOARD_AUTO_UPDATE_INDOOR_RIDE_NAME)
-            self.shadow_mode.send_message(message=message)
+            reply_markup = self.bot_constants.KEYBOARD_AUTO_UPDATE_INDOOR_RIDE_NAME
+
+        self.update.message.reply_text(message, reply_markup=reply_markup)
+        self.shadow_mode.send_message(message=message)
 
     def refresh_all_stats_command(self):
         self.user_data.clear()
@@ -157,6 +157,23 @@ class HandleCommands(object):
         self.update.message.reply_text(names, parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=names)
 
+    def activity_summary_command(self):
+        self.user_data.clear()
+        self.user_data['ride_summary'] = {'athlete_id': self.athlete_id}
+        enable_activity_summary = self.database_client.read_operation(
+            self.bot_constants.QUERY_ACTIVITY_SUMMARY.format(athlete_id=self.athlete_id))
+        if not enable_activity_summary[0]:
+            message = self.bot_constants.MESSAGE_ACTIVITY_SUMMARY_CONFIRMATION.format(
+                first_name=self.telegram_user_first_name)
+            reply_markup = self.bot_constants.KEYBOARD_ENABLE_ACTIVITY_SUMMARY_CONFIRMATION
+        else:
+            message = self.bot_constants.MESSAGE_ACTIVITY_SUMMARY_SHOULD_DISABLE.format(
+                first_name=self.telegram_user_first_name)
+            reply_markup = self.bot_constants.KEYBOARD_ACTIVITY_SUMMARY_DISABLE_CONFIRMATION
+
+        self.update.message.reply_text(message, reply_markup=reply_markup)
+        self.shadow_mode.send_message(message=message)
+
     def cancel_command(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_CANCEL_CURRENT_OPERATION
@@ -178,7 +195,8 @@ class HandleCommands(object):
                 '/auto_update_indoor_ride': self.auto_update_indoor_ride_command,
                 '/cancel': self.cancel_command,
                 '/refresh_all_stats': self.refresh_all_stats_command,
-                '/all_athletes': self.all_athletes_command
+                '/all_athletes': self.all_athletes_command,
+                '/activity_summary': self.activity_summary_command
             })
 
             options[command]()
