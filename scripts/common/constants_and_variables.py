@@ -14,6 +14,9 @@ class BotConstants(object):
     QUERY_UPDATE_INDOOR_RIDE_DISABLE = "UPDATE strava_telegram_bot SET update_indoor_ride=False, update_indoor_ride_data=NULL where athlete_id={athlete_id}"
     QUERY_UPDATE_INDOOR_RIDE_ENABLE = "UPDATE strava_telegram_bot SET update_indoor_ride=True, update_indoor_ride_data='{update_indoor_ride_data}' where athlete_id={athlete_id}"
     QUERY_GET_ATHLETES = "select name from strava_telegram_bot order by created"
+    QUERY_ACTIVITY_SUMMARY_ENABLE = "UPDATE strava_telegram_bot SET enable_activity_summary=True, chat_id='{chat_id}' where athlete_id={athlete_id}"
+    QUERY_ACTIVITY_SUMMARY_DISABLE = "UPDATE strava_telegram_bot SET enable_activity_summary=False, chat_id=NULL where athlete_id={athlete_id}"
+    QUERY_ACTIVITY_SUMMARY = "select enable_activity_summary from strava_telegram_bot where athlete_id={athlete_id}"
 
     MESSAGE_START_COMMAND = "Hi {first_name}! Type '/' to get the list of command(s)."
     MESSAGE_STATS_MAIN_KEYBOARD_MENU = "Choose an activity type to view your stats:"
@@ -29,12 +32,21 @@ class BotConstants(object):
     MESSAGE_UPDATE_INDOOR_RIDE_CHOOSE_ACTIVITY_NAME = "Hi {first_name}! Choose the activity name: (Send /cancel to cancel ongoing operation)"
     MESSAGE_CANCEL_CURRENT_OPERATION = "Cancelled current operation."
     MESSAGE_UPDATE_INDOOR_RIDE_DISABLED = "Disabled auto update of Indoor Rides."
+
     MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CHOOSE_BIKE = "Choose the bike you want to set for Indoor Rides: (Send /cancel to cancel ongoing operation)"
     MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CONFIRMATION = "Are you sure you want to enable auto updates of Indoor Rides with the below configuration?\n\n{configuration}"
     MESSAGE_AUTO_UPDATE_INDOOR_RIDE_INSUFFICIENT_INFORMATION = 'Insufficient information to enable auto updates of Indoor Rides. Bye!'
     MESSAGE_AUTO_UPDATE_INDOOR_RIDE_ENABLED = "Enabled auto update of Indoor Rides."
     MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CANCELLED = "Cancelled setup for auto update of Indoor Rides"
+
     MESSAGE_FETCHING_REGISTERED_ATHLETES = "Hi {first_name}! Fetching the list of registered athletes."
+
+    MESSAGE_ACTIVITY_SUMMARY_CONFIRMATION = "Hi {first_name}! Do you want to receive Activity Summary for your activities?"
+    MESSAGE_ACTIVITY_SUMMARY_ENABLED = "Enabled Activity Summary.\n\nNote: Do not delete this chat to continue to receive updates. As per Telegram policy, Bots cannot send messages if the chat is deleted."
+    MESSAGE_ACTIVITY_SUMMARY_IGNORE = "Activity Summary setup cancelled."
+    MESSAGE_ACTIVITY_SUMMARY_DISABLED = "Disabled Activity Summary."
+    MESSAGE_ACTIVITY_SUMMARY_DISABLE_IGNORE = "Activity Summary is still enabled. Thank you!"
+    MESSAGE_ACTIVITY_SUMMARY_SHOULD_DISABLE = "Hi {first_name}! You have enabled Activity Summary. Do you want to disable it?"
 
     API_TOKEN_EXCHANGE = 'https://www.strava.com/oauth/token'
     API_TELEGRAM_SEND_MESSAGE = "https://api.telegram.org/bot{bot_token}/sendMessage"
@@ -87,6 +99,14 @@ class BotConstants(object):
     KEYBOARD_AUTO_UPDATE_INDOOR_RIDE_CONFIRMATION = InlineKeyboardMarkup(
         [[InlineKeyboardButton("Yes", callback_data='auto_update_indoor_ride_update_confirm_yes'),
           InlineKeyboardButton("No", callback_data='auto_update_indoor_ride_confirm_no')]])
+
+    KEYBOARD_ENABLE_ACTIVITY_SUMMARY_CONFIRMATION = InlineKeyboardMarkup(
+        [[InlineKeyboardButton("Yes", callback_data='activity_summary_enable'),
+          InlineKeyboardButton("No", callback_data='activity_summary_ignore')]])
+
+    KEYBOARD_ACTIVITY_SUMMARY_DISABLE_CONFIRMATION = InlineKeyboardMarkup(
+        [[InlineKeyboardButton("Yes", callback_data='activity_summary_disable'),
+          InlineKeyboardButton("No", callback_data='activity_summary_disable_ignore')]])
 
 
 class BotVariables(object):
