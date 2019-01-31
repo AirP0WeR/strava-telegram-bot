@@ -19,14 +19,14 @@ class BotConstants(object):
     QUERY_ACTIVITY_SUMMARY = "select enable_activity_summary from strava_telegram_bot where athlete_id={athlete_id}"
     QUERY_ACTIVITY_SUMMARY_BY_TELEGRAM_USERNAME = "select enable_activity_summary from strava_telegram_bot where telegram_username='{telegram_username}'"  # Promotion - Temporary code
 
-    MESSAGE_START_COMMAND = "Hi {first_name}! Type '/' to get the list of command(s) I understand or click /help to know more."
+    MESSAGE_START_COMMAND = "Hi {first_name}! Type '/' to get the list of command(s)."
     MESSAGE_STATS_MAIN_KEYBOARD_MENU = "Choose an activity type to view your stats:"
     MESSAGE_STATS_SUB_KEYBOARD_MENU = "Choose the type of stat you want to see:"
     MESSAGE_STATS_NOT_UPDATED = "Stats are not synced yet. Please check again after a minute."
     MESSAGE_UPDATE_STATS_FAILED = "Hi {first_name}! Failed to update stats."
     MESSAGE_UPDATE_STATS_STARTED = "Hi {first_name}! Refreshing.. Check stats after a minute or two."
     MESSAGE_UPDATE_STATS_STARTED_ALL = "Hi {first_name}! Refreshing.."
-    MESSAGE_UNREGISTERED_ATHLETE = "Hi {first_name}! You are not a registered user yet.\n\nVisit the following link to register: {registration_url}\n\nContact {admin_user_name} in case you face any issues.\n\nAlternatively, you can select a topic below for help."
+    MESSAGE_UNREGISTERED_ATHLETE = "Hi {first_name}! You are not a registered user yet.\n\nVisit the following link to register: {registration_url}\n\nContact {admin_user_name} in case you face any issues."
     MESSAGE_EXIT_BUTTON = "Thank you!"
     MESSAGE_SHOULD_UPDATE_INDOOR_RIDE_DISABLE = "Hi {first_name}! You have automated update of Indoor Rides with the below configuration:\n{configuration}\n\nDo you want to disable it?"
     MESSAGE_UPDATE_INDOOR_RIDE_DISABLE_CANCEL = "Auto update of Indoor Rides is still enabled. Thank you!"
