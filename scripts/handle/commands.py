@@ -161,8 +161,13 @@ class HandleCommands(object):
         self.shadow_mode.send_message(message=message)
 
     def help_command(self):
+        import os
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        cwd = os.getcwd()
+        print(dir_path)
+        print(cwd)
         self.bot.send_photo(chat_id=self.update.message.chat_id,
-                            photo=open('app/scripts/commands/help/Telegram_Android_Username.jpeg', 'rb'))
+                            photo=open('scripts/commands/help/Telegram_Android_Username.jpeg', 'rb'))
 
     def cancel_command(self):
         self.user_data.clear()
