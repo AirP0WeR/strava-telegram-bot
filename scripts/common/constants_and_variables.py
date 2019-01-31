@@ -19,7 +19,7 @@ class BotConstants(object):
     QUERY_ACTIVITY_SUMMARY = "select enable_activity_summary from strava_telegram_bot where athlete_id={athlete_id}"
     QUERY_ACTIVITY_SUMMARY_BY_TELEGRAM_USERNAME = "select enable_activity_summary from strava_telegram_bot where telegram_username='{telegram_username}'"  # Promotion - Temporary code
 
-    MESSAGE_START_COMMAND = "Hi {first_name}! Type '/' to get the list of command(s)."
+    MESSAGE_START_COMMAND = "Hi {first_name}! Type '/' to get the list of command(s) I understand or click /help to know more."
     MESSAGE_STATS_MAIN_KEYBOARD_MENU = "Choose an activity type to view your stats:"
     MESSAGE_STATS_SUB_KEYBOARD_MENU = "Choose the type of stat you want to see:"
     MESSAGE_STATS_NOT_UPDATED = "Stats are not synced yet. Please check again after a minute."
@@ -53,8 +53,8 @@ class BotConstants(object):
     MESSAGE_HELP_EXIT = "Goodbye!"
     MESSAGE_HELP_REGISTRATION_DEVICE = "Choose the type of device you use:"
     MESSAGE_HELP_COMMANDS = "/stats - Get your Monthly, Yearly and All Time Statistics and compare your monthly/yearly statistics with your previous month/year.\n\n" \
-                            "/activity_summary - Get activity summary instantly for you new activities\n\n" \
-                            "/auto_update_indoor_ride - Auto update indoor ride with predefined Name & Bike\n\n" \
+                            "/activity_summary - Get your activity summary as soon as you finish your activity\n\n" \
+                            "/auto_update_indoor_ride - Get your activity Name / Bike updated automatically for your indoor rides\n\n" \
                             "/refresh_stats - Force refresh stats. Use this only if you find any discrepancy in your stats."
 
     API_TOKEN_EXCHANGE = 'https://www.strava.com/oauth/token'
