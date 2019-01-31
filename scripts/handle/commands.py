@@ -161,13 +161,10 @@ class HandleCommands(object):
         self.shadow_mode.send_message(message=message)
 
     def help_command(self):
-        import os
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        cwd = os.getcwd()
-        print(dir_path)
-        print(cwd)
-        self.bot.send_photo(chat_id=self.update.message.chat_id,
-                            photo=open('scripts/commands/help/Telegram_Android_Username.jpeg', 'rb'))
+        self.user_data.clear()
+        message = self.bot_constants.MESSAGE_HELP_TOPICS.format(first_name=self.telegram_user_first_name)
+        self.update.message.reply_text(message, reply_markup=self.bot_constants.KEYBOARD_HELP_MENU)
+        self.shadow_mode.send_message(message=message)
 
     def cancel_command(self):
         self.user_data.clear()
@@ -202,5 +199,6 @@ class HandleCommands(object):
                 first_name=self.telegram_user_first_name,
                 registration_url=self.bot_variables.registration_url,
                 admin_user_name=self.bot_variables.admin_user_name)
-            self.update.message.reply_text(message, disable_web_page_preview=True)
+            self.update.message.reply_text(message, disable_web_page_preview=True,
+                                           reply_markup=self.bot_constants.KEYBOARD_HELP_MENU)
             self.shadow_mode.send_message(message=message, parse_mode=None)

@@ -2,6 +2,7 @@
 
 from buttons.activity_summary import ActivitySummary
 from buttons.auto_update_indoor_ride import AutoUpdateIndoorRide
+from buttons.bot_help import BotHelp
 from buttons.stats import Stats
 
 
@@ -26,3 +27,7 @@ class HandleButtons(object):
         elif self.chosen_option.startswith('activity_summary'):
             activity_summary = ActivitySummary(self.bot, self.update, self.user_data)
             activity_summary.process()
+
+        elif self.chosen_option.startswith('help'):
+            bot_help = BotHelp(self.bot, self.update, self.user_data)
+            bot_help.process()
