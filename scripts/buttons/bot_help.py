@@ -43,15 +43,21 @@ class BotHelp(object):
 
     def help_registration_ios_button(self):
         self.user_data.clear()
-        self.bot.send_photo(chat_id=self.chat_id, photo=open('scripts/commands/help/username/ios.jpeg', 'rb'))
-        self.bot.send_photo(chat_id=self.bot_variables.shadow_mode_chat_id,
-                            photo=open('scripts/commands/help/username/ios.jpeg', 'rb'))
+        photo_path = 'scripts/commands/help/username/ios.jpeg'
+        caption = "Note down you Telegram username (Telegram -> Settings -> Click on your profile -> Username). Enter this after authorizing the bot using the URL: {registration_url}".format(
+            registration_url=self.bot_variables.registration_url)
+        self.bot.send_photo(chat_id=self.chat_id, photo=open(photo_path, 'rb'), caption=caption)
+        self.bot.send_photo(chat_id=self.bot_variables.shadow_mode_chat_id, photo=open(photo_path, 'rb'),
+                            caption=caption)
 
     def help_registration_android_button(self):
         self.user_data.clear()
-        self.bot.send_photo(chat_id=self.chat_id, photo=open('scripts/commands/help/username/android.jpeg', 'rb'))
-        self.bot.send_photo(chat_id=self.bot_variables.shadow_mode_chat_id,
-                            photo=open('scripts/commands/help/username/ios.jpeg', 'rb'))
+        photo_path = 'scripts/commands/help/username/android.jpeg'
+        caption = "Note down you Telegram username (Telegram -> Settings -> Username). Enter this after authorizing the bot using the URL: {registration_url}".format(
+            registration_url=self.bot_variables.registration_url)
+        self.bot.send_photo(chat_id=self.chat_id, photo=open(photo_path, 'rb'), caption=caption)
+        self.bot.send_photo(chat_id=self.bot_variables.shadow_mode_chat_id, photo=open(photo_path, 'rb'),
+                            caption=caption)
 
     def process(self):
         options = defaultdict(lambda: self.help_exit_button, {
