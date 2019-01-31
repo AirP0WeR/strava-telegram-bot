@@ -52,9 +52,9 @@ class BotConstants(object):
     MESSAGE_HELP_TOPICS = "Hi {first_name}! Select a topic below for help."
     MESSAGE_HELP_EXIT = "Goodbye!"
     MESSAGE_HELP_REGISTRATION_DEVICE = "Choose the type of device you use:"
-    MESSAGE_HELP_COMMANDS = "/stats - Get your Monthly, Yearly and All Time Statistics and compare your monthly/yearly statistics with your previous month/year.\n" \
-                            "/activity_summary - Get activity summary instantly for you new activities\n" \
-                            "/auto_update_indoor_ride - Auto update indoor ride with predefined Name & Bike\n" \
+    MESSAGE_HELP_COMMANDS = "/stats - Get your Monthly, Yearly and All Time Statistics and compare your monthly/yearly statistics with your previous month/year.\n\n" \
+                            "/activity_summary - Get activity summary instantly for you new activities\n\n" \
+                            "/auto_update_indoor_ride - Auto update indoor ride with predefined Name & Bike\n\n" \
                             "/refresh_stats - Force refresh stats. Use this only if you find any discrepancy in your stats."
 
     API_TOKEN_EXCHANGE = 'https://www.strava.com/oauth/token'
