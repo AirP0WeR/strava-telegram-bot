@@ -56,7 +56,6 @@ class ActivitySummary(object):
         message = self.bot_constants.MESSAGE_EXIT_BUTTON
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
         self.shadow_mode.send_message(message=message)
-        self.shadow_mode.send_message(message=message)
 
     def process(self):
         options = defaultdict(lambda: self.exit_button, {

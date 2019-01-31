@@ -1,6 +1,5 @@
 #  -*- encoding: utf-8 -*-
 
-import logging
 import time
 from collections import defaultdict
 
@@ -39,25 +38,17 @@ class HandleCommands(object):
             return None
 
     def get_athlete_token(self, athlete_id):
+        access_token = None
         result = self.database_client.read_operation(self.bot_constants.QUERY_FETCH_TOKEN.format(athlete_id=athlete_id))
         if len(result) > 0:
             access_token = self.aes_cipher.decrypt(result[0])
             refresh_token = self.aes_cipher.decrypt(result[1])
             expires_at = result[2]
-            current_time = int(time.time())
-            if current_time > expires_at:
-                logging.info(
-                    "Token has expired | Current Time: {current_time} | Token Expiry Time: {expires_at}".format(
-                        current_time=current_time, expires_at=expires_at))
+
+            if int(time.time()) > expires_at:
                 access_token = self.refresh_and_update_token(athlete_id, refresh_token)
-                return access_token
-            else:
-                logging.info(
-                    "Token is still valid | Current Time: {current_time} | Token Expiry Time: {expires_at}".format(
-                        current_time=current_time, expires_at=expires_at))
-                return access_token
-        else:
-            return False
+
+        return access_token
 
     def refresh_and_update_token(self, athlete_id, refresh_token):
         response = requests.post(self.bot_constants.API_TOKEN_EXCHANGE, data={
@@ -67,15 +58,10 @@ class HandleCommands(object):
             'refresh_token': refresh_token,
         }).json()
 
-        access_info = dict()
-        access_info['access_token'] = response['access_token']
-        access_info['refresh_token'] = response['refresh_token']
-        access_info['expires_at'] = response['expires_at']
-
         self.database_client.write_operation(self.bot_constants.QUERY_UPDATE_TOKEN.format(
-            access_token=self.aes_cipher.encrypt(access_info['access_token']),
-            refresh_token=self.aes_cipher.encrypt(access_info['refresh_token']),
-            expires_at=access_info['expires_at'],
+            access_token=self.aes_cipher.encrypt(response['access_token']),
+            refresh_token=self.aes_cipher.encrypt(response['refresh_token']),
+            expires_at=response['expires_at'],
             athlete_id=athlete_id
         ))
 
@@ -115,7 +101,7 @@ class HandleCommands(object):
                 configured_data += "\nActivity Name: {activity_name}".format(
                     activity_name=update_indoor_ride[1]['name'])
             if update_indoor_ride[1]['gear_id']:
-                strava_client = self.strava_client.get_client_with_token(athlete_token)
+                strava_client = self.strava_client.get_client(athlete_token)
                 bike_name = strava_client.get_gear(gear_id=update_indoor_ride[1]['gear_id']).name
                 configured_data += "\nBike: {bike_name}".format(bike_name=bike_name)
 
@@ -174,6 +160,12 @@ class HandleCommands(object):
         self.update.message.reply_text(message, reply_markup=reply_markup)
         self.shadow_mode.send_message(message=message)
 
+    def help_command(self):
+        self.user_data.clear()
+        message = self.bot_constants.MESSAGE_HELP_TOPICS.format(first_name=self.telegram_user_first_name)
+        self.update.message.reply_text(message, reply_markup=self.bot_constants.KEYBOARD_HELP_MENU)
+        self.shadow_mode.send_message(message=message)
+
     def cancel_command(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_CANCEL_CURRENT_OPERATION
@@ -196,7 +188,8 @@ class HandleCommands(object):
                 '/cancel': self.cancel_command,
                 '/refresh_all_stats': self.refresh_all_stats_command,
                 '/all_athletes': self.all_athletes_command,
-                '/activity_summary': self.activity_summary_command
+                '/activity_summary': self.activity_summary_command,
+                '/help': self.help_command
             })
 
             options[command]()
@@ -206,5 +199,6 @@ class HandleCommands(object):
                 first_name=self.telegram_user_first_name,
                 registration_url=self.bot_variables.registration_url,
                 admin_user_name=self.bot_variables.admin_user_name)
-            self.update.message.reply_text(message, disable_web_page_preview=True)
+            self.update.message.reply_text(message, disable_web_page_preview=True,
+                                           reply_markup=self.bot_constants.KEYBOARD_HELP_MENU)
             self.shadow_mode.send_message(message=message, parse_mode=None)

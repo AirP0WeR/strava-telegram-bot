@@ -57,7 +57,7 @@ class AutoUpdateIndoorRide(object):
         self.get_bikes()
 
     def get_bikes(self):
-        strava_client = StravaClient().get_client_with_token(self.user_data['auto_update_indoor_ride']['athlete_token'])
+        strava_client = StravaClient().get_client(self.user_data['auto_update_indoor_ride']['athlete_token'])
         athlete = strava_client.get_athlete()
         bikes = dict()
         count = 1
@@ -96,7 +96,7 @@ class AutoUpdateIndoorRide(object):
                 configured_data += "Activity Name: {activity_name}\n".format(
                     activity_name=self.user_data['auto_update_indoor_ride']['name'])
             if self.user_data['auto_update_indoor_ride']['gear_id']:
-                strava_client = self.strava_client.get_client_with_token(
+                strava_client = self.strava_client.get_client(
                     self.user_data['auto_update_indoor_ride']['athlete_token'])
                 bike_name = strava_client.get_gear(gear_id=self.user_data['auto_update_indoor_ride']['gear_id']).name
                 configured_data += "Bike: {bike_name}".format(bike_name=bike_name)

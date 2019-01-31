@@ -26,7 +26,7 @@ class BotConstants(object):
     MESSAGE_UPDATE_STATS_FAILED = "Hi {first_name}! Failed to update stats."
     MESSAGE_UPDATE_STATS_STARTED = "Hi {first_name}! Refreshing.. Check stats after a minute or two."
     MESSAGE_UPDATE_STATS_STARTED_ALL = "Hi {first_name}! Refreshing.."
-    MESSAGE_UNREGISTERED_ATHLETE = "Hi {first_name}! You are not a registered user yet.\n\nVisit the following link to register: {registration_url}\n\nContact {admin_user_name} in case you face any issues."
+    MESSAGE_UNREGISTERED_ATHLETE = "Hi {first_name}! You are not a registered user yet.\n\nVisit the following link to register: {registration_url}\n\nContact {admin_user_name} in case you face any issues.\n\nAlternatively, you can select a topic below for help."
     MESSAGE_EXIT_BUTTON = "Thank you!"
     MESSAGE_SHOULD_UPDATE_INDOOR_RIDE_DISABLE = "Hi {first_name}! You have automated update of Indoor Rides with the below configuration:\n{configuration}\n\nDo you want to disable it?"
     MESSAGE_UPDATE_INDOOR_RIDE_DISABLE_CANCEL = "Auto update of Indoor Rides is still enabled. Thank you!"
@@ -48,6 +48,14 @@ class BotConstants(object):
     MESSAGE_ACTIVITY_SUMMARY_DISABLED = "Disabled Activity Summary."
     MESSAGE_ACTIVITY_SUMMARY_DISABLE_IGNORE = "Activity Summary is still enabled. Thank you!"
     MESSAGE_ACTIVITY_SUMMARY_SHOULD_DISABLE = "Hi {first_name}! You have enabled Activity Summary. Do you want to disable it?"
+
+    MESSAGE_HELP_TOPICS = "Hi {first_name}! Select a topic below for help."
+    MESSAGE_HELP_EXIT = "Goodbye!"
+    MESSAGE_HELP_REGISTRATION_DEVICE = "Choose the type of device you use:"
+    MESSAGE_HELP_COMMANDS = "/stats - Get your Monthly, Yearly and All Time Statistics and compare your monthly/yearly statistics with your previous month/year.\n" \
+                            "/activity_summary - Get activity summary instantly for you new activities\n" \
+                            "/auto_update_indoor_ride - Auto update indoor ride with predefined Name & Bike\n" \
+                            "/refresh_stats - Force refresh stats. Use this only if you find any discrepancy in your stats."
 
     API_TOKEN_EXCHANGE = 'https://www.strava.com/oauth/token'
     API_TELEGRAM_SEND_MESSAGE = "https://api.telegram.org/bot{bot_token}/sendMessage"
@@ -108,6 +116,15 @@ class BotConstants(object):
     KEYBOARD_ACTIVITY_SUMMARY_DISABLE_CONFIRMATION = InlineKeyboardMarkup(
         [[InlineKeyboardButton("Yes", callback_data='activity_summary_disable'),
           InlineKeyboardButton("No", callback_data='activity_summary_disable_ignore')]])
+
+    KEYBOARD_HELP_MENU = InlineKeyboardMarkup([[InlineKeyboardButton("Registration", callback_data='help_registration'),
+                                                InlineKeyboardButton("Bot Commands", callback_data='help_commands')],
+                                               [InlineKeyboardButton("Exit", callback_data='help_exit')]])
+
+    KEYBOARD_HELP_REGISTRATION = InlineKeyboardMarkup(
+        [[InlineKeyboardButton("iOS", callback_data='help_registration_ios'),
+          InlineKeyboardButton("Android", callback_data='help_registration_android')],
+         [InlineKeyboardButton("Exit", callback_data='help_exit')]])
 
 
 class BotVariables(object):
