@@ -15,9 +15,10 @@ class BotConstants(object):
     QUERY_UPDATE_INDOOR_RIDE_ENABLE = "UPDATE strava_telegram_bot SET update_indoor_ride=True, update_indoor_ride_data='{update_indoor_ride_data}', chat_id='{chat_id}' where athlete_id={athlete_id}"
     QUERY_GET_ATHLETES = "select name from strava_telegram_bot order by created"
     QUERY_ACTIVITY_SUMMARY_ENABLE = "UPDATE strava_telegram_bot SET enable_activity_summary=True, chat_id='{chat_id}' where athlete_id={athlete_id}"
-    QUERY_ACTIVITY_SUMMARY_DISABLE = "UPDATE strava_telegram_bot SET enable_activity_summary=False, chat_id=NULL where athlete_id={athlete_id}"
+    QUERY_ACTIVITY_SUMMARY_DISABLE = "UPDATE strava_telegram_bot SET enable_activity_summary=False where athlete_id={athlete_id}"
     QUERY_ACTIVITY_SUMMARY = "select enable_activity_summary from strava_telegram_bot where athlete_id={athlete_id}"
     QUERY_ACTIVITY_SUMMARY_BY_TELEGRAM_USERNAME = "select enable_activity_summary from strava_telegram_bot where telegram_username='{telegram_username}'"  # Promotion - Temporary code
+    QUERY_UPDATE_CHAT_ID = "UPDATE strava_telegram_bot SET chat_id='{chat_id}' where athlete_id={athlete_id}"
 
     MESSAGE_START_COMMAND = "Hi {first_name}! Type '/' to get the list of command(s) I understand or click /help to know more."
     MESSAGE_STATS_MAIN_KEYBOARD_MENU = "Choose an activity type to view your stats:"
