@@ -72,13 +72,15 @@ class HandleCommands(object):
     def start_command(self):
         self.user_data.clear()
         self.database_client.write_operation(self.bot_constants.QUERY_UPDATE_CHAT_ID.format(chat_id=self.chat_id,
-                                                                                            telegram_username=self.telegram_username))
+                                                                                            athlete_id=self.athlete_id))
         message = self.bot_constants.MESSAGE_START_COMMAND.format(first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
 
     def stats_command(self):
         self.user_data.clear()
+        self.database_client.write_operation(self.bot_constants.QUERY_UPDATE_CHAT_ID.format(chat_id=self.chat_id,
+                                                                                            athlete_id=self.athlete_id))
         stats = ProcessStats(self.update)
         stats.process()
 
@@ -198,8 +200,6 @@ class HandleCommands(object):
             options[command]()
 
         else:
-            self.database_client.write_operation(self.bot_constants.QUERY_UPDATE_CHAT_ID.format(chat_id=self.chat_id,
-                                                                                                telegram_username=self.telegram_username))
             message = self.bot_constants.MESSAGE_UNREGISTERED_ATHLETE.format(
                 first_name=self.telegram_user_first_name,
                 registration_url=self.bot_variables.registration_url,
