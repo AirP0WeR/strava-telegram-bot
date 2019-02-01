@@ -28,6 +28,8 @@ class HandleCommands(object):
         self.telegram_user_first_name = self.update.message.from_user.first_name
         self.shadow_mode = ShadowMode(bot)
         self.aes_cipher = AESCipher(self.bot_variables.crypt_key_length, self.bot_variables.crypt_key)
+        self.telegram_username = self.update.message.from_user.username
+        self.chat_id = self.update.message.chat_id
 
     def get_athlete_id(self, telegram_username):
         athlete_id = self.database_client.read_operation(
@@ -69,6 +71,8 @@ class HandleCommands(object):
 
     def start_command(self):
         self.user_data.clear()
+        self.database_client.write_operation(self.bot_constants.QUERY_UPDATE_CHAT_ID.format(chat_id=self.chat_id,
+                                                                                            telegram_username=self.telegram_username))
         message = self.bot_constants.MESSAGE_START_COMMAND.format(first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
@@ -173,12 +177,11 @@ class HandleCommands(object):
         self.shadow_mode.send_message(message=message)
 
     def process(self):
-        self.bot.send_chat_action(chat_id=self.update.message.chat_id, action=telegram.ChatAction.TYPING)
-        telegram_username = self.update.message.from_user.username
-        self.athlete_id = self.get_athlete_id(telegram_username)
+        self.bot.send_chat_action(chat_id=self.chat_id, action=telegram.ChatAction.TYPING)
+        self.athlete_id = self.get_athlete_id(self.telegram_username)
         if self.athlete_id:
             command = self.update.message.text
-            self.bot.send_chat_action(chat_id=self.update.message.chat_id, action=telegram.ChatAction.TYPING)
+            self.bot.send_chat_action(chat_id=self.chat_id, action=telegram.ChatAction.TYPING)
 
             options = defaultdict(lambda: self.start_command, {
                 '/start': self.start_command,
@@ -195,6 +198,8 @@ class HandleCommands(object):
             options[command]()
 
         else:
+            self.database_client.write_operation(self.bot_constants.QUERY_UPDATE_CHAT_ID.format(chat_id=self.chat_id,
+                                                                                                telegram_username=self.telegram_username))
             message = self.bot_constants.MESSAGE_UNREGISTERED_ATHLETE.format(
                 first_name=self.telegram_user_first_name,
                 registration_url=self.bot_variables.registration_url,
