@@ -111,14 +111,22 @@ class HandleCommands(object):
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
         self.shadow_mode.send_message(message=message)
         all_athletes = self.database_client.read_all_operation(self.bot_constants.QUERY_GET_ATHLETES)
-        sl_no = 1
+        sl_no = 0
+        messages = list()
         names = "*List of registered athletes:*\n\n"
-        for name in all_athletes:
-            names += "{sl_no}. {name}\n".format(sl_no=sl_no, name=name[0])
+        for athlete in all_athletes:
             sl_no += 1
-
-        self.update.message.reply_text(names, parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=names)
+            names += "{sl_no}. [{name}](https://www.strava.com/athletes/{athlete_id})\n".format(sl_no=sl_no,
+                                                                                                name=athlete[0],
+                                                                                                athlete_id=athlete[1])
+            if sl_no % 25 == 0:
+                messages.append(names)
+                names = "*List of registered athletes:*\n\n"
+        messages.append(names)
+        for name in messages:
+            if name != "*List of registered athletes:*\n\n":
+                self.update.message.reply_text(name, parse_mode="Markdown", disable_web_page_preview=True)
+                self.shadow_mode.send_message(message=name)
 
     def activity_summary_command(self):
         self.user_data.clear()
