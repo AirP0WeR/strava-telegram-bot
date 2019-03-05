@@ -4,8 +4,10 @@ import logging
 import traceback
 from collections import defaultdict
 
+import requests
+
 from clients.database import DatabaseClient
-from common.constants_and_variables import BotConstants
+from common.constants_and_variables import BotConstants, BotVariables
 from common.get_athlete_token import GetAthleteToken
 from common.shadow_mode import ShadowMode
 
@@ -18,6 +20,7 @@ class HandleCommandArgs(object):
         self.args = args
         self.database_client = DatabaseClient()
         self.bot_constants = BotConstants()
+        self.bot_variables = BotVariables()
         self.shadow_mode = ShadowMode(bot)
 
     def default(self):
@@ -70,13 +73,27 @@ class HandleCommandArgs(object):
         else:
             logging.warning("More than 1 arguments passed for /deactivate. Args {}".format(self.args))
 
+    def update_stats_command(self):
+        if len(self.args) == 1:
+            athlete_id = self.args[0]
+            response = requests.post(self.bot_variables.api_update_stats_webhook.format(athlete_id=athlete_id))
+            if response.status_code == 200:
+                message = "Updating stats for {}..".format(athlete_id)
+            else:
+                message = "Failed to trigger update stats for {}".format(athlete_id)
+            self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+            self.shadow_mode.send_message(message=message)
+        else:
+            logging.warning("More than 1 arguments passed for /deactivate. Args {}".format(self.args))
+
     def process(self):
         command = self.update.message.text.split(' ', 1)[0]
 
         options = defaultdict(lambda: self.default, {
             '/token': self.token_command,
             '/activate': self.activate_athlete_command,
-            '/deactivate': self.deactivate_athlete_command
+            '/deactivate': self.deactivate_athlete_command,
+            '/update': self.update_stats_command
         })
 
         options[command]()
