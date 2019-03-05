@@ -1,6 +1,5 @@
 #  -*- encoding: utf-8 -*-
 
-import time
 from collections import defaultdict
 
 import requests
@@ -11,6 +10,7 @@ from clients.strava import StravaClient
 from commands.stats.process import ProcessStats
 from common.aes_cipher import AESCipher
 from common.constants_and_variables import BotVariables, BotConstants
+from common.get_athlete_token import GetAthleteToken
 from common.shadow_mode import ShadowMode
 
 
@@ -39,36 +39,6 @@ class HandleCommands(object):
         else:
             return None
 
-    def get_athlete_token(self, athlete_id):
-        access_token = None
-        result = self.database_client.read_operation(self.bot_constants.QUERY_FETCH_TOKEN.format(athlete_id=athlete_id))
-        if len(result) > 0:
-            access_token = self.aes_cipher.decrypt(result[0])
-            refresh_token = self.aes_cipher.decrypt(result[1])
-            expires_at = result[2]
-
-            if int(time.time()) > expires_at:
-                access_token = self.refresh_and_update_token(athlete_id, refresh_token)
-
-        return access_token
-
-    def refresh_and_update_token(self, athlete_id, refresh_token):
-        response = requests.post(self.bot_constants.API_TOKEN_EXCHANGE, data={
-            'client_id': int(self.bot_variables.client_id),
-            'client_secret': self.bot_variables.client_secret,
-            'grant_type': 'refresh_token',
-            'refresh_token': refresh_token,
-        }).json()
-
-        self.database_client.write_operation(self.bot_constants.QUERY_UPDATE_TOKEN.format(
-            access_token=self.aes_cipher.encrypt(response['access_token']),
-            refresh_token=self.aes_cipher.encrypt(response['refresh_token']),
-            expires_at=response['expires_at'],
-            athlete_id=athlete_id
-        ))
-
-        return response['access_token']
-
     def start_command(self):
         self.user_data.clear()
         self.database_client.write_operation(self.bot_constants.QUERY_UPDATE_CHAT_ID.format(chat_id=self.chat_id,
@@ -96,7 +66,8 @@ class HandleCommands(object):
 
     def auto_update_indoor_ride_command(self):
         self.user_data.clear()
-        athlete_token = self.get_athlete_token(self.athlete_id)
+        get_athlete_token = GetAthleteToken()
+        athlete_token = get_athlete_token.get_token(self.athlete_id)
         self.user_data['auto_update_indoor_ride'] = {'athlete_id': self.athlete_id, 'athlete_token': athlete_token}
 
         update_indoor_ride = self.database_client.read_operation(
