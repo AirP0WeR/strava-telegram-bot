@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from clients.database import DatabaseClient
 from common.constants_and_variables import BotConstants, BotVariables
-from common.shadow_mode import ShadowMode
+from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
 
 class BotHelp(object):
@@ -20,26 +20,26 @@ class BotHelp(object):
         self.chat_id = self.query.message.chat_id
         self.message_id = self.query.message.message_id
         self.telegram_username = self.query.message.chat.username
-        self.shadow_mode = ShadowMode(bot)
+        self.strava_telegram_webhooks_resource = StravaTelegramWebhooksResource()
         self.database_client = DatabaseClient()
 
     def help_exit_button(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_HELP_EXIT
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
 
     def help_registration_button(self):
         message = self.bot_constants.MESSAGE_HELP_REGISTRATION_DEVICE
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    reply_markup=self.bot_constants.KEYBOARD_HELP_REGISTRATION)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
 
     def help_commands_button(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_HELP_COMMANDS
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
 
     def help_registration_ios_button(self):
         self.user_data.clear()

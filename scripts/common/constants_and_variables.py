@@ -62,6 +62,11 @@ class BotConstants(object):
 
     API_TOKEN_EXCHANGE = 'https://www.strava.com/oauth/token'
     API_TELEGRAM_SEND_MESSAGE = "https://api.telegram.org/bot{bot_token}/sendMessage"
+    # API_TOKEN_EXCHANGE = "{host}/token/exchange/{code}"
+    API_ATHLETE_EXISTS = "{host}/athlete/exists/{athlete_id}"
+    API_UPDATE_STATS = "{host}/stats/{athlete_id}"
+    API_DATABASE_WRITE = "{host}/database/write"
+    API_SHADOW_MESSAGE = "{host}/telegram/shadow_message"
 
     KEYBOARD_STATS_MAIN_KEYBOARD_MENU = InlineKeyboardMarkup([[InlineKeyboardButton("Ride", callback_data='stats_ride'),
                                                                InlineKeyboardButton("Run", callback_data='stats_run'),
@@ -148,3 +153,4 @@ class BotVariables(object):
     iron_cache_token = os.environ.get('IRON_CACHE_TOKEN')
     api_update_stats_webhook = os.environ.get('UPDATE_STATS_WEBHOOK_API')
     api_update_stats_all_webhook = os.environ.get('UPDATE_STATS_ALL_WEBHOOK_API')
+    api_host = os.environ.get('API_HOST')

@@ -4,7 +4,7 @@ from collections import defaultdict
 
 from clients.database import DatabaseClient
 from common.constants_and_variables import BotConstants
-from common.shadow_mode import ShadowMode
+from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
 
 class ActivitySummary(object):
@@ -19,7 +19,7 @@ class ActivitySummary(object):
         self.chat_id = self.query.message.chat_id
         self.message_id = self.query.message.message_id
         self.telegram_username = self.query.message.chat.username
-        self.shadow_mode = ShadowMode(bot)
+        self.strava_telegram_webhooks_resource = StravaTelegramWebhooksResource()
         self.database_client = DatabaseClient()
 
     def activity_summary_enable_button(self):
@@ -29,7 +29,7 @@ class ActivitySummary(object):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_ACTIVITY_SUMMARY_ENABLED
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
 
     def activity_summary_disable_button(self):
         self.database_client.write_operation(self.bot_constants.QUERY_ACTIVITY_SUMMARY_DISABLE.format(
@@ -37,25 +37,25 @@ class ActivitySummary(object):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_ACTIVITY_SUMMARY_DISABLED
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
 
     def activity_summary_ignore_button(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_ACTIVITY_SUMMARY_IGNORE
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
 
     def activity_summary_disable_ignore_button(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_ACTIVITY_SUMMARY_DISABLE_IGNORE
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
 
     def exit_button(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_EXIT_BUTTON
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
 
     def process(self):
         options = defaultdict(lambda: self.exit_button, {
