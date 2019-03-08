@@ -6,46 +6,41 @@ import traceback
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, Filters
 
 from common.constants_and_variables import BotVariables
-from common.shadow_mode import ShadowMode
 from handle.buttons import HandleButtons
 from handle.command_args import HandleCommandArgs
 from handle.commands import HandleCommands
+from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
 
 class StravaTelegramBot(object):
 
     def __init__(self):
         self.bot_variables = BotVariables()
+        self.strava_telegram_webhooks_resource = StravaTelegramWebhooksResource()
 
     @staticmethod
     def error(update, error):
         logger.error('Update "{update}" caused error "{error}"'.format(update=update, error=error))
 
-    @staticmethod
-    def handle_commands(bot, update, user_data):
-        shadow_mode = ShadowMode(bot)
+    def handle_commands(self, bot, update, user_data):
         try:
             commands = HandleCommands(bot, update, user_data)
             commands.process()
         except Exception:
             message = "Something went wrong. Exception: {exception}".format(exception=traceback.format_exc())
             logging.error(message)
-            shadow_mode.send_message(message)
+            self.strava_telegram_webhooks_resource.shadow_message(message)
 
-    @staticmethod
-    def handle_buttons(bot, update, user_data):
-        shadow_mode = ShadowMode(bot)
+    def handle_buttons(self, bot, update, user_data):
         try:
             buttons = HandleButtons(bot, update, user_data)
             buttons.process()
         except Exception:
             message = "Something went wrong. Exception: {exception}".format(exception=traceback.format_exc())
             logging.error(message)
-            shadow_mode.send_message(message)
+            self.strava_telegram_webhooks_resource.shadow_message(message)
 
-    @staticmethod
-    def handle_command_args(bot, update, args):
-        shadow_mode = ShadowMode(bot)
+    def handle_command_args(self, bot, update, args):
         try:
             if len(args) > 0:
                 command_args = HandleCommandArgs(bot, update, args)
@@ -55,7 +50,7 @@ class StravaTelegramBot(object):
         except Exception:
             message = "Something went wrong. Exception: {exception}".format(exception=traceback.format_exc())
             logging.error(message)
-            shadow_mode.send_message(message)
+            self.strava_telegram_webhooks_resource.shadow_message(message)
 
     def main(self):
         updater = Updater(self.bot_variables.telegram_bot_token, workers=16)

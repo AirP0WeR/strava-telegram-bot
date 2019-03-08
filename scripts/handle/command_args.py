@@ -8,8 +8,7 @@ import requests
 
 from clients.database import DatabaseClient
 from common.constants_and_variables import BotConstants, BotVariables
-from common.get_athlete_token import GetAthleteToken
-from common.shadow_mode import ShadowMode
+from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
 
 class HandleCommandArgs(object):
@@ -18,10 +17,10 @@ class HandleCommandArgs(object):
         self.bot = bot
         self.update = update
         self.args = args
-        self.database_client = DatabaseClient()
         self.bot_constants = BotConstants()
         self.bot_variables = BotVariables()
-        self.shadow_mode = ShadowMode(bot)
+        self.strava_telegram_webhooks_resource = StravaTelegramWebhooksResource()
+        self.database_client = DatabaseClient()
 
     def default(self):
         pass
@@ -29,15 +28,14 @@ class HandleCommandArgs(object):
     def token_command(self):
         if len(self.args) == 1:
             athlete_id = self.args[0]
-            get_athlete_token = GetAthleteToken()
-            athlete_token = get_athlete_token.get_token(athlete_id)
+            athlete_token = self.strava_telegram_webhooks_resource.get_token(athlete_id)
             if athlete_token:
                 message = "Token for {athlete_id}: `{athlete_token}`".format(athlete_id=athlete_id,
                                                                              athlete_token=athlete_token)
             else:
                 message = "Athlete ID {athlete_id} not found.".format(athlete_id=athlete_id)
             self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-            self.shadow_mode.send_message(message=message)
+            self.strava_telegram_webhooks_resource.shadow_message(message)
         else:
             logging.warning("More than 1 arguments passed for /token. Args {}".format(self.args))
 
@@ -53,7 +51,7 @@ class HandleCommandArgs(object):
             else:
                 message = "Successfully activated {athlete_id}".format(athlete_id=athlete_id)
             self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-            self.shadow_mode.send_message(message=message)
+            self.strava_telegram_webhooks_resource.shadow_message(message)
         else:
             logging.warning("More than 1 arguments passed for /activate. Args {}".format(self.args))
 
@@ -69,7 +67,7 @@ class HandleCommandArgs(object):
             else:
                 message = "Successfully deactivated {athlete_id}".format(athlete_id=athlete_id)
             self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-            self.shadow_mode.send_message(message=message)
+            self.strava_telegram_webhooks_resource.shadow_message(message)
         else:
             logging.warning("More than 1 arguments passed for /deactivate. Args {}".format(self.args))
 
@@ -82,7 +80,7 @@ class HandleCommandArgs(object):
             else:
                 message = "Failed to trigger update stats for {}".format(athlete_id)
             self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-            self.shadow_mode.send_message(message=message)
+            self.strava_telegram_webhooks_resource.shadow_message(message)
         else:
             logging.warning("More than 1 arguments passed for /deactivate. Args {}".format(self.args))
 

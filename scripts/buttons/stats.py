@@ -1,7 +1,6 @@
 #  -*- encoding: utf-8 -*-
 
 import logging
-import time
 import ujson
 from collections import defaultdict
 
@@ -9,7 +8,7 @@ from clients.database import DatabaseClient
 from clients.iron_cache import IronCache
 from commands.stats.format import FormatStats
 from common.constants_and_variables import BotConstants
-from common.shadow_mode import ShadowMode
+from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
 
 class Stats(object):
@@ -24,7 +23,7 @@ class Stats(object):
         self.chat_id = self.query.message.chat_id
         self.message_id = self.query.message.message_id
         self.telegram_username = self.query.message.chat.username
-        self.shadow_mode = ShadowMode(bot)
+        self.strava_telegram_webhooks_resource = StravaTelegramWebhooksResource()
         self.iron_cache = IronCache()
         self.database_client = DatabaseClient()
 
@@ -49,7 +48,7 @@ class Stats(object):
         message = format_stats.ride_stats("All Time Stats", "at")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
         self.bot.send_message(text=message, chat_id=self.chat_id,
                               reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
@@ -59,7 +58,7 @@ class Stats(object):
         message = format_stats.ride_stats("Year to Date Stats", "ytd")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
         self.bot.send_message(text=message, chat_id=self.chat_id,
                               reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
@@ -69,7 +68,7 @@ class Stats(object):
         message = format_stats.ride_stats("Previous Year Stats", "py")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
         self.bot.send_message(text=message, chat_id=self.chat_id,
                               reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
@@ -79,7 +78,7 @@ class Stats(object):
         message = format_stats.ride_stats("Current Month Stats", "cm")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
         self.bot.send_message(text=message, chat_id=self.chat_id,
                               reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
@@ -89,7 +88,7 @@ class Stats(object):
         message = format_stats.ride_stats("Previous Month Stats", "pm")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
         self.bot.send_message(text=message, chat_id=self.chat_id,
                               reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
@@ -104,7 +103,7 @@ class Stats(object):
         message = format_stats.run_stats("All Time Stats", "at")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
         self.bot.send_message(text=message, chat_id=self.chat_id,
                               reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
@@ -114,7 +113,7 @@ class Stats(object):
         message = format_stats.run_stats("Year to Date Stats", "ytd")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
         self.bot.send_message(text=message, chat_id=self.chat_id,
                               reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
@@ -124,7 +123,7 @@ class Stats(object):
         message = format_stats.run_stats("Previous Year Stats", "py")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
         self.bot.send_message(text=message, chat_id=self.chat_id,
                               reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
@@ -134,7 +133,7 @@ class Stats(object):
         message = format_stats.run_stats("Current Month Stats", "cm")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
         self.bot.send_message(text=message, chat_id=self.chat_id,
                               reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
@@ -144,7 +143,7 @@ class Stats(object):
         message = format_stats.run_stats("Previous Month", "pm")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
         self.bot.send_message(text=message, chat_id=self.chat_id,
                               reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
@@ -159,7 +158,7 @@ class Stats(object):
         message = format_stats.swim_stats("All Time Stats", "at")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
         self.bot.send_message(text=message, chat_id=self.chat_id,
                               reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
@@ -169,7 +168,7 @@ class Stats(object):
         message = format_stats.swim_stats("Year to Date Stats", "ytd")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
         self.bot.send_message(text=message, chat_id=self.chat_id,
                               reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
@@ -179,7 +178,7 @@ class Stats(object):
         message = format_stats.swim_stats("Previous Year Stats", "py")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
         self.bot.send_message(text=message, chat_id=self.chat_id,
                               reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
@@ -189,7 +188,7 @@ class Stats(object):
         message = format_stats.swim_stats("Current Month Stats", "cm")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
         self.bot.send_message(text=message, chat_id=self.chat_id,
                               reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
@@ -199,7 +198,7 @@ class Stats(object):
         message = format_stats.swim_stats("Previous Month Stats", "pm")
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                    parse_mode="Markdown", disable_web_page_preview=True)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
         message = self.bot_constants.MESSAGE_STATS_MAIN_KEYBOARD_MENU
         self.bot.send_message(text=message, chat_id=self.chat_id,
                               reply_markup=self.bot_constants.KEYBOARD_STATS_MAIN_KEYBOARD_MENU)
@@ -213,7 +212,7 @@ class Stats(object):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_EXIT_BUTTON
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
-        self.shadow_mode.send_message(message=message)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
 
     def process(self):
         options = defaultdict(lambda: self.exit_button, {
@@ -240,21 +239,3 @@ class Stats(object):
         })
 
         options[self.chosen_option]()
-
-        # Promotion - Temporary code
-        if not self.database_client.read_operation(
-                self.bot_constants.QUERY_ACTIVITY_SUMMARY_BY_TELEGRAM_USERNAME.format(
-                        telegram_username=self.telegram_username))[0]:
-            try:
-                last_promotion_sent_time = self.iron_cache.get(cache="promotion", key=self.telegram_username).value
-            except Exception:
-                message = "NEW FEATURE ALERT! Check out our new feature which sends activity summary whenever there is a new activity. Click /activity_summary to enable it."
-                self.bot.send_message(text=message, chat_id=self.chat_id)
-                self.shadow_mode.send_message(message, parse_mode=None)
-                self.iron_cache.put(cache="promotion", key=self.telegram_username, value=int(time.time() + 60))
-            else:
-                if int(time.time()) > int(last_promotion_sent_time):
-                    message = "NEW FEATURE ALERT! Check out our new feature which sends activity summary whenever there is a new activity. Click /activity_summary to enable it."
-                    self.bot.send_message(text=message, chat_id=self.chat_id)
-                    self.shadow_mode.send_message(message, parse_mode=None)
-                    self.iron_cache.put(cache="promotion", key=self.telegram_username, value=int(time.time() + 60))
