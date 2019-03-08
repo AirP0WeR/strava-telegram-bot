@@ -67,6 +67,7 @@ class BotConstants(object):
     API_UPDATE_STATS = "{host}/stats/{athlete_id}"
     API_DATABASE_WRITE = "{host}/database/write"
     API_SHADOW_MESSAGE = "{host}/telegram/shadow_message"
+    API_GET_TOKEN = "{host}/token/get/{athlete_id}"
 
     KEYBOARD_STATS_MAIN_KEYBOARD_MENU = InlineKeyboardMarkup([[InlineKeyboardButton("Ride", callback_data='stats_ride'),
                                                                InlineKeyboardButton("Run", callback_data='stats_run'),

@@ -92,3 +92,18 @@ class StravaTelegramWebhooksResource(object):
                 result = True
 
         return result
+
+    def get_token(self, athlete_id):
+        token = False
+        endpoint = self.bot_constants.API_GET_TOKEN.format(host=self.host, athlete_id=athlete_id)
+        try:
+            logging.info("Requesting token..")
+            response = requests.get(endpoint)
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            if response.status_code == 200:
+                token = response.json()
+
+        return token
