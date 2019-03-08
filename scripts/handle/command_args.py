@@ -1,12 +1,8 @@
 #  -*- encoding: utf-8 -*-
 
 import logging
-import traceback
 from collections import defaultdict
 
-import requests
-
-from clients.database import DatabaseClient
 from common.constants_and_variables import BotConstants, BotVariables
 from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
@@ -20,7 +16,6 @@ class HandleCommandArgs(object):
         self.bot_constants = BotConstants()
         self.bot_variables = BotVariables()
         self.strava_telegram_webhooks_resource = StravaTelegramWebhooksResource()
-        self.database_client = DatabaseClient()
 
     def default(self):
         pass
@@ -42,14 +37,11 @@ class HandleCommandArgs(object):
     def activate_athlete_command(self):
         if len(self.args) == 1:
             athlete_id = self.args[0]
-            try:
-                self.database_client.write_operation(
-                    self.bot_constants.QUERY_ACTIVATE_ATHLETE.format(athlete_id=athlete_id))
-            except Exception:
-                message = "Failed to activate {athlete_id}. Exception: {exception}".format(athlete_id=athlete_id,
-                                                                                           exception=traceback.format_exc())
+            if self.strava_telegram_webhooks_resource.database_write(
+                    self.bot_constants.QUERY_ACTIVATE_ATHLETE.format(athlete_id=athlete_id)):
+                message = "Successfully activated {athlete_id}.".format(athlete_id=athlete_id)
             else:
-                message = "Successfully activated {athlete_id}".format(athlete_id=athlete_id)
+                message = "Failed to activate {athlete_id}.".format(athlete_id=athlete_id)
             self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
             self.strava_telegram_webhooks_resource.shadow_message(message)
         else:
@@ -58,14 +50,11 @@ class HandleCommandArgs(object):
     def deactivate_athlete_command(self):
         if len(self.args) == 1:
             athlete_id = self.args[0]
-            try:
-                self.database_client.write_operation(
-                    self.bot_constants.QUERY_DEACTIVATE_ATHLETE.format(athlete_id=athlete_id))
-            except Exception:
-                message = "Failed to deactivate {athlete_id}. Exception: {exception}".format(athlete_id=athlete_id,
-                                                                                             exception=traceback.format_exc())
+            if self.strava_telegram_webhooks_resource.database_write(
+                    self.bot_constants.QUERY_DEACTIVATE_ATHLETE.format(athlete_id=athlete_id)):
+                message = "Successfully deactivated {athlete_id}.".format(athlete_id=athlete_id)
             else:
-                message = "Successfully deactivated {athlete_id}".format(athlete_id=athlete_id)
+                message = "Failed to deactivate {athlete_id}.".format(athlete_id=athlete_id)
             self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
             self.strava_telegram_webhooks_resource.shadow_message(message)
         else:
@@ -74,8 +63,7 @@ class HandleCommandArgs(object):
     def update_stats_command(self):
         if len(self.args) == 1:
             athlete_id = self.args[0]
-            response = requests.post(self.bot_variables.api_update_stats_webhook.format(athlete_id=athlete_id))
-            if response.status_code == 200:
+            if self.strava_telegram_webhooks_resource.update_stats(athlete_id):
                 message = "Updating stats for {}..".format(athlete_id)
             else:
                 message = "Failed to trigger update stats for {}".format(athlete_id)
