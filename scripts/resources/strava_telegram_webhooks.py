@@ -154,6 +154,21 @@ class StravaTelegramWebhooksResource(object):
 
         return gear_name
 
+    def get_bikes_list(self, token):
+        bikes = False
+        endpoint = self.bot_constants.API_GET_BIKES_LIST.format(host=self.host, token=token)
+        try:
+            logging.info("Requesting bikes list..")
+            response = requests.get(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                bikes = response.json()
+
+        return bikes
+
     def get_athlete(self, athlete_id):
         token = False
         endpoint = self.bot_constants.API_GET_ATHLETE.format(host=self.host, athlete_id=athlete_id)
@@ -168,21 +183,6 @@ class StravaTelegramWebhooksResource(object):
                 token = response.json()
 
         return token
-
-    def get_athlete_info(self, token):
-        athlete_info = False
-        endpoint = self.bot_constants.API_GET_STRAVA_ATHLETE_INFO.format(host=self.host, token=token)
-        try:
-            logging.info("Requesting athlete info from Strava..")
-            response = requests.get(endpoint)
-        except Exception:
-            logging.error(traceback.format_exc())
-        else:
-            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
-            if response.status_code == 200:
-                athlete_info = response.json()
-
-        return athlete_info
 
     def get_athlete_by_telegram_username(self, telegram_username):
         token = False

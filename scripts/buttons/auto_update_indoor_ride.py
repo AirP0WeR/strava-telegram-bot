@@ -54,13 +54,8 @@ class AutoUpdateIndoorRide(object):
         self.get_bikes()
 
     def get_bikes(self):
-        athlete = self.strava_telegram_webhooks_resource.get_athlete_info(
+        bikes = self.strava_telegram_webhooks_resource.get_bikes_list(
             self.user_data['auto_update_indoor_ride']['athlete_token'])
-        bikes = dict()
-        count = 1
-        for bike in athlete.bikes:
-            bikes.update({count: {'bike_name': bike.name, 'bike_id': bike.id}})
-            count += 1
         if len(bikes) > 0:
             bikes_list = []
             for sl_no in bikes:

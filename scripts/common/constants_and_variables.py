@@ -65,7 +65,7 @@ class BotConstants(object):
     API_GET_ATHLETE_BY_TELEGRAM_USERNAME = "{host}/athlete/get_by_telegram_username/{telegram_username}"
     API_GET_GEAR_NAME = "{host}/strava/gear/name/{token}/{gear_id}"
     API_GET_STATS = "{host}/athlete/stats/{telegram_username}"
-    API_GET_STRAVA_ATHLETE_INFO = "{host}/strava/athlete_info/{token}"
+    API_GET_BIKES_LIST = "{host}/strava/bikes/{token}"
 
     KEYBOARD_STATS_MAIN_KEYBOARD_MENU = InlineKeyboardMarkup([[InlineKeyboardButton("Ride", callback_data='stats_ride'),
                                                                InlineKeyboardButton("Run", callback_data='stats_run'),
