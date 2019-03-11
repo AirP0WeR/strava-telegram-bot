@@ -169,3 +169,6 @@ class HandleCommands(object):
                 admin_user_name=self.bot_variables.admin_user_name)
             self.update.message.reply_text(message, disable_web_page_preview=True,
                                            reply_markup=self.bot_constants.KEYBOARD_HELP_MENU)
+            self.strava_telegram_webhooks_resource.shadow_message(
+                "{first_name} tried using the bot, but is not registered yet.".format(
+                    first_name=self.telegram_user_first_name))
