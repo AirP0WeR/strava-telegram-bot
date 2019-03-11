@@ -18,10 +18,6 @@ $ pip install psycopg2-binary
 $ pip install requests
 ```
 
-```
-$ heroku addons:attach <database-app-name> -a <this-app-name>
-```
-
 ##### Deploy Hooks HTTP URL
 ```
 https://api.telegram.org/bot{telegram_bot_token}/sendMessage?chat_id={telegram_chat_id}&text={{app}}%20({{release}})%20deployed!
