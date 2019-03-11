@@ -6,18 +6,11 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 class BotConstants(object):
-    QUERY_GET_ATHLETE_ID = "select athlete_id from strava_telegram_bot where telegram_username='{telegram_username}' and active=TRUE"
-    QUERY_GET_STRAVA_DATA = "select strava_data from strava_telegram_bot where telegram_username='{telegram_username}'"
-    QUERY_FETCH_TOKEN = "select access_token, refresh_token, expires_at from strava_telegram_bot where athlete_id={athlete_id}"
-    QUERY_UPDATE_TOKEN = "UPDATE strava_telegram_bot SET access_token='{access_token}', refresh_token='{refresh_token}', expires_at={expires_at}, updated=now() where athlete_id={athlete_id}"
-    QUERY_FETCH_UPDATE_INDOOR_RIDE = "select update_indoor_ride, update_indoor_ride_data from strava_telegram_bot where athlete_id={athlete_id}"
     QUERY_UPDATE_INDOOR_RIDE_DISABLE = "UPDATE strava_telegram_bot SET update_indoor_ride=False, update_indoor_ride_data=NULL where athlete_id={athlete_id}"
     QUERY_UPDATE_INDOOR_RIDE_ENABLE = "UPDATE strava_telegram_bot SET update_indoor_ride=True, update_indoor_ride_data='{update_indoor_ride_data}', chat_id='{chat_id}' where athlete_id={athlete_id}"
     QUERY_GET_ATHLETES = "select name, athlete_id from strava_telegram_bot where active=true order by created"
     QUERY_ACTIVITY_SUMMARY_ENABLE = "UPDATE strava_telegram_bot SET enable_activity_summary=True, chat_id='{chat_id}' where athlete_id={athlete_id}"
     QUERY_ACTIVITY_SUMMARY_DISABLE = "UPDATE strava_telegram_bot SET enable_activity_summary=False where athlete_id={athlete_id}"
-    QUERY_ACTIVITY_SUMMARY = "select enable_activity_summary from strava_telegram_bot where athlete_id={athlete_id}"
-    QUERY_ACTIVITY_SUMMARY_BY_TELEGRAM_USERNAME = "select enable_activity_summary from strava_telegram_bot where telegram_username='{telegram_username}'"  # Promotion - Temporary code
     QUERY_UPDATE_CHAT_ID = "UPDATE strava_telegram_bot SET chat_id='{chat_id}' where athlete_id={athlete_id}"
     QUERY_ACTIVATE_ATHLETE = "UPDATE strava_telegram_bot SET active=true where athlete_id={athlete_id}"
     QUERY_DEACTIVATE_ATHLETE = "UPDATE strava_telegram_bot SET active=false where athlete_id={athlete_id}"
@@ -60,14 +53,19 @@ class BotConstants(object):
                             "/auto_update_indoor_ride - Get your activity Name / Bike updated automatically for your indoor rides\n\n" \
                             "/refresh_stats - Force refresh stats. Use this only if you find any discrepancy in your stats."
 
-    API_TOKEN_EXCHANGE = 'https://www.strava.com/oauth/token'
-    API_TELEGRAM_SEND_MESSAGE = "https://api.telegram.org/bot{bot_token}/sendMessage"
-    # API_TOKEN_EXCHANGE = "{host}/token/exchange/{code}"
+    API_TOKEN_EXCHANGE = "{host}/token/exchange/{code}"
     API_ATHLETE_EXISTS = "{host}/athlete/exists/{athlete_id}"
     API_UPDATE_STATS = "{host}/stats/{athlete_id}"
+    API_UPDATE_ALL_STATS = "{host}/stats/all"
     API_DATABASE_WRITE = "{host}/database/write"
     API_SHADOW_MESSAGE = "{host}/telegram/shadow_message"
-    API_GET_TOKEN = "{host}/token/get/{athlete_id}"
+    API_GET_ATHLETE_ID = "{host}/athlete/athlete_id/{telegram_username}"
+    API_DATABASE_READ_ALL = "{host}/database/read/all"
+    API_GET_ATHLETE = "{host}/athlete/get/{athlete_id}"
+    API_GET_ATHLETE_BY_TELEGRAM_USERNAME = "{host}/athlete/get_by_telegram_username/{telegram_username}"
+    API_GET_GEAR_NAME = "{host}/strava/gear/name/{token}/{gear_id}"
+    API_GET_STATS = "{host}/athlete/stats/{telegram_username}"
+    API_GET_BIKES_LIST = "{host}/strava/bikes/{token}"
 
     KEYBOARD_STATS_MAIN_KEYBOARD_MENU = InlineKeyboardMarkup([[InlineKeyboardButton("Ride", callback_data='stats_ride'),
                                                                InlineKeyboardButton("Run", callback_data='stats_run'),
@@ -139,19 +137,13 @@ class BotConstants(object):
 class BotVariables(object):
     crypt_key_length = int(os.environ.get('CRYPT_KEY_LENGTH'))
     crypt_key = os.environ.get('CRYPT_KEY')
-    database_url = os.environ.get('DATABASE_URL')
     admin_user_name = os.environ.get('ADMIN_USER_NAME')
     app_name = os.environ.get('APP_NAME')
     port = int(os.environ.get('PORT'))
     registration_url = os.environ.get('REGISTRATION_URL')
     telegram_bot_token = os.environ.get('TELEGRAM_BOT_TOKEN')
-    client_id = os.environ.get('CLIENT_ID')
-    client_secret = os.environ.get('CLIENT_SECRET')
     admins = os.environ.get('ADMINS', '').split(',')
-    shadow_mode = os.environ.get('SHADOW_MODE')
     shadow_mode_chat_id = os.environ.get('SHADOW_MODE_CHAT_ID')
     iron_cache_project_id = os.environ.get('IRON_CACHE_PROJECT_ID')
     iron_cache_token = os.environ.get('IRON_CACHE_TOKEN')
-    api_update_stats_webhook = os.environ.get('UPDATE_STATS_WEBHOOK_API')
-    api_update_stats_all_webhook = os.environ.get('UPDATE_STATS_ALL_WEBHOOK_API')
     api_host = os.environ.get('API_HOST')

@@ -22,10 +22,10 @@ class StravaTelegramWebhooksResource(object):
         try:
             logging.info("Requesting token exchange..")
             response = requests.post(endpoint)
-            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
         except Exception:
             logging.error(traceback.format_exc())
         else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
             if response.status_code == 200:
                 result = response.json()
 
@@ -37,10 +37,10 @@ class StravaTelegramWebhooksResource(object):
         try:
             logging.info("Checking if athlete {athlete_id} already exists..".format(athlete_id=athlete_id))
             response = requests.get(endpoint)
-            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
         except Exception:
             logging.error(traceback.format_exc())
         else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
             if response.status_code == 200:
                 result = True
 
@@ -52,10 +52,25 @@ class StravaTelegramWebhooksResource(object):
         try:
             logging.info("Sending request to update stats for {athlete_id}".format(athlete_id=athlete_id))
             response = requests.post(endpoint)
-            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
         except Exception:
             logging.error(traceback.format_exc())
         else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                result = True
+
+        return result
+
+    def update_all_stats(self):
+        result = False
+        endpoint = self.bot_constants.API_UPDATE_ALL_STATS.format(host=self.host)
+        try:
+            logging.info("Sending request to update stats for all the registered athletes")
+            response = requests.post(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
             if response.status_code == 200:
                 result = True
 
@@ -68,12 +83,28 @@ class StravaTelegramWebhooksResource(object):
         try:
             logging.info("Requesting write operation to the database..")
             response = requests.post(endpoint, data=data, headers={"Content-Type": "application/json"})
-            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
         except Exception:
             logging.error(traceback.format_exc())
         else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
             if response.status_code == 200:
                 result = True
+
+        return result
+
+    def database_read_all(self, query):
+        result = False
+        endpoint = self.bot_constants.API_DATABASE_READ_ALL.format(host=self.host)
+        data = json.dumps({"query": query})
+        try:
+            logging.info("Requesting read all operation to the database..")
+            response = requests.get(endpoint, data=data, headers={"Content-Type": "application/json"})
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                result = response.json()
 
         return result
 
@@ -84,26 +115,102 @@ class StravaTelegramWebhooksResource(object):
         try:
             logging.info("Requesting to send shadow message..")
             response = requests.post(endpoint, data=data, headers={"Content-Type": "application/json"})
-            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
         except Exception:
             logging.error(traceback.format_exc())
         else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
             if response.status_code == 200:
                 result = True
 
         return result
 
-    def get_token(self, athlete_id):
-        token = False
-        endpoint = self.bot_constants.API_GET_TOKEN.format(host=self.host, athlete_id=athlete_id)
+    def get_athlete_id(self, telegram_username):
+        athlete_id = False
+        endpoint = self.bot_constants.API_GET_ATHLETE_ID.format(host=self.host, telegram_username=telegram_username)
         try:
-            logging.info("Requesting token..")
+            logging.info("Requesting Athlete ID..")
             response = requests.get(endpoint)
-            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
         except Exception:
             logging.error(traceback.format_exc())
         else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                athlete_id = response.json()
+
+        return athlete_id
+
+    def get_gear_name(self, token, gear_id):
+        gear_name = False
+        endpoint = self.bot_constants.API_GET_GEAR_NAME.format(host=self.host, token=token, gear_id=gear_id)
+        try:
+            logging.info("Requesting gear name..")
+            response = requests.get(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                gear_name = response.json()
+
+        return gear_name
+
+    def get_bikes_list(self, token):
+        bikes = False
+        endpoint = self.bot_constants.API_GET_BIKES_LIST.format(host=self.host, token=token)
+        try:
+            logging.info("Requesting bikes list..")
+            response = requests.get(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                bikes = response.json()
+
+        return bikes
+
+    def get_athlete(self, athlete_id):
+        token = False
+        endpoint = self.bot_constants.API_GET_ATHLETE.format(host=self.host, athlete_id=athlete_id)
+        try:
+            logging.info("Requesting athlete {athlete_id}..".format(athlete_id=athlete_id))
+            response = requests.get(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
             if response.status_code == 200:
                 token = response.json()
 
         return token
+
+    def get_athlete_by_telegram_username(self, telegram_username):
+        token = False
+        endpoint = self.bot_constants.API_GET_ATHLETE_BY_TELEGRAM_USERNAME.format(host=self.host,
+                                                                                  telegram_username=telegram_username)
+        try:
+            logging.info("Requesting athlete {telegram_username}..".format(telegram_username=telegram_username))
+            response = requests.get(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                token = response.json()
+
+        return token
+
+    def get_athlete_stats(self, telegram_username):
+        stats = False
+        endpoint = self.bot_constants.API_GET_STATS.format(host=self.host, telegram_username=telegram_username)
+        try:
+            logging.info("Requesting stats for {telegram_username}..".format(telegram_username=telegram_username))
+            response = requests.get(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                stats = response.json()
+
+        return stats
