@@ -5,6 +5,7 @@ import traceback
 import ujson
 
 from clients.iron_cache import IronCacheClient
+from common.execution_time import execution_time
 
 
 class IronCacheResource(object):
@@ -12,6 +13,7 @@ class IronCacheResource(object):
     def __init__(self):
         self.iron_cache_client = IronCacheClient().cache()
 
+    @execution_time
     def put_cache(self, cache, key, value):
         result = False
         try:
@@ -28,6 +30,7 @@ class IronCacheResource(object):
         logging.info("Result: {result}".format(result=result))
         return result
 
+    @execution_time
     def get_cache(self, cache, key):
         result = False
         try:
