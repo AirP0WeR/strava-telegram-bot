@@ -2,7 +2,6 @@
 
 from collections import defaultdict
 
-from clients.database import DatabaseClient
 from common.constants_and_variables import BotConstants, BotVariables
 from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
@@ -21,7 +20,6 @@ class BotHelp(object):
         self.message_id = self.query.message.message_id
         self.telegram_username = self.query.message.chat.username
         self.strava_telegram_webhooks_resource = StravaTelegramWebhooksResource()
-        self.database_client = DatabaseClient()
 
     def help_exit_button(self):
         self.user_data.clear()

@@ -23,8 +23,9 @@ class HandleCommandArgs(object):
     def token_command(self):
         if len(self.args) == 1:
             athlete_id = self.args[0]
-            athlete_token = self.strava_telegram_webhooks_resource.get_token(athlete_id)
-            if athlete_token:
+            athlete_details = self.strava_telegram_webhooks_resource.get_athlete(athlete_id)
+            if athlete_details:
+                athlete_token = athlete_details['athlete_token']
                 message = "Token for {athlete_id}: `{athlete_token}`".format(athlete_id=athlete_id,
                                                                              athlete_token=athlete_token)
             else:

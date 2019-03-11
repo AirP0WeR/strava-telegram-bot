@@ -2,7 +2,6 @@
 
 from collections import defaultdict
 
-from clients.database import DatabaseClient
 from common.constants_and_variables import BotConstants
 from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
@@ -20,10 +19,9 @@ class ActivitySummary(object):
         self.message_id = self.query.message.message_id
         self.telegram_username = self.query.message.chat.username
         self.strava_telegram_webhooks_resource = StravaTelegramWebhooksResource()
-        self.database_client = DatabaseClient()
 
     def activity_summary_enable_button(self):
-        self.database_client.write_operation(self.bot_constants.QUERY_ACTIVITY_SUMMARY_ENABLE.format(
+        self.strava_telegram_webhooks_resource.database_write(self.bot_constants.QUERY_ACTIVITY_SUMMARY_ENABLE.format(
             chat_id=self.chat_id,
             athlete_id=self.user_data['ride_summary']['athlete_id']))
         self.user_data.clear()
@@ -32,7 +30,7 @@ class ActivitySummary(object):
         self.strava_telegram_webhooks_resource.shadow_message(message)
 
     def activity_summary_disable_button(self):
-        self.database_client.write_operation(self.bot_constants.QUERY_ACTIVITY_SUMMARY_DISABLE.format(
+        self.strava_telegram_webhooks_resource.database_write(self.bot_constants.QUERY_ACTIVITY_SUMMARY_DISABLE.format(
             athlete_id=self.user_data['ride_summary']['athlete_id']))
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_ACTIVITY_SUMMARY_DISABLED

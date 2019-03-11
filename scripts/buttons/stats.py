@@ -1,13 +1,11 @@
 #  -*- encoding: utf-8 -*-
 
 import logging
-import ujson
 from collections import defaultdict
 
-from clients.database import DatabaseClient
-from clients.iron_cache import IronCache
 from commands.stats.format import FormatStats
 from common.constants_and_variables import BotConstants
+from resources.iron_cache import IronCacheResource
 from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
 
@@ -24,17 +22,14 @@ class Stats(object):
         self.message_id = self.query.message.message_id
         self.telegram_username = self.query.message.chat.username
         self.strava_telegram_webhooks_resource = StravaTelegramWebhooksResource()
-        self.iron_cache = IronCache()
-        self.database_client = DatabaseClient()
+        self.iron_cache_resource = IronCacheResource()
 
     def get_strava_data(self):
-        try:
-            strava_data = ujson.loads(self.iron_cache.get(cache="stats", key=self.telegram_username).value)
-        except:
-            logging.warning("Failed to fetch from cache! Querying database..")
-            strava_data = self.database_client.read_operation(
-                self.bot_constants.QUERY_GET_STRAVA_DATA.format(telegram_username=self.telegram_username))[0]
-            self.iron_cache.put(cache="stats", key=self.telegram_username, value=strava_data)
+        strava_data = self.iron_cache_resource.get_cache("stats", self.telegram_username)
+        if not strava_data:
+            logging.warning("Failed to fetch from cache! Falling back to database..")
+            strava_data = self.strava_telegram_webhooks_resource.get_athlete_stats(self.telegram_username)
+            self.iron_cache_resource.put_cache("stats", self.telegram_username, strava_data)
 
         return strava_data
 

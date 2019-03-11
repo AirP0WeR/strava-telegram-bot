@@ -5,8 +5,6 @@ from collections import defaultdict
 
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 
-from clients.database import DatabaseClient
-from clients.strava import StravaClient
 from common.constants_and_variables import BotConstants
 from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
@@ -22,12 +20,11 @@ class AutoUpdateIndoorRide(object):
         self.chosen_option = chosen_option
         self.chat_id = self.query.message.chat_id
         self.message_id = self.query.message.message_id
-        self.database_client = DatabaseClient()
-        self.strava_client = StravaClient()
         self.strava_telegram_webhooks_resource = StravaTelegramWebhooksResource()
 
     def auto_update_indoor_ride_disable(self):
-        self.database_client.write_operation(self.bot_constants.QUERY_UPDATE_INDOOR_RIDE_DISABLE.format(
+        self.strava_telegram_webhooks_resource.database_write(
+            self.bot_constants.QUERY_UPDATE_INDOOR_RIDE_DISABLE.format(
             athlete_id=self.user_data['auto_update_indoor_ride']['athlete_id']))
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_UPDATE_INDOOR_RIDE_DISABLED
@@ -57,8 +54,8 @@ class AutoUpdateIndoorRide(object):
         self.get_bikes()
 
     def get_bikes(self):
-        strava_client = StravaClient().get_client(self.user_data['auto_update_indoor_ride']['athlete_token'])
-        athlete = strava_client.get_athlete()
+        athlete = self.strava_telegram_webhooks_resource.get_athlete_info(
+            self.user_data['auto_update_indoor_ride']['athlete_token'])
         bikes = dict()
         count = 1
         for bike in athlete.bikes:
@@ -96,9 +93,9 @@ class AutoUpdateIndoorRide(object):
                 configured_data += "Activity Name: {activity_name}\n".format(
                     activity_name=self.user_data['auto_update_indoor_ride']['name'])
             if self.user_data['auto_update_indoor_ride']['gear_id']:
-                strava_client = self.strava_client.get_client(
-                    self.user_data['auto_update_indoor_ride']['athlete_token'])
-                bike_name = strava_client.get_gear(gear_id=self.user_data['auto_update_indoor_ride']['gear_id']).name
+                bike_name = self.strava_telegram_webhooks_resource.get_gear_name(
+                    self.user_data['auto_update_indoor_ride']['athlete_token'],
+                    self.user_data['auto_update_indoor_ride']['gear_id'])
                 configured_data += "Bike: {bike_name}".format(bike_name=bike_name)
             message = self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CONFIRMATION.format(
                 configuration=configured_data)
@@ -118,7 +115,7 @@ class AutoUpdateIndoorRide(object):
         if 'gear_id' in self.user_data['auto_update_indoor_ride']:
             update_indoor_ride_data.update({'gear_id': self.user_data['auto_update_indoor_ride']['gear_id']})
 
-        self.database_client.write_operation(self.bot_constants.QUERY_UPDATE_INDOOR_RIDE_ENABLE.format(
+        self.strava_telegram_webhooks_resource.database_write(self.bot_constants.QUERY_UPDATE_INDOOR_RIDE_ENABLE.format(
             update_indoor_ride_data=ujson.dumps(update_indoor_ride_data),
             chat_id=self.chat_id,
             athlete_id=self.user_data['auto_update_indoor_ride']['athlete_id']))
