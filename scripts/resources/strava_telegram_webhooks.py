@@ -7,6 +7,7 @@ import traceback
 import requests
 
 from common.constants_and_variables import BotVariables, BotConstants
+from common.execution_time import execution_time
 
 
 class StravaTelegramWebhooksResource(object):
@@ -16,6 +17,7 @@ class StravaTelegramWebhooksResource(object):
         self.bot_constants = BotConstants()
         self.host = self.bot_variables.api_host
 
+    @execution_time
     def token_exchange(self, code):
         result = {}
         endpoint = self.bot_constants.API_TOKEN_EXCHANGE.format(host=self.host, code=code)
@@ -31,6 +33,7 @@ class StravaTelegramWebhooksResource(object):
 
         return result if result != {} else False
 
+    @execution_time
     def athlete_exists(self, athlete_id):
         result = False
         endpoint = self.bot_constants.API_ATHLETE_EXISTS.format(host=self.host, athlete_id=athlete_id)
@@ -46,6 +49,7 @@ class StravaTelegramWebhooksResource(object):
 
         return result
 
+    @execution_time
     def update_stats(self, athlete_id):
         result = False
         endpoint = self.bot_constants.API_UPDATE_STATS.format(host=self.host, athlete_id=athlete_id)
@@ -61,6 +65,7 @@ class StravaTelegramWebhooksResource(object):
 
         return result
 
+    @execution_time
     def update_all_stats(self):
         result = False
         endpoint = self.bot_constants.API_UPDATE_ALL_STATS.format(host=self.host)
@@ -76,6 +81,7 @@ class StravaTelegramWebhooksResource(object):
 
         return result
 
+    @execution_time
     def database_write(self, query):
         result = False
         endpoint = self.bot_constants.API_DATABASE_WRITE.format(host=self.host)
@@ -92,6 +98,7 @@ class StravaTelegramWebhooksResource(object):
 
         return result
 
+    @execution_time
     def database_read_all(self, query):
         result = False
         endpoint = self.bot_constants.API_DATABASE_READ_ALL.format(host=self.host)
@@ -108,6 +115,7 @@ class StravaTelegramWebhooksResource(object):
 
         return result
 
+    @execution_time
     def shadow_message(self, message):
         result = False
         endpoint = self.bot_constants.API_SHADOW_MESSAGE.format(host=self.host)
@@ -124,6 +132,7 @@ class StravaTelegramWebhooksResource(object):
 
         return result
 
+    @execution_time
     def get_athlete_id(self, telegram_username):
         athlete_id = False
         endpoint = self.bot_constants.API_GET_ATHLETE_ID.format(host=self.host, telegram_username=telegram_username)
@@ -139,6 +148,7 @@ class StravaTelegramWebhooksResource(object):
 
         return athlete_id
 
+    @execution_time
     def get_gear_name(self, token, gear_id):
         gear_name = False
         endpoint = self.bot_constants.API_GET_GEAR_NAME.format(host=self.host, token=token, gear_id=gear_id)
@@ -154,6 +164,7 @@ class StravaTelegramWebhooksResource(object):
 
         return gear_name
 
+    @execution_time
     def get_bikes_list(self, token):
         bikes = False
         endpoint = self.bot_constants.API_GET_BIKES_LIST.format(host=self.host, token=token)
@@ -169,6 +180,7 @@ class StravaTelegramWebhooksResource(object):
 
         return bikes
 
+    @execution_time
     def get_athlete(self, athlete_id):
         token = False
         endpoint = self.bot_constants.API_GET_ATHLETE.format(host=self.host, athlete_id=athlete_id)
@@ -184,6 +196,7 @@ class StravaTelegramWebhooksResource(object):
 
         return token
 
+    @execution_time
     def get_athlete_by_telegram_username(self, telegram_username):
         token = False
         endpoint = self.bot_constants.API_GET_ATHLETE_BY_TELEGRAM_USERNAME.format(host=self.host,
@@ -200,6 +213,7 @@ class StravaTelegramWebhooksResource(object):
 
         return token
 
+    @execution_time
     def get_athlete_stats(self, telegram_username):
         stats = False
         endpoint = self.bot_constants.API_GET_STATS.format(host=self.host, telegram_username=telegram_username)
