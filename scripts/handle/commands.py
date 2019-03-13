@@ -27,7 +27,7 @@ class HandleCommands(object):
 
     def start_command(self):
         self.user_data.clear()
-        if self.athlete_details['chat_id'] and self.athlete_details['chat_id'] != self.chat_id:
+        if self.athlete_details['chat_id'] and int(self.athlete_details['chat_id']) != int(self.chat_id):
             self.strava_telegram_webhooks_resource.update_chat_id(chat_id=self.chat_id,
                                                                   athlete_id=self.athlete_details['athlete_id'])
         message = self.bot_constants.MESSAGE_START_COMMAND.format(first_name=self.telegram_user_first_name)
@@ -36,7 +36,7 @@ class HandleCommands(object):
 
     def stats_command(self):
         self.user_data.clear()
-        if self.athlete_details['chat_id'] and self.athlete_details['chat_id'] != self.chat_id:
+        if self.athlete_details['chat_id'] and int(self.athlete_details['chat_id']) != int(self.chat_id):
             self.strava_telegram_webhooks_resource.update_chat_id(chat_id=self.chat_id,
                                                                   athlete_id=self.athlete_details['athlete_id'])
         stats = ProcessStats(self.update)
