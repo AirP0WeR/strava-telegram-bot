@@ -228,3 +228,104 @@ class StravaTelegramWebhooksResource(object):
                 stats = response.json()
 
         return stats
+
+    @execution_time
+    def enable_activity_summary(self, chat_id, athlete_id):
+        enable = False
+        endpoint = self.bot_constants.API_ENABLE_ACTIVITY_SUMMARY.format(host=self.host, chat_id=chat_id,
+                                                                         athlete_id=athlete_id)
+        try:
+            logging.info(
+                "Request to enable activity summary for {athlete_id} with chat id: {chat_id}".format(chat_id=chat_id,
+                                                                                                     athlete_id=athlete_id))
+            response = requests.post(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                enable = True
+
+        return enable
+
+    @execution_time
+    def disable_activity_summary(self, athlete_id):
+        disable = False
+        endpoint = self.bot_constants.API_DISABLE_ACTIVITY_SUMMARY.format(host=self.host, athlete_id=athlete_id)
+        try:
+            logging.info("Request to disable activity summary for {athlete_id}".format(athlete_id=athlete_id))
+            response = requests.post(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                disable = True
+
+        return disable
+
+    @execution_time
+    def disable_auto_update_indoor_ride(self, athlete_id):
+        disable = False
+        endpoint = self.bot_constants.API_DISABLE_AUTO_UPDATE_INDOOR_RIDE.format(host=self.host, athlete_id=athlete_id)
+        try:
+            logging.info("Request to disable auto update indoor ride for {athlete_id}".format(athlete_id=athlete_id))
+            response = requests.post(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                disable = True
+
+        return disable
+
+    @execution_time
+    def update_chat_id(self, chat_id, athlete_id):
+        update = False
+        endpoint = self.bot_constants.API_UPDATE_CHAT_ID.format(host=self.host, chat_id=chat_id, athlete_id=athlete_id)
+        try:
+            logging.info(
+                "Request to update chat id for for {athlete_id} with chat id: {chat_id}".format(chat_id=chat_id,
+                                                                                                athlete_id=athlete_id))
+            response = requests.post(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                update = True
+
+        return update
+
+    @execution_time
+    def activate_flag_athlete(self, athlete_id):
+        activate = False
+        endpoint = self.bot_constants.API_ACTIVATE_ATHLETE.format(host=self.host, athlete_id=athlete_id)
+        try:
+            logging.info("Request to activate athlete {athlete_id}".format(athlete_id=athlete_id))
+            response = requests.post(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                activate = True
+
+        return activate
+
+    @execution_time
+    def deactivate_flag_athlete(self, athlete_id):
+        deactivate = False
+        endpoint = self.bot_constants.API_DEACTIVATE_ATHLETE.format(host=self.host, athlete_id=athlete_id)
+        try:
+            logging.info("Request to deactivate athlete {athlete_id}".format(athlete_id=athlete_id))
+            response = requests.post(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                deactivate = True
+
+        return deactivate

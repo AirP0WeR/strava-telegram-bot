@@ -23,9 +23,8 @@ class AutoUpdateIndoorRide(object):
         self.strava_telegram_webhooks_resource = StravaTelegramWebhooksResource()
 
     def auto_update_indoor_ride_disable(self):
-        self.strava_telegram_webhooks_resource.database_write(
-            self.bot_constants.QUERY_UPDATE_INDOOR_RIDE_DISABLE.format(
-            athlete_id=self.user_data['auto_update_indoor_ride']['athlete_id']))
+        self.strava_telegram_webhooks_resource.disable_auto_update_indoor_ride(
+            athlete_id=self.user_data['auto_update_indoor_ride']['athlete_id'])
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_UPDATE_INDOOR_RIDE_DISABLED
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)

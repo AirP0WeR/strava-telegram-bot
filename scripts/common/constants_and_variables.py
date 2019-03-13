@@ -6,14 +6,9 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 
 class BotConstants(object):
-    QUERY_UPDATE_INDOOR_RIDE_DISABLE = "UPDATE strava_telegram_bot SET update_indoor_ride=False, update_indoor_ride_data=NULL where athlete_id={athlete_id}"
+
     QUERY_UPDATE_INDOOR_RIDE_ENABLE = "UPDATE strava_telegram_bot SET update_indoor_ride=True, update_indoor_ride_data='{update_indoor_ride_data}', chat_id='{chat_id}' where athlete_id={athlete_id}"
     QUERY_GET_ATHLETES = "select name, athlete_id from strava_telegram_bot where active=true order by created"
-    QUERY_ACTIVITY_SUMMARY_ENABLE = "UPDATE strava_telegram_bot SET enable_activity_summary=True, chat_id='{chat_id}' where athlete_id={athlete_id}"
-    QUERY_ACTIVITY_SUMMARY_DISABLE = "UPDATE strava_telegram_bot SET enable_activity_summary=False where athlete_id={athlete_id}"
-    QUERY_UPDATE_CHAT_ID = "UPDATE strava_telegram_bot SET chat_id='{chat_id}' where athlete_id={athlete_id}"
-    QUERY_ACTIVATE_ATHLETE = "UPDATE strava_telegram_bot SET active=true where athlete_id={athlete_id}"
-    QUERY_DEACTIVATE_ATHLETE = "UPDATE strava_telegram_bot SET active=false where athlete_id={athlete_id}"
 
     MESSAGE_START_COMMAND = "Hi {first_name}! Type '/' to get the list of command(s) I understand or click /help to know more."
     MESSAGE_STATS_MAIN_KEYBOARD_MENU = "Choose an activity type to view your stats:"
@@ -66,6 +61,12 @@ class BotConstants(object):
     API_GET_GEAR_NAME = "{host}/strava/gear/name/{token}/{gear_id}"
     API_GET_STATS = "{host}/athlete/stats/{telegram_username}"
     API_GET_BIKES_LIST = "{host}/strava/bikes/{token}"
+    API_ENABLE_ACTIVITY_SUMMARY = "{host}/athlete/activity_summary/enable/{chat_id}/{athlete_id}"
+    API_DISABLE_ACTIVITY_SUMMARY = "{host}/athlete/activity_summary/disable/{athlete_id}"
+    API_DISABLE_AUTO_UPDATE_INDOOR_RIDE = "{host}/athlete/auto_update_indoor_ride/disable/{athlete_id}"
+    API_UPDATE_CHAT_ID = "{host}/athlete/update_chat_id/{chat_id}/{athlete_id}"
+    API_ACTIVATE_ATHLETE = "{host}/athlete/activate/{athlete_id}"
+    API_DEACTIVATE_ATHLETE = "{host}/athlete/deactivate/{athlete_id}"
 
     KEYBOARD_STATS_MAIN_KEYBOARD_MENU = InlineKeyboardMarkup([[InlineKeyboardButton("Ride", callback_data='stats_ride'),
                                                                InlineKeyboardButton("Run", callback_data='stats_run'),

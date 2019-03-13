@@ -21,17 +21,17 @@ class ActivitySummary(object):
         self.strava_telegram_webhooks_resource = StravaTelegramWebhooksResource()
 
     def activity_summary_enable_button(self):
-        self.strava_telegram_webhooks_resource.database_write(self.bot_constants.QUERY_ACTIVITY_SUMMARY_ENABLE.format(
-            chat_id=self.chat_id,
-            athlete_id=self.user_data['ride_summary']['athlete_id']))
-        self.user_data.clear()
-        message = self.bot_constants.MESSAGE_ACTIVITY_SUMMARY_ENABLED
-        self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        if self.strava_telegram_webhooks_resource.enable_activity_summary(chat_id=self.chat_id,
+                                                                          athlete_id=self.user_data['ride_summary'][
+                                                                              'athlete_id']):
+            self.user_data.clear()
+            message = self.bot_constants.MESSAGE_ACTIVITY_SUMMARY_ENABLED
+            self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
+            self.strava_telegram_webhooks_resource.shadow_message(message)
 
     def activity_summary_disable_button(self):
-        self.strava_telegram_webhooks_resource.database_write(self.bot_constants.QUERY_ACTIVITY_SUMMARY_DISABLE.format(
-            athlete_id=self.user_data['ride_summary']['athlete_id']))
+        self.strava_telegram_webhooks_resource.disable_activity_summary(
+            athlete_id=self.user_data['ride_summary']['athlete_id'])
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_ACTIVITY_SUMMARY_DISABLED
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
