@@ -38,8 +38,7 @@ class HandleCommandArgs(object):
     def activate_athlete_command(self):
         if len(self.args) == 1:
             athlete_id = self.args[0]
-            if self.strava_telegram_webhooks_resource.database_write(
-                    self.bot_constants.QUERY_ACTIVATE_ATHLETE.format(athlete_id=athlete_id)):
+            if self.strava_telegram_webhooks_resource.activate_flag_athlete(athlete_id=athlete_id):
                 message = "Successfully activated {athlete_id}.".format(athlete_id=athlete_id)
             else:
                 message = "Failed to activate {athlete_id}.".format(athlete_id=athlete_id)
@@ -51,8 +50,7 @@ class HandleCommandArgs(object):
     def deactivate_athlete_command(self):
         if len(self.args) == 1:
             athlete_id = self.args[0]
-            if self.strava_telegram_webhooks_resource.database_write(
-                    self.bot_constants.QUERY_DEACTIVATE_ATHLETE.format(athlete_id=athlete_id)):
+            if self.strava_telegram_webhooks_resource.deactivate_flag_athlete(athlete_id=athlete_id):
                 message = "Successfully deactivated {athlete_id}.".format(athlete_id=athlete_id)
             else:
                 message = "Failed to deactivate {athlete_id}.".format(athlete_id=athlete_id)
