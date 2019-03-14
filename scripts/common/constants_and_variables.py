@@ -10,14 +10,12 @@ class BotConstants(object):
     QUERY_UPDATE_INDOOR_RIDE_ENABLE = "UPDATE strava_telegram_bot SET update_indoor_ride=True, update_indoor_ride_data='{update_indoor_ride_data}', chat_id='{chat_id}' where athlete_id={athlete_id}"
     QUERY_GET_ATHLETES = "select name, athlete_id from strava_telegram_bot where active=true order by created"
 
-    MESSAGE_START_COMMAND = "Hi {first_name}! Type '/' to get the list of command(s) I understand or click /help to know more."
     MESSAGE_STATS_MAIN_KEYBOARD_MENU = "Choose an activity type to view your stats:"
     MESSAGE_STATS_SUB_KEYBOARD_MENU = "Choose the type of stat you want to see:"
     MESSAGE_STATS_NOT_UPDATED = "Stats are not synced yet. Please check again after a minute."
     MESSAGE_UPDATE_STATS_FAILED = "Hi {first_name}! Failed to update stats."
     MESSAGE_UPDATE_STATS_STARTED = "Hi {first_name}! Refreshing.. Check stats after a minute or two."
     MESSAGE_UPDATE_STATS_STARTED_ALL = "Hi {first_name}! Refreshing.."
-    MESSAGE_UNREGISTERED_ATHLETE = "Hi {first_name}! You are not a registered user yet.\n\nVisit the following link to register: {registration_url}\n\nContact {admin_user_name} in case you face any issues.\n\nAlternatively, you can select a topic below for help."
     MESSAGE_EXIT_BUTTON = "Thank you!"
     MESSAGE_SHOULD_UPDATE_INDOOR_RIDE_DISABLE = "Hi {first_name}! You have automated update of Indoor Rides with the below configuration:\n{configuration}\n\nDo you want to disable it?"
     MESSAGE_UPDATE_INDOOR_RIDE_DISABLE_CANCEL = "Auto update of Indoor Rides is still enabled. Thank you!"
@@ -40,13 +38,13 @@ class BotConstants(object):
     MESSAGE_ACTIVITY_SUMMARY_DISABLE_IGNORE = "Activity Summary is still enabled. Thank you!"
     MESSAGE_ACTIVITY_SUMMARY_SHOULD_DISABLE = "Hi {first_name}! You have enabled Activity Summary. Do you want to disable it?"
 
-    MESSAGE_HELP_TOPICS = "Hi {first_name}! Select a topic below for help."
     MESSAGE_HELP_EXIT = "Goodbye!"
-    MESSAGE_HELP_REGISTRATION_DEVICE = "Choose the type of device you use:"
-    MESSAGE_HELP_COMMANDS = "/stats - Get your Monthly, Yearly and All Time Statistics and compare your monthly/yearly statistics with your previous month/year.\n\n" \
-                            "/activity_summary - Get your activity summary as soon as you finish your activity\n\n" \
-                            "/auto_update_indoor_ride - Get your activity Name / Bike updated automatically for your indoor rides\n\n" \
-                            "/refresh_stats - Force refresh stats. Use this only if you find any discrepancy in your stats."
+    MESSAGE_HELP_COMMANDS = "Below are the commands you can use to interact with me.\n\n" \
+                            "/stats - Get your Monthly, Yearly and All Time Statistics.\n\n" \
+                            "/auto_update_indoor_ride - The Bot will automatically update your Indoor Ride's Name / Bike. Click on the command to set it up.\n\n" \
+                            "/activity_summary - The Bot sends a small summary of your activity as soon as it's uploaded to Strava. Click on the command to Enable / Disable it. By default, it's already enabled.\n\n" \
+                            "/refresh_stats - Force refresh stats. Use this only if you find any discrepancy in your stats.\n\n" \
+                            "Type '/' to get the list of above commands anytime in this chat."
 
     API_TOKEN_EXCHANGE = "{host}/token/exchange/{code}"
     API_ATHLETE_EXISTS = "{host}/athlete/exists/{athlete_id}"
@@ -124,10 +122,6 @@ class BotConstants(object):
     KEYBOARD_ACTIVITY_SUMMARY_DISABLE_CONFIRMATION = InlineKeyboardMarkup(
         [[InlineKeyboardButton("Yes", callback_data='activity_summary_disable'),
           InlineKeyboardButton("No", callback_data='activity_summary_disable_ignore')]])
-
-    KEYBOARD_HELP_MENU = InlineKeyboardMarkup([[InlineKeyboardButton("Registration", callback_data='help_registration'),
-                                                InlineKeyboardButton("Bot Commands", callback_data='help_commands')],
-                                               [InlineKeyboardButton("Exit", callback_data='help_exit')]])
 
     KEYBOARD_HELP_REGISTRATION = InlineKeyboardMarkup(
         [[InlineKeyboardButton("iOS", callback_data='help_registration_ios'),
