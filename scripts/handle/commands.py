@@ -123,7 +123,7 @@ class HandleCommands(object):
 
     def help_command(self):
         self.user_data.clear()
-        if self.athlete_details['chat_id'] and int(self.athlete_details['chat_id']) != int(self.chat_id):
+        if not self.athlete_details['chat_id'] or int(self.athlete_details['chat_id']) != int(self.chat_id):
             self.strava_telegram_webhooks_resource.update_chat_id(chat_id=self.chat_id,
                                                                   athlete_id=self.athlete_details['athlete_id'])
         message = self.bot_constants.MESSAGE_HELP_COMMANDS
