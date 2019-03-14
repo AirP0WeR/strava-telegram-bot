@@ -128,6 +128,7 @@ class HandleCommands(object):
                                                                   athlete_id=self.athlete_details['athlete_id'])
         message = self.bot_constants.MESSAGE_HELP_COMMANDS
         self.update.message.reply_text(message)
+        self.strava_telegram_webhooks_resource.shadow_message("Sent help commands.")
 
     def cancel_command(self):
         self.user_data.clear()
