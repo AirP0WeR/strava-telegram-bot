@@ -33,7 +33,7 @@ class HandleRegistration(object):
             registration_url=self.bot_variables.registration_url)
         self.bot.send_photo(chat_id=self.chat_id, photo=open(photo_path, 'rb'), caption=caption)
         photo_path = "scripts/commands/help/registration/telegram_reg.png"
-        caption = "Once you Authorize, enter your Telegram username ({telegram_username}) and click on Submit.\n\nOnce done, come back to this chat and click /next to continue.".format(
+        caption = "Once you Authorize, enter your Telegram username:\n\n{telegram_username}\n\nand click on Submit.\n\nOnce done, come back to this chat and click /next to continue.".format(
             telegram_username=self.telegram_username)
         self.bot.send_photo(chat_id=self.chat_id, photo=open(photo_path, 'rb'), caption=caption)
         self.strava_telegram_webhooks_resource.shadow_message(
