@@ -7,6 +7,7 @@ import telegram
 from commands.stats.process import ProcessStats
 from common.aes_cipher import AESCipher
 from common.constants_and_variables import BotVariables, BotConstants
+from handle.registration import HandleRegistration
 from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
 
@@ -24,19 +25,11 @@ class HandleCommands(object):
         self.telegram_username = self.update.message.from_user.username
         self.chat_id = self.update.message.chat_id
         self.athlete_details = None
-
-    def start_command(self):
-        self.user_data.clear()
-        if self.athlete_details['chat_id'] and int(self.athlete_details['chat_id']) != int(self.chat_id):
-            self.strava_telegram_webhooks_resource.update_chat_id(chat_id=self.chat_id,
-                                                                  athlete_id=self.athlete_details['athlete_id'])
-        message = self.bot_constants.MESSAGE_START_COMMAND.format(first_name=self.telegram_user_first_name)
-        self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.registration = HandleRegistration(self.bot, self.update, self.user_data)
 
     def stats_command(self):
         self.user_data.clear()
-        if self.athlete_details['chat_id'] and int(self.athlete_details['chat_id']) != int(self.chat_id):
+        if not self.athlete_details['chat_id'] or int(self.athlete_details['chat_id']) != int(self.chat_id):
             self.strava_telegram_webhooks_resource.update_chat_id(chat_id=self.chat_id,
                                                                   athlete_id=self.athlete_details['athlete_id'])
         stats = ProcessStats(self.update)
@@ -130,9 +123,12 @@ class HandleCommands(object):
 
     def help_command(self):
         self.user_data.clear()
-        message = self.bot_constants.MESSAGE_HELP_TOPICS.format(first_name=self.telegram_user_first_name)
-        self.update.message.reply_text(message, reply_markup=self.bot_constants.KEYBOARD_HELP_MENU)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        if not self.athlete_details['chat_id'] or int(self.athlete_details['chat_id']) != int(self.chat_id):
+            self.strava_telegram_webhooks_resource.update_chat_id(chat_id=self.chat_id,
+                                                                  athlete_id=self.athlete_details['athlete_id'])
+        message = self.bot_constants.MESSAGE_HELP_COMMANDS
+        self.update.message.reply_text(message)
+        self.strava_telegram_webhooks_resource.shadow_message("Sent help commands.")
 
     def cancel_command(self):
         self.user_data.clear()
@@ -146,10 +142,9 @@ class HandleCommands(object):
             self.telegram_username)
         if self.athlete_details:
             command = self.update.message.text
-            self.bot.send_chat_action(chat_id=self.chat_id, action=telegram.ChatAction.TYPING)
-
-            options = defaultdict(lambda: self.start_command, {
-                '/start': self.start_command,
+            options = defaultdict(lambda: self.help_command, {
+                '/start': self.help_command,
+                '/next': self.help_command,
                 '/stats': self.stats_command,
                 '/refresh_stats': self.refresh_command,
                 '/auto_update_indoor_ride': self.auto_update_indoor_ride_command,
@@ -159,16 +154,6 @@ class HandleCommands(object):
                 '/activity_summary': self.activity_summary_command,
                 '/help': self.help_command
             })
-
             options[command]()
-
         else:
-            message = self.bot_constants.MESSAGE_UNREGISTERED_ATHLETE.format(
-                first_name=self.telegram_user_first_name,
-                registration_url=self.bot_variables.registration_url,
-                admin_user_name=self.bot_variables.admin_user_name)
-            self.update.message.reply_text(message, disable_web_page_preview=True,
-                                           reply_markup=self.bot_constants.KEYBOARD_HELP_MENU)
-            self.strava_telegram_webhooks_resource.shadow_message(
-                "{first_name} tried using the bot, but is not registered yet.".format(
-                    first_name=self.telegram_user_first_name))
+            self.registration.main()

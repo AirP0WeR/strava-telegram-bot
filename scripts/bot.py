@@ -57,6 +57,7 @@ class StravaTelegramBot(object):
         dispatcher_handler = updater.dispatcher
 
         dispatcher_handler.add_handler(CommandHandler("start", self.handle_commands, pass_user_data=True))
+        dispatcher_handler.add_handler(CommandHandler("next", self.handle_commands, pass_user_data=True))
         dispatcher_handler.add_handler(CommandHandler("stats", self.handle_commands, pass_user_data=True))
         dispatcher_handler.add_handler(CommandHandler("refresh_stats", self.handle_commands, pass_user_data=True))
         dispatcher_handler.add_handler(
