@@ -20,6 +20,9 @@ class HandleRegistration(object):
 
     def next_command(self):
         if self.telegram_username:
+            message = "I see that your Telegram username is: `{telegram_username}`\n\nFollow the below steps to signup:".format(
+                telegram_username=self.telegram_username)
+            self.strava_telegram_webhooks_resource.shadow_message(message)
             self.auth_and_reg()
         else:
             message = "Looks like you haven't set your Telegram username yet. Follow the above steps and click /next to continue or message {admin_user_name} for additional help.".format(
