@@ -27,16 +27,20 @@ class HandleCommands(object):
         self.athlete_details = None
         self.registration = HandleRegistration(self.bot, self.update, self.user_data)
 
-    def stats_command(self):
-        self.user_data.clear()
+    def update_user_chat_id(self):
         if not self.athlete_details['chat_id'] or int(self.athlete_details['chat_id']) != int(self.chat_id):
             self.strava_telegram_webhooks_resource.update_chat_id(chat_id=self.chat_id,
                                                                   athlete_id=self.athlete_details['athlete_id'])
+
+    def stats_command(self):
+        self.user_data.clear()
+        self.update_user_chat_id()
         stats = ProcessStats(self.update)
         stats.process()
 
     def refresh_command(self):
         self.user_data.clear()
+        self.update_user_chat_id()
         message = self.bot_constants.MESSAGE_UPDATE_STATS_FAILED.format(first_name=self.telegram_user_first_name)
         if self.strava_telegram_webhooks_resource.update_stats(self.athlete_details['athlete_id']):
             message = self.bot_constants.MESSAGE_UPDATE_STATS_STARTED.format(first_name=self.telegram_user_first_name)
@@ -123,9 +127,7 @@ class HandleCommands(object):
 
     def help_command(self):
         self.user_data.clear()
-        if not self.athlete_details['chat_id'] or int(self.athlete_details['chat_id']) != int(self.chat_id):
-            self.strava_telegram_webhooks_resource.update_chat_id(chat_id=self.chat_id,
-                                                                  athlete_id=self.athlete_details['athlete_id'])
+        self.update_user_chat_id()
         message = self.bot_constants.MESSAGE_HELP_COMMANDS
         self.update.message.reply_text(message)
         self.strava_telegram_webhooks_resource.shadow_message("Sent help commands.")
