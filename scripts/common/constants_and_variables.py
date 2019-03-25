@@ -14,7 +14,7 @@ class BotConstants(object):
     MESSAGE_STATS_SUB_KEYBOARD_MENU = "Choose the type of stat you want to see:"
     MESSAGE_STATS_NOT_UPDATED = "Stats are not synced yet. Please check again after a minute."
     MESSAGE_UPDATE_STATS_FAILED = "Hi {first_name}! Failed to update stats."
-    MESSAGE_UPDATE_STATS_STARTED = "Hi {first_name}! Refreshing.. Check stats after a minute or two."
+    MESSAGE_UPDATE_STATS_STARTED = "Hi {first_name}! Refreshing.. I will update once it's completed."
     MESSAGE_UPDATE_STATS_STARTED_ALL = "Hi {first_name}! Refreshing.."
     MESSAGE_EXIT_BUTTON = "Thank you!"
     MESSAGE_SHOULD_UPDATE_INDOOR_RIDE_DISABLE = "Hi {first_name}! You have automated update of Indoor Rides with the below configuration:\n{configuration}\n\nDo you want to disable it?"
