@@ -61,10 +61,24 @@ class StravaTelegramBot(object):
         dispatcher_handler.add_handler(CommandHandler("stats", self.handle_commands, pass_user_data=True))
         dispatcher_handler.add_handler(CommandHandler("refresh_stats", self.handle_commands, pass_user_data=True))
         dispatcher_handler.add_handler(
+            CommandHandler("challenges_refresh_stats", self.handle_command_args, pass_args=True))
+        dispatcher_handler.add_handler(
+            CommandHandler("challenges_refresh_all_stats", self.handle_commands, pass_user_data=True,
+                           filters=Filters.user(username=self.bot_variables.admins)))
+        dispatcher_handler.add_handler(
             CommandHandler("auto_update_indoor_ride", self.handle_commands, pass_user_data=True))
         dispatcher_handler.add_handler(CommandHandler("cancel", self.handle_commands, pass_user_data=True))
         dispatcher_handler.add_handler(CommandHandler("all_athletes", self.handle_commands, pass_user_data=True,
                                                       filters=Filters.user(username=self.bot_variables.admins)))
+        dispatcher_handler.add_handler(
+            CommandHandler("challenges_even_athletes", self.handle_commands, pass_user_data=True,
+                           filters=Filters.user(username=self.bot_variables.admins)))
+        dispatcher_handler.add_handler(
+            CommandHandler("challenges_odd_athletes", self.handle_commands, pass_user_data=True,
+                           filters=Filters.user(username=self.bot_variables.admins)))
+        dispatcher_handler.add_handler(
+            CommandHandler("challenges_hits_reset", self.handle_commands, pass_user_data=True,
+                           filters=Filters.user(username=self.bot_variables.admins)))
         dispatcher_handler.add_handler(
             CommandHandler("refresh_all_stats", self.handle_commands, pass_user_data=True,
                            filters=Filters.user(username=self.bot_variables.admins)))

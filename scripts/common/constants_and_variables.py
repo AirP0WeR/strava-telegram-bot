@@ -22,6 +22,9 @@ class BotConstants(object):
     MESSAGE_UPDATE_INDOOR_RIDE_CHOOSE_ACTIVITY_NAME = "Hi {first_name}! Choose the activity name: (Send /cancel to cancel ongoing operation)"
     MESSAGE_CANCEL_CURRENT_OPERATION = "Cancelled current operation."
     MESSAGE_UPDATE_INDOOR_RIDE_DISABLED = "Disabled auto update of Indoor Rides."
+    MESSAGE_UPDATE_STATS_CHALLENGES_FAILED = "Failed to update challenges stats."
+    MESSAGE_UPDATE_STATS_CHALLENGES_SUCCESS = "Successfully updated challenges stats."
+    MESSAGE_UPDATE_STATS_CHALLENGES_STARTED = "Hi {first_name}! Refreshing.."
 
     MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CHOOSE_BIKE = "Choose the bike you want to set for Indoor Rides: (Send /cancel to cancel ongoing operation)"
     MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CONFIRMATION = "Are you sure you want to enable auto updates of Indoor Rides with the below configuration?\n\n{configuration}"
@@ -30,6 +33,8 @@ class BotConstants(object):
     MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CANCELLED = "Cancelled setup for auto update of Indoor Rides"
 
     MESSAGE_FETCHING_REGISTERED_ATHLETES = "Hi {first_name}! Fetching the list of registered athletes."
+    MESSAGE_FETCHING_REGISTERED_ATHLETES_EVEN_CHALLENGES = "Hi {first_name}! Fetching the list of registered athletes for even challenges."
+    MESSAGE_FETCHING_REGISTERED_ATHLETES_ODD_CHALLENGES = "Hi {first_name}! Fetching the list of registered athletes for odd challenges."
 
     MESSAGE_ACTIVITY_SUMMARY_CONFIRMATION = "Hi {first_name}! Do you want to receive Activity Summary for your activities?"
     MESSAGE_ACTIVITY_SUMMARY_ENABLED = "Enabled Activity Summary.\n\nNote: Do not delete this chat to continue to receive updates. As per Telegram policy, Bots cannot send messages if the chat is deleted."
@@ -45,6 +50,9 @@ class BotConstants(object):
                             "/activity_summary - The Bot sends a small summary of your activity as soon as it's uploaded to Strava. Click on the command to Enable / Disable it. By default, it's already enabled.\n\n" \
                             "/refresh_stats - Force refresh stats. Use this only if you find any discrepancy in your stats.\n\n" \
                             "Type '/' to get the list of above commands anytime in this chat."
+
+    MESSAGE_CHALLENGES_HITS_RESET_SUCCESS = "Hi {first_name}! Successfully reset the page hits counter to 0."
+    MESSAGE_CHALLENGES_HITS_RESET_FAIL = "Hi {first_name}! Failed to reset the page hits counter."
 
     API_TOKEN_EXCHANGE = "{host}/token/exchange/{code}"
     API_ATHLETE_EXISTS = "{host}/athlete/exists/{athlete_id}"
@@ -65,6 +73,11 @@ class BotConstants(object):
     API_UPDATE_CHAT_ID = "{host}/athlete/update_chat_id/{chat_id}/{athlete_id}"
     API_ACTIVATE_ATHLETE = "{host}/athlete/activate/{athlete_id}"
     API_DEACTIVATE_ATHLETE = "{host}/athlete/deactivate/{athlete_id}"
+    API_LIST_EVEN_CHALLENGES_ATHLETES = "{host}/challenges/even/athletes/list"
+    API_LIST_ODD_CHALLENGES_ATHLETES = "{host}/challenges/odd/athletes/list"
+    API_CHALLENGES_HITS_RESET = "{host}/challenges/hits/reset"
+    API_UPDATE_CHALLENGES_STATS = "{host}/challenges/stats/{athlete_id}"
+    API_UPDATE_CHALLENGES_ALL_STATS = "{host}//challenges/stats/all"
 
     KEYBOARD_STATS_MAIN_KEYBOARD_MENU = InlineKeyboardMarkup([[InlineKeyboardButton("Ride", callback_data='stats_ride'),
                                                                InlineKeyboardButton("Run", callback_data='stats_run'),

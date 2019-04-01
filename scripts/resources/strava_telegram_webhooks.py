@@ -2,9 +2,9 @@
 
 import logging
 import traceback
-import ujson
 
 import requests
+import ujson
 
 from common.constants_and_variables import BotVariables, BotConstants
 from common.execution_time import execution_time
@@ -71,6 +71,38 @@ class StravaTelegramWebhooksResource(object):
         endpoint = self.bot_constants.API_UPDATE_ALL_STATS.format(host=self.host)
         try:
             logging.info("Sending request to update stats for all the registered athletes")
+            response = requests.post(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                result = True
+
+        return result
+
+    @execution_time
+    def update_challenges_stats(self, athlete_id):
+        result = False
+        endpoint = self.bot_constants.API_UPDATE_CHALLENGES_STATS.format(host=self.host, athlete_id=athlete_id)
+        try:
+            logging.info("Sending request to update challenges stats for {athlete_id}".format(athlete_id=athlete_id))
+            response = requests.post(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                result = True
+
+        return result
+
+    @execution_time
+    def update_challenges_all_stats(self):
+        result = False
+        endpoint = self.bot_constants.API_UPDATE_CHALLENGES_ALL_STATS.format(host=self.host)
+        try:
+            logging.info("Sending request to update challenges stats for all the registered athletes")
             response = requests.post(endpoint)
         except Exception:
             logging.error(traceback.format_exc())
@@ -329,3 +361,51 @@ class StravaTelegramWebhooksResource(object):
                 deactivate = True
 
         return deactivate
+
+    @execution_time
+    def get_even_challenges_athletes(self):
+        challenges_even_athletes = False
+        endpoint = self.bot_constants.API_LIST_EVEN_CHALLENGES_ATHLETES.format(host=self.host)
+        try:
+            logging.info("Requesting list of registered athletes for even challenges..")
+            response = requests.get(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                challenges_even_athletes = response.json()
+
+        return challenges_even_athletes
+
+    @execution_time
+    def get_odd_challenges_athletes(self):
+        challenges_odd_athletes = False
+        endpoint = self.bot_constants.API_LIST_ODD_CHALLENGES_ATHLETES.format(host=self.host)
+        try:
+            logging.info("Requesting list of registered athletes for odd challenges..")
+            response = requests.get(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                challenges_odd_athletes = response.json()
+
+        return challenges_odd_athletes
+
+    @execution_time
+    def challenges_hits_reset(self):
+        result = False
+        endpoint = self.bot_constants.API_CHALLENGES_HITS_RESET.format(host=self.host)
+        try:
+            logging.info("Requesting to reset challenges page hits count..")
+            response = requests.post(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                result = True
+
+        return result

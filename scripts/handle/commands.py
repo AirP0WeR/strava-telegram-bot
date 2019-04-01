@@ -58,6 +58,17 @@ class HandleCommands(object):
                                        disable_web_page_preview=True)
         self.strava_telegram_webhooks_resource.shadow_message(message)
 
+    def challenges_refresh_all_stats_command(self):
+        self.user_data.clear()
+        message = self.bot_constants.MESSAGE_UPDATE_STATS_CHALLENGES_FAILED.format(
+            first_name=self.telegram_user_first_name)
+        if self.strava_telegram_webhooks_resource.update_challenges_all_stats():
+            message = self.bot_constants.MESSAGE_UPDATE_STATS_CHALLENGES_STARTED.format(
+                first_name=self.telegram_user_first_name)
+        self.update.message.reply_text(message, parse_mode="Markdown",
+                                       disable_web_page_preview=True)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
+
     def all_athletes_command(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_FETCHING_REGISTERED_ATHLETES.format(
@@ -81,6 +92,28 @@ class HandleCommands(object):
             if name != "*List of registered athletes:*\n\n":
                 self.update.message.reply_text(name, parse_mode="Markdown", disable_web_page_preview=True)
                 self.strava_telegram_webhooks_resource.shadow_message(name)
+
+    def challenges_even_athletes(self):
+        self.user_data.clear()
+        message = self.bot_constants.MESSAGE_FETCHING_REGISTERED_ATHLETES_EVEN_CHALLENGES.format(
+            first_name=self.telegram_user_first_name)
+        self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
+        results = self.strava_telegram_webhooks_resource.get_even_challenges_athletes()
+        for result in results:
+            self.update.message.reply_text(result, parse_mode="Markdown", disable_web_page_preview=True)
+            self.strava_telegram_webhooks_resource.shadow_message(result)
+
+    def challenges_odd_athletes(self):
+        self.user_data.clear()
+        message = self.bot_constants.MESSAGE_FETCHING_REGISTERED_ATHLETES_ODD_CHALLENGES.format(
+            first_name=self.telegram_user_first_name)
+        self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
+        results = self.strava_telegram_webhooks_resource.get_odd_challenges_athletes()
+        for result in results:
+            self.update.message.reply_text(result, parse_mode="Markdown", disable_web_page_preview=True)
+            self.strava_telegram_webhooks_resource.shadow_message(result)
 
     def activity_summary_command(self):
         self.user_data.clear()
@@ -125,6 +158,18 @@ class HandleCommands(object):
         self.update.message.reply_text(message, reply_markup=reply_markup)
         self.strava_telegram_webhooks_resource.shadow_message(message)
 
+    def challenges_hits_reset(self):
+        self.user_data.clear()
+        result = self.strava_telegram_webhooks_resource.challenges_hits_reset()
+        if result:
+            message = self.bot_constants.MESSAGE_CHALLENGES_HITS_RESET_SUCCESS.format(
+                first_name=self.telegram_user_first_name)
+        else:
+            message = self.bot_constants.MESSAGE_CHALLENGES_HITS_RESET_FAIL.format(
+                first_name=self.telegram_user_first_name)
+        self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
+        self.strava_telegram_webhooks_resource.shadow_message(message)
+
     def help_command(self):
         self.user_data.clear()
         self.update_user_chat_id()
@@ -153,6 +198,10 @@ class HandleCommands(object):
                 '/cancel': self.cancel_command,
                 '/refresh_all_stats': self.refresh_all_stats_command,
                 '/all_athletes': self.all_athletes_command,
+                '/challenges_even_athletes': self.challenges_even_athletes,
+                '/challenges_odd_athletes': self.challenges_odd_athletes,
+                '/challenges_refresh_all_stats': self.challenges_refresh_all_stats_command,
+                '/challenges_hits_reset': self.challenges_hits_reset,
                 '/activity_summary': self.activity_summary_command,
                 '/help': self.help_command
             })
