@@ -77,7 +77,7 @@ class BotConstants(object):
     API_LIST_ODD_CHALLENGES_ATHLETES = "{host}/challenges/odd/athletes/list"
     API_CHALLENGES_HITS_RESET = "{host}/challenges/hits/reset"
     API_UPDATE_CHALLENGES_STATS = "{host}/challenges/stats/{athlete_id}"
-    API_UPDATE_CHALLENGES_ALL_STATS = "{host}//challenges/stats/all"
+    API_UPDATE_CHALLENGES_ALL_STATS = "{host}/challenges/stats/all"
 
     KEYBOARD_STATS_MAIN_KEYBOARD_MENU = InlineKeyboardMarkup([[InlineKeyboardButton("Ride", callback_data='stats_ride'),
                                                                InlineKeyboardButton("Run", callback_data='stats_run'),
