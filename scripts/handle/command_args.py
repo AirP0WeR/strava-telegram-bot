@@ -71,6 +71,18 @@ class HandleCommandArgs(object):
         else:
             logging.warning("More than 1 arguments passed for /deactivate. Args {}".format(self.args))
 
+    def challenges_refresh_stats_command(self):
+        if len(self.args) == 1:
+            athlete_id = self.args[0]
+            message = self.bot_constants.MESSAGE_UPDATE_STATS_CHALLENGES_FAILED
+            if self.strava_telegram_webhooks_resource.update_challenges_stats(athlete_id):
+                message = self.bot_constants.MESSAGE_UPDATE_STATS_CHALLENGES_SUCCESS
+            self.update.message.reply_text(message, parse_mode="Markdown",
+                                           disable_web_page_preview=True)
+            self.strava_telegram_webhooks_resource.shadow_message(message)
+        else:
+            logging.warning("More than 1 arguments passed for /deactivate. Args {}".format(self.args))
+
     def process(self):
         command = self.update.message.text.split(' ', 1)[0]
 
@@ -78,7 +90,8 @@ class HandleCommandArgs(object):
             '/token': self.token_command,
             '/activate': self.activate_athlete_command,
             '/deactivate': self.deactivate_athlete_command,
-            '/update': self.update_stats_command
+            '/update': self.update_stats_command,
+            '/challenges_refresh_stats': self.challenges_refresh_stats_command,
         })
 
         options[command]()
