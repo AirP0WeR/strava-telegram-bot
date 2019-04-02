@@ -63,6 +63,8 @@ class StravaTelegramBot(object):
         dispatcher_handler.add_handler(
             CommandHandler("challenges_refresh_stats", self.handle_command_args, pass_args=True))
         dispatcher_handler.add_handler(
+            CommandHandler("challenges_delete", self.handle_command_args, pass_args=True))
+        dispatcher_handler.add_handler(
             CommandHandler("challenges_refresh_all_stats", self.handle_commands, pass_user_data=True,
                            filters=Filters.user(username=self.bot_variables.admins)))
         dispatcher_handler.add_handler(
