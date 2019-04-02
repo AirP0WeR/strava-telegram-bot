@@ -83,6 +83,20 @@ class HandleCommandArgs(object):
         else:
             logging.warning("More than 1 arguments passed for /deactivate. Args {}".format(self.args))
 
+    def challenges_delete_command(self):
+        if len(self.args) == 1:
+            athlete_id = self.args[0]
+            if self.strava_telegram_webhooks_resource.challenges_delete_athlete(athlete_id):
+                message = "Successfully deauthorised and deleted {athlete_id} from challenges".format(
+                    athlete_id=athlete_id)
+            else:
+                message = "Failed to deauthorise and delete {athlete_id} from challenges".format(athlete_id=athlete_id)
+            self.update.message.reply_text(message, parse_mode="Markdown",
+                                           disable_web_page_preview=True)
+            self.strava_telegram_webhooks_resource.shadow_message(message)
+        else:
+            logging.warning("More than 1 arguments passed for /deactivate. Args {}".format(self.args))
+
     def process(self):
         command = self.update.message.text.split(' ', 1)[0]
 
@@ -92,6 +106,7 @@ class HandleCommandArgs(object):
             '/deactivate': self.deactivate_athlete_command,
             '/update': self.update_stats_command,
             '/challenges_refresh_stats': self.challenges_refresh_stats_command,
+            '/challenges_delete': self.challenges_delete_command
         })
 
         options[command]()

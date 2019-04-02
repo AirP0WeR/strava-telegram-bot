@@ -409,3 +409,20 @@ class StravaTelegramWebhooksResource(object):
                 result = True
 
         return result
+
+    @execution_time
+    def challenges_delete_athlete(self, athlete_id):
+        result = False
+        endpoint = self.bot_constants.API_DEAUTH_AND_DELETE_FROM_CHALLENGES.format(host=self.host,
+                                                                                   athlete_id=athlete_id)
+        try:
+            logging.info("Requesting to deauth and delete athlete from challenges..")
+            response = requests.post(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: {status_code}".format(status_code=response.status_code))
+            if response.status_code == 200:
+                result = True
+
+        return result
