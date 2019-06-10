@@ -6,7 +6,7 @@ from common.constants_and_variables import BotConstants, BotVariables
 from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
 
-class BotHelp(object):
+class BotHelp:
 
     def __init__(self, bot, update, user_data):
         self.bot = bot

@@ -5,7 +5,7 @@ from iron_cache import IronCache
 from common.constants_and_variables import BotVariables
 
 
-class IronCacheClient(object):
+class IronCacheClient:
 
     def __init__(self):
         self.bot_variables = BotVariables()

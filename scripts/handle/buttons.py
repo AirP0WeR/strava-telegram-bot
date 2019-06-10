@@ -6,7 +6,7 @@ from buttons.bot_help import BotHelp
 from buttons.stats import Stats
 
 
-class HandleButtons(object):
+class HandleButtons:
 
     def __init__(self, bot, update, user_data):
         self.bot = bot
