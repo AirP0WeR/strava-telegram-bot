@@ -56,7 +56,7 @@ class BotConstants:
 
     API_TOKEN_EXCHANGE = "{host}/token/exchange/{code}"
     API_ATHLETE_EXISTS = "{host}/athlete/exists/{athlete_id}"
-    API_UPDATE_STATS = "{host}/stats/{athlete_id}"
+    API_UPDATE_STATS = "{host}/stats/bot/{athlete_id}"
     API_UPDATE_ALL_STATS = "{host}/stats"
     API_DATABASE_WRITE = "{host}/database/write"
     API_SHADOW_MESSAGE = "{host}/telegram/shadow_message"
@@ -76,7 +76,7 @@ class BotConstants:
     API_LIST_EVEN_CHALLENGES_ATHLETES = "{host}/challenges/even/athletes/list"
     API_LIST_ODD_CHALLENGES_ATHLETES = "{host}/challenges/odd/athletes/list"
     API_CHALLENGES_HITS_RESET = "{host}/challenges/hits/reset"
-    API_UPDATE_CHALLENGES_STATS = "{host}/challenges/stats/{athlete_id}"
+    API_UPDATE_CHALLENGES_STATS = "{host}/stats/challenges/{athlete_id}"
     API_UPDATE_CHALLENGES_ALL_STATS = "{host}/challenges/stats"
     API_DEAUTH_FROM_CHALLENGES = "{host}/challenges/deauth/{athlete_id}"
 
