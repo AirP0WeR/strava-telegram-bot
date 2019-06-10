@@ -11,7 +11,7 @@ from handle.registration import HandleRegistration
 from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
 
-class HandleCommands(object):
+class HandleCommands:
 
     def __init__(self, bot, update, user_data):
         self.bot = bot

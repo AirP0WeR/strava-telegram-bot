@@ -12,7 +12,7 @@ from handle.commands import HandleCommands
 from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
 
-class StravaTelegramBot(object):
+class StravaTelegramBot:
 
     def __init__(self):
         self.bot_variables = BotVariables()
@@ -20,7 +20,7 @@ class StravaTelegramBot(object):
 
     @staticmethod
     def error(update, error):
-        logger.error('Update "{update}" caused error "{error}"'.format(update=update, error=error))
+        logger.error('Update %s caused error %s', update, error)
 
     def handle_commands(self, bot, update, user_data):
         try:

@@ -9,7 +9,7 @@ from resources.iron_cache import IronCacheResource
 from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
 
-class Stats(object):
+class Stats:
 
     def __init__(self, bot, update, user_data):
         self.bot = bot

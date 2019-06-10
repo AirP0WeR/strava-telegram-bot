@@ -1,15 +1,15 @@
 #  -*- encoding: utf-8 -*-
 
-import ujson
 from collections import defaultdict
 
+import ujson
 from telegram import InlineKeyboardMarkup, InlineKeyboardButton
 
 from common.constants_and_variables import BotConstants
 from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
 
-class AutoUpdateIndoorRide(object):
+class AutoUpdateIndoorRide:
 
     def __init__(self, bot, update, user_data, chosen_option):
         self.bot = bot

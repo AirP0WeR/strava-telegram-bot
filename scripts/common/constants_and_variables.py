@@ -5,7 +5,7 @@ import os
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 
-class BotConstants(object):
+class BotConstants:
 
     QUERY_UPDATE_INDOOR_RIDE_ENABLE = "UPDATE strava_telegram_bot SET update_indoor_ride=True, update_indoor_ride_data='{update_indoor_ride_data}', chat_id='{chat_id}' where athlete_id={athlete_id}"
     QUERY_GET_ATHLETES = "select name, athlete_id from strava_telegram_bot where active=true order by created"
@@ -57,7 +57,7 @@ class BotConstants(object):
     API_TOKEN_EXCHANGE = "{host}/token/exchange/{code}"
     API_ATHLETE_EXISTS = "{host}/athlete/exists/{athlete_id}"
     API_UPDATE_STATS = "{host}/stats/{athlete_id}"
-    API_UPDATE_ALL_STATS = "{host}/stats/all"
+    API_UPDATE_ALL_STATS = "{host}/stats"
     API_DATABASE_WRITE = "{host}/database/write"
     API_SHADOW_MESSAGE = "{host}/telegram/shadow_message"
     API_GET_ATHLETE_ID = "{host}/athlete/athlete_id/{telegram_username}"
@@ -77,7 +77,7 @@ class BotConstants(object):
     API_LIST_ODD_CHALLENGES_ATHLETES = "{host}/challenges/odd/athletes/list"
     API_CHALLENGES_HITS_RESET = "{host}/challenges/hits/reset"
     API_UPDATE_CHALLENGES_STATS = "{host}/challenges/stats/{athlete_id}"
-    API_UPDATE_CHALLENGES_ALL_STATS = "{host}/challenges/stats/all"
+    API_UPDATE_CHALLENGES_ALL_STATS = "{host}/challenges/stats"
     API_DEAUTH_FROM_CHALLENGES = "{host}/challenges/deauth/{athlete_id}"
 
     KEYBOARD_STATS_MAIN_KEYBOARD_MENU = InlineKeyboardMarkup([[InlineKeyboardButton("Ride", callback_data='stats_ride'),
@@ -143,7 +143,7 @@ class BotConstants(object):
          [InlineKeyboardButton("Exit", callback_data='help_exit')]])
 
 
-class BotVariables(object):
+class BotVariables:
     crypt_key_length = int(os.environ.get('CRYPT_KEY_LENGTH'))
     crypt_key = os.environ.get('CRYPT_KEY')
     admin_user_name = os.environ.get('ADMIN_USER_NAME')

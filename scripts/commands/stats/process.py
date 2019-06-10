@@ -3,7 +3,7 @@
 from common.constants_and_variables import BotConstants
 
 
-class ProcessStats(object):
+class ProcessStats:
 
     def __init__(self, update):
         self.update = update

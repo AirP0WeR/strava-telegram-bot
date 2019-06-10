@@ -3,7 +3,7 @@
 from common.operations import Operations
 
 
-class FormatStats(object):
+class FormatStats:
 
     def __init__(self, calculated_stats):
         self.calculated_stats = calculated_stats
