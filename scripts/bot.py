@@ -29,7 +29,7 @@ class StravaTelegramBot:
         except Exception:
             message = "Something went wrong. Exception: {exception}".format(exception=traceback.format_exc())
             logging.error(message)
-            self.strava_telegram_webhooks_resource.shadow_message(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
 
     def handle_buttons(self, bot, update, user_data):
         try:
@@ -38,7 +38,7 @@ class StravaTelegramBot:
         except Exception:
             message = "Something went wrong. Exception: {exception}".format(exception=traceback.format_exc())
             logging.error(message)
-            self.strava_telegram_webhooks_resource.shadow_message(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
 
     def handle_command_args(self, bot, update, args):
         try:
@@ -50,7 +50,7 @@ class StravaTelegramBot:
         except Exception:
             message = "Something went wrong. Exception: {exception}".format(exception=traceback.format_exc())
             logging.error(message)
-            self.strava_telegram_webhooks_resource.shadow_message(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
 
     def main(self):
         updater = Updater(self.bot_variables.telegram_bot_token, workers=16)

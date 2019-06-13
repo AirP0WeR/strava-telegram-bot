@@ -31,7 +31,7 @@ class HandleCommandArgs:
             else:
                 message = "Athlete ID {athlete_id} not found.".format(athlete_id=athlete_id)
             self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-            self.strava_telegram_webhooks_resource.shadow_message(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
         else:
             logging.warning("More than 1 arguments passed for /token. Args %s", self.args)
 
@@ -43,7 +43,7 @@ class HandleCommandArgs:
             else:
                 message = "Failed to activate {athlete_id}.".format(athlete_id=athlete_id)
             self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-            self.strava_telegram_webhooks_resource.shadow_message(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
         else:
             logging.warning("More than 1 arguments passed for /activate. Args %s", self.args)
 
@@ -55,7 +55,7 @@ class HandleCommandArgs:
             else:
                 message = "Failed to deactivate {athlete_id}.".format(athlete_id=athlete_id)
             self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-            self.strava_telegram_webhooks_resource.shadow_message(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
         else:
             logging.warning("More than 1 arguments passed for /deactivate. Args %s", self.args)
 
@@ -67,7 +67,7 @@ class HandleCommandArgs:
             else:
                 message = "Failed to trigger update stats for {}".format(athlete_id)
             self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-            self.strava_telegram_webhooks_resource.shadow_message(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
         else:
             logging.warning("More than 1 arguments passed for /deactivate. Args %s", self.args)
 
@@ -79,7 +79,7 @@ class HandleCommandArgs:
                 message = self.bot_constants.MESSAGE_UPDATE_STATS_CHALLENGES_SUCCESS
             self.update.message.reply_text(message, parse_mode="Markdown",
                                            disable_web_page_preview=True)
-            self.strava_telegram_webhooks_resource.shadow_message(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
         else:
             logging.warning("More than 1 arguments passed for /deactivate. Args %s", self.args)
 
@@ -93,7 +93,7 @@ class HandleCommandArgs:
                 message = "Failed to deauthorise {athlete_id} from challenges".format(athlete_id=athlete_id)
             self.update.message.reply_text(message, parse_mode="Markdown",
                                            disable_web_page_preview=True)
-            self.strava_telegram_webhooks_resource.shadow_message(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
         else:
             logging.warning("More than 1 arguments passed for /deactivate. Args %s", self.args)
 

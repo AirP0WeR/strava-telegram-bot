@@ -58,7 +58,7 @@ class BotConstants:
     API_UPDATE_STATS = "{host}/stats/bot/{athlete_id}"
     API_UPDATE_ALL_STATS = "{host}/stats"
     API_DATABASE_WRITE = "{host}/database/write"
-    API_SHADOW_MESSAGE = "{host}/telegram/shadow_message"
+    API_SEND_MESSAGE = "{host}/telegram/send_message"
     API_GET_ATHLETE_ID = "{host}/athlete/athlete_id/{telegram_username}"
     API_DATABASE_READ_ALL = "{host}/database/read/all"
     API_GET_ATHLETE = "{host}/athlete/get/{athlete_id}"

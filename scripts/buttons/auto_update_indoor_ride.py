@@ -28,13 +28,13 @@ class AutoUpdateIndoorRide:
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_UPDATE_INDOOR_RIDE_DISABLED
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.strava_telegram_webhooks_resource.send_message(message)
 
     def auto_update_indoor_ride_ignore(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_UPDATE_INDOOR_RIDE_DISABLE_CANCEL
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.strava_telegram_webhooks_resource.send_message(message)
 
     def auto_update_indoor_ride_name_indoor_ride(self):
         self.user_data['auto_update_indoor_ride'].update({'name': 'Indoor Ride'})
@@ -67,7 +67,7 @@ class AutoUpdateIndoorRide:
                 list_bikes += "{sl_no}. {bike_name}\n".format(sl_no=sl_no, bike_name=bikes[sl_no]['bike_name'])
             self.user_data['auto_update_indoor_ride'].update({'gear_id': bikes})
             self.bot.send_message(text=list_bikes, chat_id=self.chat_id)
-            self.strava_telegram_webhooks_resource.shadow_message(list_bikes)
+            self.strava_telegram_webhooks_resource.send_message(list_bikes)
             message = self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CHOOSE_BIKE
             self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
                                        reply_markup=keyboard_bikes)
@@ -95,12 +95,12 @@ class AutoUpdateIndoorRide:
                 configuration=configured_data)
             self.bot.send_message(text=message, chat_id=self.chat_id,
                                   reply_markup=self.bot_constants.KEYBOARD_AUTO_UPDATE_INDOOR_RIDE_CONFIRMATION)
-            self.strava_telegram_webhooks_resource.shadow_message(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
         else:
             self.user_data.clear()
             message = self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_INSUFFICIENT_INFORMATION
             self.bot.send_message(text=message, chat_id=self.chat_id)
-            self.strava_telegram_webhooks_resource.shadow_message(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
 
     def auto_update_indoor_ride_update_confirm_yes(self):
         update_indoor_ride_data = dict()
@@ -117,19 +117,19 @@ class AutoUpdateIndoorRide:
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_ENABLED
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.strava_telegram_webhooks_resource.send_message(message)
 
     def auto_update_indoor_ride_confirm_no(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_AUTO_UPDATE_INDOOR_RIDE_CANCELLED
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.strava_telegram_webhooks_resource.send_message(message)
 
     def exit_button(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_EXIT_BUTTON
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.strava_telegram_webhooks_resource.send_message(message)
 
     def process(self):
         if 'auto_update_indoor_ride_gear_id_' in self.chosen_option:
