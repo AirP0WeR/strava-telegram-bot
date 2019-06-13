@@ -18,22 +18,6 @@ class StravaTelegramWebhooksResource:
         self.host = self.bot_variables.api_host
 
     @execution_time
-    def token_exchange(self, code):
-        result = {}
-        endpoint = self.bot_constants.API_TOKEN_EXCHANGE.format(host=self.host, code=code)
-        try:
-            logging.info("Requesting token exchange..")
-            response = requests.post(endpoint)
-        except Exception:
-            logging.error(traceback.format_exc())
-        else:
-            logging.info("Response status code: %s", response.status_code)
-            if response.status_code == 200:
-                result = response.json()
-
-        return result if result != {} else False
-
-    @execution_time
     def athlete_exists(self, athlete_id):
         result = False
         endpoint = self.bot_constants.API_ATHLETE_EXISTS.format(host=self.host, athlete_id=athlete_id)

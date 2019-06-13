@@ -54,7 +54,6 @@ class BotConstants:
     MESSAGE_CHALLENGES_HITS_RESET_SUCCESS = "Hi {first_name}! Successfully reset the page hits counter to 0."
     MESSAGE_CHALLENGES_HITS_RESET_FAIL = "Hi {first_name}! Failed to reset the page hits counter."
 
-    API_TOKEN_EXCHANGE = "{host}/token/exchange/{code}"
     API_ATHLETE_EXISTS = "{host}/athlete/exists/{athlete_id}"
     API_UPDATE_STATS = "{host}/stats/bot/{athlete_id}"
     API_UPDATE_ALL_STATS = "{host}/stats"
