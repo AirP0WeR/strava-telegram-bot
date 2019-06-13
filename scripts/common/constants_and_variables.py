@@ -54,12 +54,11 @@ class BotConstants:
     MESSAGE_CHALLENGES_HITS_RESET_SUCCESS = "Hi {first_name}! Successfully reset the page hits counter to 0."
     MESSAGE_CHALLENGES_HITS_RESET_FAIL = "Hi {first_name}! Failed to reset the page hits counter."
 
-    API_TOKEN_EXCHANGE = "{host}/token/exchange/{code}"
     API_ATHLETE_EXISTS = "{host}/athlete/exists/{athlete_id}"
-    API_UPDATE_STATS = "{host}/stats/{athlete_id}"
+    API_UPDATE_STATS = "{host}/stats/bot/{athlete_id}"
     API_UPDATE_ALL_STATS = "{host}/stats"
     API_DATABASE_WRITE = "{host}/database/write"
-    API_SHADOW_MESSAGE = "{host}/telegram/shadow_message"
+    API_SEND_MESSAGE = "{host}/telegram/send_message"
     API_GET_ATHLETE_ID = "{host}/athlete/athlete_id/{telegram_username}"
     API_DATABASE_READ_ALL = "{host}/database/read/all"
     API_GET_ATHLETE = "{host}/athlete/get/{athlete_id}"
@@ -76,7 +75,7 @@ class BotConstants:
     API_LIST_EVEN_CHALLENGES_ATHLETES = "{host}/challenges/even/athletes/list"
     API_LIST_ODD_CHALLENGES_ATHLETES = "{host}/challenges/odd/athletes/list"
     API_CHALLENGES_HITS_RESET = "{host}/challenges/hits/reset"
-    API_UPDATE_CHALLENGES_STATS = "{host}/challenges/stats/{athlete_id}"
+    API_UPDATE_CHALLENGES_STATS = "{host}/stats/challenges/{athlete_id}"
     API_UPDATE_CHALLENGES_ALL_STATS = "{host}/challenges/stats"
     API_DEAUTH_FROM_CHALLENGES = "{host}/challenges/deauth/{athlete_id}"
 

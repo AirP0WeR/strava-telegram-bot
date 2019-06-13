@@ -25,7 +25,7 @@ class BotHelp:
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_HELP_EXIT
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.strava_telegram_webhooks_resource.send_message(message)
 
     def help_registration_ios_button(self):
         self.user_data.clear()
@@ -35,7 +35,7 @@ class BotHelp:
         self.bot.send_photo(chat_id=self.chat_id, photo=open(photo_path, 'rb'), caption=caption)
         message = "Once you set your Telegram username, come back to this chat and click /next to continue."
         self.bot.send_message(text=message, chat_id=self.chat_id, parse_mode="Markdown")
-        self.strava_telegram_webhooks_resource.shadow_message("Sent iOS screenshot to the user.")
+        self.strava_telegram_webhooks_resource.send_message("Sent iOS screenshot to the user.")
 
     def help_registration_android_button(self):
         self.user_data.clear()
@@ -45,7 +45,7 @@ class BotHelp:
         self.bot.send_photo(chat_id=self.chat_id, photo=open(photo_path, 'rb'), caption=caption)
         message = "Once you set your Telegram username, come back to this chat and click /next to continue."
         self.bot.send_message(text=message, chat_id=self.chat_id, parse_mode="Markdown")
-        self.strava_telegram_webhooks_resource.shadow_message("Sent Android screenshot to the user.")
+        self.strava_telegram_webhooks_resource.send_message("Sent Android screenshot to the user.")
 
     def process(self):
         options = defaultdict(lambda: self.help_exit_button, {

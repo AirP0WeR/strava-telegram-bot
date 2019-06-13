@@ -46,7 +46,7 @@ class HandleCommands:
             message = self.bot_constants.MESSAGE_UPDATE_STATS_STARTED.format(first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown",
                                        disable_web_page_preview=True)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.strava_telegram_webhooks_resource.send_message(message)
 
     def refresh_all_stats_command(self):
         self.user_data.clear()
@@ -56,7 +56,7 @@ class HandleCommands:
                 first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown",
                                        disable_web_page_preview=True)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.strava_telegram_webhooks_resource.send_message(message)
 
     def challenges_refresh_all_stats_command(self):
         self.user_data.clear()
@@ -67,14 +67,14 @@ class HandleCommands:
                 first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown",
                                        disable_web_page_preview=True)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.strava_telegram_webhooks_resource.send_message(message)
 
     def all_athletes_command(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_FETCHING_REGISTERED_ATHLETES.format(
             first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.strava_telegram_webhooks_resource.send_message(message)
         all_athletes = self.strava_telegram_webhooks_resource.database_read_all(self.bot_constants.QUERY_GET_ATHLETES)
         sl_no = 0
         messages = list()
@@ -91,29 +91,29 @@ class HandleCommands:
         for name in messages:
             if name != "*List of registered athletes:*\n\n":
                 self.update.message.reply_text(name, parse_mode="Markdown", disable_web_page_preview=True)
-                self.strava_telegram_webhooks_resource.shadow_message(name)
+                self.strava_telegram_webhooks_resource.send_message(name)
 
     def challenges_even_athletes(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_FETCHING_REGISTERED_ATHLETES_EVEN_CHALLENGES.format(
             first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.strava_telegram_webhooks_resource.send_message(message)
         results = self.strava_telegram_webhooks_resource.get_even_challenges_athletes()
         for result in results:
             self.update.message.reply_text(result, parse_mode="Markdown", disable_web_page_preview=True)
-            self.strava_telegram_webhooks_resource.shadow_message(result)
+            self.strava_telegram_webhooks_resource.send_message(result)
 
     def challenges_odd_athletes(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_FETCHING_REGISTERED_ATHLETES_ODD_CHALLENGES.format(
             first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.strava_telegram_webhooks_resource.send_message(message)
         results = self.strava_telegram_webhooks_resource.get_odd_challenges_athletes()
         for result in results:
             self.update.message.reply_text(result, parse_mode="Markdown", disable_web_page_preview=True)
-            self.strava_telegram_webhooks_resource.shadow_message(result)
+            self.strava_telegram_webhooks_resource.send_message(result)
 
     def activity_summary_command(self):
         self.user_data.clear()
@@ -129,7 +129,7 @@ class HandleCommands:
             reply_markup = self.bot_constants.KEYBOARD_ENABLE_ACTIVITY_SUMMARY_CONFIRMATION
 
         self.update.message.reply_text(message, reply_markup=reply_markup)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.strava_telegram_webhooks_resource.send_message(message)
 
     def auto_update_indoor_ride_command(self):
         self.user_data.clear()
@@ -156,7 +156,7 @@ class HandleCommands:
             reply_markup = self.bot_constants.KEYBOARD_AUTO_UPDATE_INDOOR_RIDE_NAME
 
         self.update.message.reply_text(message, reply_markup=reply_markup)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.strava_telegram_webhooks_resource.send_message(message)
 
     def challenges_hits_reset(self):
         self.user_data.clear()
@@ -168,20 +168,20 @@ class HandleCommands:
             message = self.bot_constants.MESSAGE_CHALLENGES_HITS_RESET_FAIL.format(
                 first_name=self.telegram_user_first_name)
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.strava_telegram_webhooks_resource.send_message(message)
 
     def help_command(self):
         self.user_data.clear()
         self.update_user_chat_id()
         message = self.bot_constants.MESSAGE_HELP_COMMANDS
         self.update.message.reply_text(message)
-        self.strava_telegram_webhooks_resource.shadow_message("Sent help commands.")
+        self.strava_telegram_webhooks_resource.send_message("Sent help commands.")
 
     def cancel_command(self):
         self.user_data.clear()
         message = self.bot_constants.MESSAGE_CANCEL_CURRENT_OPERATION
         self.update.message.reply_text(message)
-        self.strava_telegram_webhooks_resource.shadow_message(message)
+        self.strava_telegram_webhooks_resource.send_message(message)
 
     def process(self):
         self.bot.send_chat_action(chat_id=self.chat_id, action=telegram.ChatAction.TYPING)

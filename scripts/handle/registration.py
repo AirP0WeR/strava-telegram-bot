@@ -22,13 +22,13 @@ class HandleRegistration:
         if self.telegram_username:
             message = "I see that your Telegram username is: `{telegram_username}`\n\nFollow the below steps to signup:".format(
                 telegram_username=self.telegram_username)
-            self.strava_telegram_webhooks_resource.shadow_message(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
             self.auth_and_reg()
         else:
             message = "Looks like you haven't set your Telegram username yet. Follow the above steps and click /next to continue or message {admin_user_name} for additional help.".format(
                 admin_user_name=self.bot_variables.admin_user_name)
             self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-            self.strava_telegram_webhooks_resource.shadow_message(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
 
     def auth_and_reg(self):
         photo_path = "scripts/commands/help/registration/strava_app_auth.PNG"
@@ -39,7 +39,7 @@ class HandleRegistration:
         caption = "Once you Authorize, enter your Telegram username:\n\n{telegram_username}\n\nand click on Submit.\n\nOnce done, come back to this chat and click /next to continue.".format(
             telegram_username=self.telegram_username)
         self.bot.send_photo(chat_id=self.chat_id, photo=open(photo_path, 'rb'), caption=caption)
-        self.strava_telegram_webhooks_resource.shadow_message(
+        self.strava_telegram_webhooks_resource.send_message(
             "Sent Authorize and Registration screenshots to the user.")
 
     def registration(self):
@@ -49,13 +49,13 @@ class HandleRegistration:
             message += "I see that your Telegram username is: `{telegram_username}`\n\nFollow the below steps to signup:".format(
                 telegram_username=self.telegram_username)
             self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
-            self.strava_telegram_webhooks_resource.shadow_message(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
             self.auth_and_reg()
         else:
             message += "You haven't set your username in Telegram yet which is required to signup for the bot. Let me show you how. Choose the type of device you are using:"
             self.update.message.reply_text(message, disable_web_page_preview=True,
                                            reply_markup=self.bot_constants.KEYBOARD_HELP_REGISTRATION)
-            self.strava_telegram_webhooks_resource.shadow_message(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
 
     def main(self):
         if self.command == "/next":
