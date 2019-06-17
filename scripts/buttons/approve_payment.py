@@ -47,4 +47,5 @@ class ApprovePayment:
             message = "Failed to approve payment for [{athlete_id}](https://www.strava.com/athletes/{athlete_id}).".format(
                 athlete_id=athlete_id)
         logging.info(message)
-        self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
+        self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id,
+                                   parse_mode='Markdown')
