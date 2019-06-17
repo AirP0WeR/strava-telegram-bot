@@ -37,7 +37,7 @@ class ApprovePayment:
         category = approved_payment_details[0]
         company = approved_payment_details[1]
         month = approved_payment_details[2]
-        name = approved_payment_details[3]
+        name = approved_payment_details[3].replace("-", " ")
         athlete_id = approved_payment_details[4]
         if self.strava_telegram_webhooks_resource.approve_payment_for_challenge(
                 self.approve_payment_config[category][company][month]['column_name'], athlete_id):
