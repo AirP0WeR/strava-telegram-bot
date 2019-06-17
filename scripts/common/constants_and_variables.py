@@ -78,6 +78,7 @@ class BotConstants:
     API_UPDATE_CHALLENGES_STATS = "{host}/stats/challenges/{athlete_id}"
     API_UPDATE_CHALLENGES_ALL_STATS = "{host}/challenges/stats"
     API_DEAUTH_FROM_CHALLENGES = "{host}/challenges/deauth/{athlete_id}"
+    API_APPROVE_PAYMENT = "{host}/challenges/payment/approve/{column_name}/{athlete_id}"
 
     KEYBOARD_STATS_MAIN_KEYBOARD_MENU = InlineKeyboardMarkup([[InlineKeyboardButton("Ride", callback_data='stats_ride'),
                                                                InlineKeyboardButton("Run", callback_data='stats_run'),

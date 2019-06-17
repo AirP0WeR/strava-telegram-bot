@@ -82,6 +82,23 @@ class StravaTelegramWebhooksResource:
         return result
 
     @execution_time
+    def approve_payment_for_challenge(self, column_name, athlete_id):
+        result = False
+        endpoint = self.bot_constants.API_APPROVE_PAYMENT.format(host=self.host, column_name=column_name,
+                                                                 athlete_id=athlete_id)
+        try:
+            logging.info("Sending request to approve payment for %s in %s", athlete_id, column_name)
+            response = requests.post(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: %s", response.status_code)
+            if response.status_code == 200:
+                result = True
+
+        return result
+
+    @execution_time
     def update_challenges_all_stats(self):
         result = False
         endpoint = self.bot_constants.API_UPDATE_CHALLENGES_ALL_STATS.format(host=self.host)
