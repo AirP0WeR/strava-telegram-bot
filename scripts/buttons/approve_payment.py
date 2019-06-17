@@ -23,7 +23,7 @@ class ApprovePayment:
             "bot": {
 
             },
-            "challenges": {
+            "c": {
                 "cadence90": {
                     "odd": {
                         "column_name": "odd_challenges"
