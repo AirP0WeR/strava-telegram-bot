@@ -29,7 +29,7 @@ class HandleButtons:
             activity_summary = ActivitySummary(self.bot, self.update, self.user_data)
             activity_summary.process()
 
-        elif self.chosen_option.startswith('payment_approved_'):
+        elif self.chosen_option.startswith('pa_'):
             approve_payment = ApprovePayment(self.bot, self.update, self.user_data)
             approve_payment.process()
 

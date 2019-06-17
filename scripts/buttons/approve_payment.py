@@ -33,7 +33,7 @@ class ApprovePayment:
         }
 
     def process(self):
-        approved_payment_details = (self.chosen_option.split("payment_approved_", 1)[1]).split("_")
+        approved_payment_details = (self.chosen_option.split("pa_", 1)[1]).split("_")
         category = approved_payment_details[0]
         company = approved_payment_details[1]
         month = approved_payment_details[2]
