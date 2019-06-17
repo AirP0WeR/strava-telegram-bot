@@ -23,7 +23,7 @@ class ApprovePayment:
             "bot": {
 
             },
-            "c": {
+            "challenges": {
                 "cadence90": {
                     "odd": {
                         "column_name": "odd_challenges"
@@ -37,13 +37,14 @@ class ApprovePayment:
         category = approved_payment_details[0]
         company = approved_payment_details[1]
         month = approved_payment_details[2]
-        name = approved_payment_details[3].replace("-", " ")
-        athlete_id = approved_payment_details[4]
+        athlete_id = approved_payment_details[3]
         if self.strava_telegram_webhooks_resource.approve_payment_for_challenge(
                 self.approve_payment_config[category][company][month]['column_name'], athlete_id):
-            message = "Approved payment for {name} ({athlete_id}).".format(name=name, athlete_id=athlete_id)
+            message = "Approved payment for [{athlete_id}](https://www.strava.com/athletes/{athlete_id}).".format(
+                athlete_id=athlete_id)
             self.strava_telegram_webhooks_resource.update_challenges_stats(athlete_id)
         else:
-            message = "Failed to approve payment for {name} ({athlete_id}).".format(name=name, athlete_id=athlete_id)
+            message = "Failed to approve payment for [{athlete_id}](https://www.strava.com/athletes/{athlete_id}).".format(
+                athlete_id=athlete_id)
         logging.info(message)
         self.bot.edit_message_text(text=message, chat_id=self.chat_id, message_id=self.message_id)
