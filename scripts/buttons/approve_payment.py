@@ -42,6 +42,7 @@ class ApprovePayment:
         if self.strava_telegram_webhooks_resource.approve_payment_for_challenge(
                 self.approve_payment_config[category][company][month]['column_name'], athlete_id):
             message = "Approved payment for {name} ({athlete_id}).".format(name=name, athlete_id=athlete_id)
+            self.strava_telegram_webhooks_resource.update_challenges_stats(athlete_id)
         else:
             message = "Failed to approve payment for {name} ({athlete_id}).".format(name=name, athlete_id=athlete_id)
         logging.info(message)
