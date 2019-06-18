@@ -1,6 +1,7 @@
 #  -*- encoding: utf-8 -*-
 
 from buttons.activity_summary import ActivitySummary
+from buttons.approve_payment import ApprovePayment
 from buttons.auto_update_indoor_ride import AutoUpdateIndoorRide
 from buttons.bot_help import BotHelp
 from buttons.stats import Stats
@@ -27,6 +28,10 @@ class HandleButtons:
         elif self.chosen_option.startswith('activity_summary'):
             activity_summary = ActivitySummary(self.bot, self.update, self.user_data)
             activity_summary.process()
+
+        elif self.chosen_option.startswith('pa_'):
+            approve_payment = ApprovePayment(self.bot, self.update, self.user_data)
+            approve_payment.process()
 
         elif self.chosen_option.startswith('help'):
             bot_help = BotHelp(self.bot, self.update, self.user_data)
