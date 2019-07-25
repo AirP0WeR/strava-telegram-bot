@@ -27,6 +27,9 @@ class ApprovePayment:
                 "cadence90": {
                     "odd": {
                         "column_name": "odd_challenges"
+                    },
+                    "even": {
+                        "column_name": "even_challenges"
                     }
                 }
             }
