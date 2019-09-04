@@ -3,7 +3,8 @@
 import logging
 import traceback
 
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, Filters
+from telegram import Update
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, Filters, CallbackContext
 
 from common.constants_and_variables import BotVariables
 from handle.buttons import HandleButtons
@@ -19,31 +20,31 @@ class StravaTelegramBot:
         self.strava_telegram_webhooks_resource = StravaTelegramWebhooksResource()
 
     @staticmethod
-    def error(update, error):
-        logger.error('Update %s caused error %s', update, error)
+    def error(update, context):
+        logger.error('Update %s caused error %s', update, context.error)
 
-    def handle_commands(self, bot, update, user_data):
+    def handle_commands(self, update: Update, context: CallbackContext):
         try:
-            commands = HandleCommands(bot, update, user_data)
+            commands = HandleCommands(context.bot, update, context.user_data)
             commands.process()
         except Exception:
             message = "Something went wrong. Exception: {exception}".format(exception=traceback.format_exc())
             logging.error(message)
             self.strava_telegram_webhooks_resource.send_message(message)
 
-    def handle_buttons(self, bot, update, user_data):
+    def handle_buttons(self, update: Update, context: CallbackContext):
         try:
-            buttons = HandleButtons(bot, update, user_data)
+            buttons = HandleButtons(context.bot, update, context.user_data)
             buttons.process()
         except Exception:
             message = "Something went wrong. Exception: {exception}".format(exception=traceback.format_exc())
             logging.error(message)
             self.strava_telegram_webhooks_resource.send_message(message)
 
-    def handle_command_args(self, bot, update, args):
+    def handle_command_args(self, update: Update, context: CallbackContext):
         try:
-            if len(args) > 0:
-                command_args = HandleCommandArgs(bot, update, args)
+            if len(context.args) > 0:
+                command_args = HandleCommandArgs(context.bot, update, context.args)
                 command_args.process()
             else:
                 logging.warning("No arguments passed.")
@@ -53,7 +54,7 @@ class StravaTelegramBot:
             self.strava_telegram_webhooks_resource.send_message(message)
 
     def main(self):
-        updater = Updater(self.bot_variables.telegram_bot_token, workers=16)
+        updater = Updater(self.bot_variables.telegram_bot_token, use_context=True, workers=16)
         dispatcher_handler = updater.dispatcher
 
         dispatcher_handler.add_handler(CommandHandler("start", self.handle_commands, pass_user_data=True))
