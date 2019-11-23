@@ -11,7 +11,7 @@ from scripts.clients.memcachier import MemcachierClient
 class MemcachierResource:
 
     def __init__(self):
-        self.memcachier_client = MemcachierClient().cache()
+        self.memcachier_client = MemcachierClient().get_client()
 
     def put_cache(self, key, value):
         result = False
