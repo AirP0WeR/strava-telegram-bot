@@ -5,7 +5,7 @@ from collections import defaultdict
 
 from commands.stats.format import FormatStats
 from common.constants_and_variables import BotConstants
-from resources.iron_cache import IronCacheResource
+from resources.memcachier import MemcachierResource
 from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
 
@@ -22,14 +22,14 @@ class Stats:
         self.message_id = self.query.message.message_id
         self.telegram_username = self.query.message.chat.username
         self.strava_telegram_webhooks_resource = StravaTelegramWebhooksResource()
-        self.iron_cache_resource = IronCacheResource()
+        self.memcachier_resource = MemcachierResource()
 
     def get_strava_data(self):
-        strava_data = self.iron_cache_resource.get_cache("stats", self.telegram_username)
+        strava_data = self.memcachier_resource.get_cache(self.telegram_username)
         if not strava_data:
             logging.warning("Failed to fetch from cache! Falling back to database..")
             strava_data = self.strava_telegram_webhooks_resource.get_athlete_stats(self.telegram_username)
-            self.iron_cache_resource.put_cache("stats", self.telegram_username, strava_data)
+            self.memcachier_resource.put_cache(self.telegram_username, strava_data)
 
         return strava_data
 

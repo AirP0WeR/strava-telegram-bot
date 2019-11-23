@@ -9,5 +9,10 @@
       "size": "Free"
     }
   },
-  "image": "heroku/python"
+  "image": "heroku/python",
+  "addons": [
+    {
+      "plan": "memcachier:dev"
+    }
+  ]
 }

@@ -4,5 +4,5 @@ psycopg2-binary==2.8.3
 python_telegram_bot==12.1.1
 stravalib==0.10.2
 telegram==0.0.1
-iron-cache==0.3.2
+python-binary-memcached==0.28.0
 pycryptodome==3.9.0
