@@ -6,3 +6,4 @@ stravalib==0.10.2
 telegram==0.0.1
 python-binary-memcached==0.28.0
 pycryptodome==3.9.0
+facebook-sdk==3.1.0

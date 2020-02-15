@@ -95,6 +95,8 @@ class StravaTelegramBot:
                                                       filters=Filters.user(username=self.bot_variables.admins)))
         dispatcher_handler.add_handler(CommandHandler("update", self.handle_command_args, pass_args=True,
                                                       filters=Filters.user(username=self.bot_variables.admins)))
+        dispatcher_handler.add_handler(CommandHandler("finish", self.handle_command_args, pass_args=True,
+                                                      filters=Filters.user(username=self.bot_variables.admins)))
         dispatcher_handler.add_handler(CallbackQueryHandler(self.handle_buttons, pass_user_data=True))
 
         dispatcher_handler.add_error_handler(self.error)

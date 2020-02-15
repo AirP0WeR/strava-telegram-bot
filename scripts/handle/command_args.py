@@ -3,11 +3,30 @@
 import logging
 from collections import defaultdict
 
+import facebook
+
 from common.constants_and_variables import BotConstants, BotVariables
 from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
 
 class HandleCommandArgs:
+    RIDERS = {
+        "12001": "Balakrishna Udyavara",
+        "12640": "Jnanashekar U P",
+        "4904": "Naveen Solanki",
+        "5243": "Narayana Badri",
+        "13294": "Sheethal Kumar Gurusiddappa",
+        "10792": "Supreeth Gopalakrishna Vattam",
+        "13697": "Santhosh Kumar M S",
+        "13696": "Dhanaprakash M S",
+        "13226": "Kikkeri Puttegowda Jayaramu",
+        "11932": "Sumit Gehani",
+        "12256": "Sowmya Chandran",
+        "10469": "Parameshwar Hegde",
+        "8608": "Madhu Krishna Iyengar",
+        "10274": "G Ravi Kumar",
+        "8361": "Kishore Kumar"
+    }
 
     def __init__(self, bot, update, args):
         self.bot = bot
@@ -97,6 +116,26 @@ class HandleCommandArgs:
         else:
             logging.warning("More than 1 arguments passed for /deactivate. Args %s", self.args)
 
+    def finish_photo(self):
+        logging.info("Received post finish post on Facebook: {}".format(self.args))
+        logging.info("Update message: {}", self.update.message)
+        if len(self.args) == 2:
+            rider_no = self.args[0].strip()
+            finish_time = self.args[1].strip()
+            rider_name = self.RIDERS[rider_no]
+            caption = "{rider_name} finished at {finish_time}\n\n.\n.\n#AudaxMysuru #AudaxIndia #Cycling #Brevet #Randonneuring #HighwayExpress300".format(
+                rider_name=rider_name, finish_time=finish_time)
+            rider_photo = self.bot.get_file(self.update.message.photo[-1])
+            rider_photo.download("/tmp/rider_photo.jpg")
+            graph = facebook.GraphAPI(access_token=self.bot_variables.facebook_token)
+            graph.put_photo(image=open('/tmp/rider_photo.jpg', 'rb'), album_path='110287720378697/photos',
+                            caption=caption)
+            message = "Uploaded finish post for {}: {}".format(rider_no, rider_name)
+            logging.info(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
+        else:
+            logging.warning("More than 2 arguments passed for /finish. Args %s", self.args)
+
     def process(self):
         command = self.update.message.text.split(' ', 1)[0]
 
@@ -106,7 +145,8 @@ class HandleCommandArgs:
             '/deactivate': self.deactivate_athlete_command,
             '/update': self.update_stats_command,
             '/challenges_refresh_stats': self.challenges_refresh_stats_command,
-            '/challenges_deauth': self.challenges_deauth_command
+            '/challenges_deauth': self.challenges_deauth_command,
+            '/finish': self.finish_photo
         })
 
         options[command]()
