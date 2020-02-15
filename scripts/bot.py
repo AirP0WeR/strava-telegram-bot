@@ -88,6 +88,7 @@ class StravaTelegramBot:
                                 caption=caption)
                 message = "Uploaded finish post for {}: {}".format(rider_no, rider_name)
                 logging.info(message)
+                update.message.reply_text(message)
                 self.strava_telegram_webhooks_resource.send_message(message)
             else:
                 message = "Invalid rider number: {}".format(rider_no)
