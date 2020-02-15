@@ -94,6 +94,12 @@ class StravaTelegramBot:
                 logging.info(message)
                 update.message.reply_text(message)
                 self.strava_telegram_webhooks_resource.send_message(message)
+        else:
+            message = "Invalid format: {}\nValid format: rider_no finish_time\nEg: 1022 9:01am".format(
+                update.message.caption)
+            logging.info(message)
+            update.message.reply_text(message)
+            self.strava_telegram_webhooks_resource.send_message(message)
 
     def main(self):
         updater = Updater(self.bot_variables.telegram_bot_token, use_context=True, workers=16)
