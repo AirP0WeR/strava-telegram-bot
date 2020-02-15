@@ -77,17 +77,23 @@ class StravaTelegramBot:
         if len(caption_split) == 2:
             rider_no = caption_split[0]
             finish_time = caption_split[1]
-            rider_name = self.RIDERS[rider_no]
-            caption = "{rider_name} finished at {finish_time}\n\n.\n.\n#AudaxMysuru #AudaxIndia #Cycling #Brevet #Randonneuring #HighwayExpress300".format(
-                rider_name=rider_name, finish_time=finish_time)
-            rider_photo = context.bot.get_file(update.message.photo[-1])
-            rider_photo.download("/tmp/rider_photo.jpg")
-            graph = facebook.GraphAPI(access_token=self.bot_variables.facebook_token)
-            graph.put_photo(image=open('/tmp/rider_photo.jpg', 'rb'), album_path='110287720378697/photos',
-                            caption=caption)
-            message = "Uploaded finish post for {}: {}".format(rider_no, rider_name)
-            logging.info(message)
-            self.strava_telegram_webhooks_resource.send_message(message)
+            if rider_no in self.RIDERS:
+                rider_name = self.RIDERS[rider_no]
+                caption = "{rider_name} finished at {finish_time}\n\n.\n.\n#AudaxMysuru #AudaxIndia #Cycling #Brevet #Randonneuring #HighwayExpress300".format(
+                    rider_name=rider_name, finish_time=finish_time)
+                rider_photo = context.bot.get_file(update.message.photo[-1])
+                rider_photo.download("/tmp/rider_photo.jpg")
+                graph = facebook.GraphAPI(access_token=self.bot_variables.facebook_token)
+                graph.put_photo(image=open('/tmp/rider_photo.jpg', 'rb'), album_path='110287720378697/photos',
+                                caption=caption)
+                message = "Uploaded finish post for {}: {}".format(rider_no, rider_name)
+                logging.info(message)
+                self.strava_telegram_webhooks_resource.send_message(message)
+            else:
+                message = "Invalid rider number: {}".format(rider_no)
+                logging.info(message)
+                update.message.reply_text(message)
+                self.strava_telegram_webhooks_resource.send_message(message)
 
     def main(self):
         updater = Updater(self.bot_variables.telegram_bot_token, use_context=True, workers=16)
