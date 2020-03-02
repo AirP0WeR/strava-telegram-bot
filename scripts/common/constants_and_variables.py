@@ -157,4 +157,3 @@ class BotVariables:
     memcachier_password = os.environ.get('MEMCACHIER_PASSWORD')
     memcachier_servers = os.environ.get('MEMCACHIER_SERVERS')
     memcachier_username = os.environ.get('MEMCACHIER_USERNAME')
-    facebook_token = os.environ.get('FACEBOOK_TOKEN')
