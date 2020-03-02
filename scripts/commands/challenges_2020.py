@@ -28,7 +28,7 @@ class Challenges2020:
         cr_at_hundreds = int(stats_cr['ride_at_hundred'])
         sa_at_hundreds = int(stats_sa['ride_at_hundred'])
 
-        message = "*Chethan Ram vs Satish Addanki*\n\n*"
+        message = "*Chethan Ram vs Satish Addanki*\n\n"
 
         if cr_at_distance > sa_at_distance:
             at_name = "Chethan Ram"
