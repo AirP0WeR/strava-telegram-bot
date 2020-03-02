@@ -19,15 +19,11 @@ class Challenges2020:
         stats_cr = self.get_strava_data(877837)
         stats_sa = self.get_strava_data(5577083)
 
-        cr_at_distance = self.operations.round_off_two_decimal_places(
-            self.operations.meters_to_kilometers(float(stats_cr['ride_at_distance'])))
-        sa_at_distance = self.operations.round_off_two_decimal_places(
-            self.operations.meters_to_kilometers(float(stats_sa['ride_at_distance'])))
+        cr_at_distance = round(self.operations.meters_to_kilometers(float(stats_cr['ride_at_distance'])), 2)
+        sa_at_distance = round(self.operations.meters_to_kilometers(float(stats_sa['ride_at_distance'])), 2)
 
-        cr_ytd_distance = self.operations.round_off_two_decimal_places(
-            self.operations.meters_to_kilometers(float(stats_cr['ride_ytd_distance'])))
-        sa_ytd_distance = self.operations.round_off_two_decimal_places(
-            self.operations.meters_to_kilometers(float(stats_sa['ride_ytd_distance'])))
+        cr_ytd_distance = round(self.operations.meters_to_kilometers(float(stats_cr['ride_ytd_distance'])), 2)
+        sa_ytd_distance = round(self.operations.meters_to_kilometers(float(stats_sa['ride_ytd_distance'])), 2)
 
         cr_at_hundreds = int(stats_cr['ride_at_hundred'])
         sa_at_hundreds = int(stats_sa['ride_at_hundred'])
