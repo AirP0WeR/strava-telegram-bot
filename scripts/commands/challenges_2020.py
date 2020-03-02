@@ -51,19 +51,20 @@ class Challenges2020:
             name = "Satish Addanki"
             hundreds = sa_at_hundreds - cr_at_hundreds
 
-        message += "Distance All Time: {at_name} by {at_distance} km\n".format(at_name=at_name, at_distance=at_distance)
-        message += "Distance Year to Date: {ytd_name} by {ytd_distance}\n".format(ytd_name=ytd_name,
-                                                                                  ytd_distance=ytd_distance)
-        message += "Hundreds: {name} by {hundreds}\n\n".format(name=name, hundreds=hundreds)
+        message += "_Distance All Time_: {at_name} by {at_distance} km\n".format(at_name=at_name,
+                                                                                 at_distance=at_distance)
+        message += "_Distance Year to Date_: {ytd_name} by {ytd_distance}\n".format(ytd_name=ytd_name,
+                                                                                    ytd_distance=ytd_distance)
+        message += "_Hundreds_: {name} by {hundreds}\n\n".format(name=name, hundreds=hundreds)
 
-        message += "Chethan Ram:\n\nDistance All Time: {cr_at_distance}\nDistance Year to Date: {cr_ytd_distance}\nTotal Hundreds: {cr_at_hundreds}\n\n".format(
+        message += "*Chethan Ram*:\n\nDistance All Time: {cr_at_distance}\nDistance Year to Date: {cr_ytd_distance}\nTotal Hundreds: {cr_at_hundreds}\n\n".format(
             cr_at_distance=cr_at_distance, cr_ytd_distance=cr_ytd_distance, cr_at_hundreds=cr_at_hundreds)
-        message += "Satish Addankni:\n\nDistance All Time: {sa_at_distance}\nDistance Year to Date: {sa_ytd_distance}\nTotal Hundreds: {sa_at_hundreds}\n\n".format(
+        message += "*Satish Addankni*:\n\nDistance All Time: {sa_at_distance}\nDistance Year to Date: {sa_ytd_distance}\nTotal Hundreds: {sa_at_hundreds}\n\n".format(
             sa_at_distance=sa_at_distance, sa_ytd_distance=sa_ytd_distance, sa_at_hundreds=sa_at_hundreds)
 
         return message
 
     def main(self):
         message = self.cs_vs_sa()
-        self.update.message.reply_text(message)
+        self.update.message.reply_text(message, parse_mode="Markdown")
         self.strava_telegram_webhooks_resource.send_message(message)
