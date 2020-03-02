@@ -27,7 +27,6 @@ class HandleCommands:
         self.chat_id = self.update.message.chat_id
         self.athlete_details = None
         self.registration = HandleRegistration(self.bot, self.update, self.user_data)
-        self.challenges2020 = Challenges2020
 
     def update_user_chat_id(self):
         if not self.athlete_details['chat_id'] or int(self.athlete_details['chat_id']) != int(self.chat_id):
@@ -174,7 +173,8 @@ class HandleCommands:
 
     def challenges_command(self):
         self.user_data.clear()
-        self.challenges2020.main()
+        challenges2020 = Challenges2020(self.bot, self.update)
+        challenges2020.main()
 
     def help_command(self):
         self.user_data.clear()

@@ -6,7 +6,7 @@ from resources.strava_telegram_webhooks import StravaTelegramWebhooksResource
 
 class Challenges2020:
 
-    def __init__(self, bot, update, user_data):
+    def __init__(self, bot, update):
         self.bot = bot
         self.update = update
         self.operations = Operations()
