@@ -263,6 +263,22 @@ class StravaTelegramWebhooksResource:
         return stats
 
     @execution_time
+    def get_athlete_stats_by_athlete_id(self, athlete_id):
+        stats = False
+        endpoint = self.bot_constants.API_GET_STATS_BY_ATHLETE_ID.format(host=self.host, athlete_id=athlete_id)
+        try:
+            logging.info("Requesting stats for %s..", athlete_id)
+            response = requests.get(endpoint)
+        except Exception:
+            logging.error(traceback.format_exc())
+        else:
+            logging.info("Response status code: %s", response.status_code)
+            if response.status_code == 200:
+                stats = response.json()
+
+        return stats
+
+    @execution_time
     def enable_activity_summary(self, chat_id, athlete_id):
         enable = False
         endpoint = self.bot_constants.API_ENABLE_ACTIVITY_SUMMARY.format(host=self.host, chat_id=chat_id,

@@ -4,6 +4,7 @@ from collections import defaultdict
 
 import telegram
 
+from commands.challenges_2020 import Challenges2020
 from commands.stats.process import ProcessStats
 from common.aes_cipher import AESCipher
 from common.constants_and_variables import BotVariables, BotConstants
@@ -26,6 +27,7 @@ class HandleCommands:
         self.chat_id = self.update.message.chat_id
         self.athlete_details = None
         self.registration = HandleRegistration(self.bot, self.update, self.user_data)
+        self.challenges2020 = Challenges2020
 
     def update_user_chat_id(self):
         if not self.athlete_details['chat_id'] or int(self.athlete_details['chat_id']) != int(self.chat_id):
@@ -170,6 +172,10 @@ class HandleCommands:
         self.update.message.reply_text(message, parse_mode="Markdown", disable_web_page_preview=True)
         self.strava_telegram_webhooks_resource.send_message(message)
 
+    def challenges_command(self):
+        self.user_data.clear()
+        self.challenges2020.main()
+
     def help_command(self):
         self.user_data.clear()
         self.update_user_chat_id()
@@ -203,6 +209,7 @@ class HandleCommands:
                 '/challenges_refresh_all_stats': self.challenges_refresh_all_stats_command,
                 '/challenges_hits_reset': self.challenges_hits_reset,
                 '/activity_summary': self.activity_summary_command,
+                '/challenges': self.challenges_command,
                 '/help': self.help_command
             })
             options[command]()

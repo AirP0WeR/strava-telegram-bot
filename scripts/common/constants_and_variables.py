@@ -65,6 +65,7 @@ class BotConstants:
     API_GET_ATHLETE_BY_TELEGRAM_USERNAME = "{host}/athlete/get_by_telegram_username/{telegram_username}"
     API_GET_GEAR_NAME = "{host}/strava/gear/name/{token}/{gear_id}"
     API_GET_STATS = "{host}/athlete/stats/{telegram_username}"
+    API_GET_STATS_BY_ATHLETE_ID = "{host}/athlete/stats/athlete_id/{athlete_id}"
     API_GET_BIKES_LIST = "{host}/strava/bikes/{token}"
     API_ENABLE_ACTIVITY_SUMMARY = "{host}/athlete/activity_summary/enable/{chat_id}/{athlete_id}"
     API_DISABLE_ACTIVITY_SUMMARY = "{host}/athlete/activity_summary/disable/{athlete_id}"
