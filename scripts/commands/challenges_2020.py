@@ -19,16 +19,20 @@ class Challenges2020:
         stats_cr = self.get_strava_data(877837)
         stats_sa = self.get_strava_data(5577083)
 
-        cr_at_distance = self.operations.meters_to_kilometers(float(stats_cr['ride_at_distance']))
-        sa_at_distance = self.operations.meters_to_kilometers(float(stats_sa['ride_at_distance']))
+        cr_at_distance = self.operations.round_off_two_decimal_places(
+            self.operations.meters_to_kilometers(float(stats_cr['ride_at_distance'])))
+        sa_at_distance = self.operations.round_off_two_decimal_places(
+            self.operations.meters_to_kilometers(float(stats_sa['ride_at_distance'])))
 
-        cr_ytd_distance = self.operations.meters_to_kilometers(float(stats_cr['ride_ytd_distance']))
-        sa_ytd_distance = self.operations.meters_to_kilometers(float(stats_sa['ride_ytd_distance']))
+        cr_ytd_distance = self.operations.round_off_two_decimal_places(
+            self.operations.meters_to_kilometers(float(stats_cr['ride_ytd_distance'])))
+        sa_ytd_distance = self.operations.round_off_two_decimal_places(
+            self.operations.meters_to_kilometers(float(stats_sa['ride_ytd_distance'])))
 
         cr_at_hundreds = int(stats_cr['ride_at_hundred'])
         sa_at_hundreds = int(stats_sa['ride_at_hundred'])
 
-        message = "*Chethan Ram vs Satish Addanki\n\n*"
+        message = "*Chethan Ram vs Satish Addanki*\n\n*"
 
         if cr_at_distance > sa_at_distance:
             at_name = "Chethan Ram"
@@ -56,11 +60,10 @@ class Challenges2020:
                                                                                   ytd_distance=ytd_distance)
         message += "Hundreds: {name} by {hundreds}\n\n".format(name=name, hundreds=hundreds)
 
-        message += "Chethan Ram:\n\nDistance All Time: {cr_at_distance}\nDistance Year to Date: {cr_ytd_distance}\nTotal Hundreds: {cr_at_hundreds}\n\n"
-        message += "Satish Addankni:\n\nDistance All Time: {sa_at_distance}\nDistance Year to Date: {sa_ytd_distance}\nTotal Hundreds: {sa_at_hundreds}\n\n"
-        message += message.format(cr_at_distance=cr_at_distance, cr_ytd_distance=cr_ytd_distance,
-                                  cr_at_hundreds=cr_at_hundreds, sa_at_distance=sa_at_distance,
-                                  sa_ytd_distance=sa_ytd_distance, sa_at_hundreds=sa_at_hundreds)
+        message += "Chethan Ram:\n\nDistance All Time: {cr_at_distance}\nDistance Year to Date: {cr_ytd_distance}\nTotal Hundreds: {cr_at_hundreds}\n\n".format(
+            cr_at_distance=cr_at_distance, cr_ytd_distance=cr_ytd_distance, cr_at_hundreds=cr_at_hundreds)
+        message += "Satish Addankni:\n\nDistance All Time: {sa_at_distance}\nDistance Year to Date: {sa_ytd_distance}\nTotal Hundreds: {sa_at_hundreds}\n\n".format(
+            sa_at_distance=sa_at_distance, sa_ytd_distance=sa_ytd_distance, sa_at_hundreds=sa_at_hundreds)
 
         return message
 
