@@ -61,9 +61,9 @@ class Challenges2020:
                                                                                                ytd_distance=ytd_distance)
         message += "_Hundreds_: {name} leads by {hundreds} hundreds\n\n\n".format(name=name, hundreds=hundreds)
 
-        message += "*Chethan Ram*:\n\n\nDistance All Time: {cr_at_distance} km\n\nDistance Year to Date: {cr_ytd_distance} km\n\nTotal Hundreds: {cr_at_hundreds}\n\n\n".format(
+        message += "*Chethan Ram*:\n\nDistance All Time: {cr_at_distance} km\nDistance Year to Date: {cr_ytd_distance} km\nTotal Hundreds: {cr_at_hundreds}\n\n".format(
             cr_at_distance=cr_at_distance, cr_ytd_distance=cr_ytd_distance, cr_at_hundreds=cr_at_hundreds)
-        message += "*Satish Addankni*:\n\n\nDistance All Time: {sa_at_distance} km\n\nDistance Year to Date: {sa_ytd_distance} km\n\nTotal Hundreds: {sa_at_hundreds}\n\n\n".format(
+        message += "*Satish Addankni*:\n\nDistance All Time: {sa_at_distance} km\nDistance Year to Date: {sa_ytd_distance} km\nTotal Hundreds: {sa_at_hundreds}\n\n".format(
             sa_at_distance=sa_at_distance, sa_ytd_distance=sa_ytd_distance, sa_at_hundreds=sa_at_hundreds)
 
         return message
