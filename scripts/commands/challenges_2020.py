@@ -28,7 +28,7 @@ class Challenges2020:
         cr_at_hundreds = int(stats_cr['ride_at_hundred'])
         sa_at_hundreds = int(stats_sa['ride_at_hundred'])
 
-        message = "*Chethan Ram vs Satish Addanki*\n\n"
+        message = "*Chethan Ram vs Satish Addanki*\n\n\n"
 
         if cr_at_distance > sa_at_distance:
             at_name = "Chethan Ram"
@@ -37,12 +37,16 @@ class Challenges2020:
             at_name = "Satish Addanki"
             at_distance = sa_at_distance - cr_at_distance
 
+        at_distance = "{0:.2f}".format(round(at_distance, 2))
+
         if cr_ytd_distance > sa_ytd_distance:
             ytd_name = "Chethan Ram"
             ytd_distance = cr_ytd_distance - sa_ytd_distance
         else:
             ytd_name = "Satish Addanki"
             ytd_distance = sa_ytd_distance - cr_ytd_distance
+
+        ytd_distance = "{0:.2f}".format(round(ytd_distance, 2))
 
         if cr_at_hundreds > sa_at_hundreds:
             name = "Chethan Ram"
@@ -53,8 +57,8 @@ class Challenges2020:
 
         message += "_Distance All Time_: {at_name} leads by {at_distance} km\n\n".format(at_name=at_name,
                                                                                          at_distance=at_distance)
-        message += "_Distance Year to Date_: {ytd_name} leads by {ytd_distance}\n\n".format(ytd_name=ytd_name,
-                                                                                            ytd_distance=ytd_distance)
+        message += "_Distance Year to Date_: {ytd_name} leads by {ytd_distance} km\n\n".format(ytd_name=ytd_name,
+                                                                                               ytd_distance=ytd_distance)
         message += "_Hundreds_: {name} leads by {hundreds} hundreds\n\n\n".format(name=name, hundreds=hundreds)
 
         message += "*Chethan Ram*:\n\n\nDistance All Time: {cr_at_distance}\n\nDistance Year to Date: {cr_ytd_distance}\n\nTotal Hundreds: {cr_at_hundreds}\n\n\n".format(
